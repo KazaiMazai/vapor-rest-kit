@@ -14,7 +14,7 @@ protocol UpdateableResourceController: ItemResourceControllerProtocol {
     func update(_: Request) throws -> EventLoopFuture<Output>
 }
 
-extension UpdateableResourceController where Self: ResourceModelProviding,
+extension UpdateableResourceController where Self: ResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model  {
 
@@ -27,7 +27,7 @@ extension UpdateableResourceController where Self: ResourceModelProviding,
     }
 }
 
-extension UpdateableResourceController where Self: ChildrenResourceModelProviding,
+extension UpdateableResourceController where Self: ChildrenResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model {
 
@@ -44,7 +44,7 @@ extension UpdateableResourceController where Self: ChildrenResourceModelProvidin
     }
 }
 
-extension UpdateableResourceController where Self: ParentResourceModelProviding,
+extension UpdateableResourceController where Self: ParentResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model  {
 
@@ -68,7 +68,7 @@ extension UpdateableResourceController where Self: ParentResourceModelProviding,
 }
 
 
-extension UpdateableResourceController where Self: SiblingsResourceModelProviding,
+extension UpdateableResourceController where Self: SiblingsResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model {
 

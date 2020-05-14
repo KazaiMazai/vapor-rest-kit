@@ -8,11 +8,11 @@
 import Vapor
 import Fluent
 
-protocol AuthParentResourceRelationProviding: ParentResourceRelationProviding where RelatedModel: Authenticatable {
+protocol AuthChildrenResourceRelationProvider: ChildrenResourceRelationProvider where RelatedModel: Authenticatable {
 
 }
 
-extension AuthParentResourceRelationProviding {
+extension AuthChildrenResourceRelationProvider {
     var rootIdComponentKey: String { "me" }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: "\(self.rootIdComponentKey)") }
 

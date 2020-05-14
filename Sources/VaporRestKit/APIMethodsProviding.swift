@@ -7,6 +7,6 @@
 
 import Vapor
 
-open protocol APIMethodsProviding {
+public protocol APIMethodsProviding {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String)
 }

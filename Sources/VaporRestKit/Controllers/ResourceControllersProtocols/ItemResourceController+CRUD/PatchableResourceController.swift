@@ -13,7 +13,7 @@ protocol PatchableResourceController: ItemResourceControllerProtocol {
     func patch(_: Request) throws -> EventLoopFuture<Output>
 }
 
-extension PatchableResourceController where Self: ResourceModelProviding,
+extension PatchableResourceController where Self: ResourceModelProvider,
                                             Self.Patch: ResourcePatchModel,
                                             Model == Patch.Model {
 
@@ -27,7 +27,7 @@ extension PatchableResourceController where Self: ResourceModelProviding,
     }
 }
 
-extension PatchableResourceController where Self: ChildrenResourceModelProviding,
+extension PatchableResourceController where Self: ChildrenResourceModelProvider,
                                             Patch: ResourcePatchModel,
                                             Model == Patch.Model {
 
@@ -42,7 +42,7 @@ extension PatchableResourceController where Self: ChildrenResourceModelProviding
     }
 }
 
-extension PatchableResourceController where Self: ParentResourceModelProviding,
+extension PatchableResourceController where Self: ParentResourceModelProvider,
                                             Patch: ResourcePatchModel,
                                             Model == Patch.Model {
 
@@ -57,7 +57,7 @@ extension PatchableResourceController where Self: ParentResourceModelProviding,
     }
 }
 
-extension PatchableResourceController where Self: SiblingsResourceModelProviding,
+extension PatchableResourceController where Self: SiblingsResourceModelProvider,
                                             Patch: ResourcePatchModel,
                                             Model == Patch.Model {
 

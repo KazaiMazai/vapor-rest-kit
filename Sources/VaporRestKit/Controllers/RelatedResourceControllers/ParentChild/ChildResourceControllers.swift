@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- ReplaceChildrenResourceController
 
-open struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, ChildrenResourceModelProviding
+struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, ChildrenResourceModelProvider
 
     where Output: ResourceOutputModel,
           Input: ResourceUpdateModel,
@@ -29,7 +29,7 @@ open struct CreateChildrenResourceController<Model, RelatedModel, Output, Input,
 
 //MARK:- ReadChildrenResourceController
 
-open struct ReadChildrenResourceController<Model, RelatedModel, Output, EagerLoading>: ReadableResourceController, ChildrenResourceModelProviding
+struct ReadChildrenResourceController<Model, RelatedModel, Output, EagerLoading>: ReadableResourceController, ChildrenResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -47,7 +47,7 @@ open struct ReadChildrenResourceController<Model, RelatedModel, Output, EagerLoa
 
 //MARK:- UpdateChildrenResourceController
 
-open struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>: UpdateableResourceController, ChildrenResourceModelProviding
+struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>: UpdateableResourceController, ChildrenResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -67,8 +67,8 @@ open struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input,
 
 //MARK:- PatchChildrenResourceController
 
-open struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, EagerLoading>:
-    PatchableResourceController, ChildrenResourceModelProviding
+struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, EagerLoading>:
+    PatchableResourceController, ChildrenResourceModelProvider
 
     where
         Output: ResourceOutputModel,
@@ -89,8 +89,8 @@ open struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, 
 
 //MARK:- DeleteChildrenResourceController
 
-open struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoading>:
-    DeletableResourceController, ChildrenResourceModelProviding
+struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoading>:
+    DeletableResourceController, ChildrenResourceModelProvider
     where
         Output: ResourceOutputModel,
         Model == Output.Model,
@@ -107,7 +107,7 @@ open struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerL
 
 //MARK:- CollectionChildResourceController
 
-open struct CollectionChildResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, ChildrenResourceModelProviding
+struct CollectionChildResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, ChildrenResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

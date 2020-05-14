@@ -8,19 +8,19 @@
 import Vapor
 import Fluent
 
-open protocol ResourceOutputModel: Content {
+protocol ResourceOutputModel: Content {
     associatedtype Model: Fields
 
     init(_: Model)
 }
 
-open protocol ResourceUpdateModel: Content, Validatable {
+protocol ResourceUpdateModel: Content, Validatable {
     associatedtype Model: Fields
 
     func update(_: Model) -> Model
 }
 
-open protocol ResourcePatchModel: Content, Validatable {
+protocol ResourcePatchModel: Content, Validatable {
     associatedtype Model: Fields
 
     func patch(_: Model) -> Model

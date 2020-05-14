@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-protocol ParentResourceModelProviding: ResourceModelProviding
+protocol ParentResourceModelProvider: ResourceModelProvider
     where Model.IDValue: LosslessStringConvertible,
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
@@ -27,7 +27,7 @@ protocol ParentResourceModelProviding: ResourceModelProviding
     func findRelated(_ req: Request) throws -> EventLoopFuture<RelatedModel>
 }
 
-extension ParentResourceModelProviding {
+extension ParentResourceModelProvider {
     var idKey: String { Model.schema }
     var idPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
 
@@ -56,7 +56,7 @@ extension ParentResourceModelProviding {
 
 //MARK:- Can be overriden
 
-extension ParentResourceModelProviding {
+extension ParentResourceModelProvider {
     func findRelated(_ req: Request) throws -> EventLoopFuture<RelatedModel> {
            return try RelatedModel.query(on: req.db)
                                   .findBy(rootIdComponentKey, from: req)
@@ -65,7 +65,7 @@ extension ParentResourceModelProviding {
 
 //MARK:- Private
 
-extension ParentResourceModelProviding {
+extension ParentResourceModelProvider {
     fileprivate func findOn(_ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
                             req: Request) throws -> EventLoopFuture<Model> {
         return try findWithRelatedOn(childrenKeyPath, req: req).map { $0.resource }

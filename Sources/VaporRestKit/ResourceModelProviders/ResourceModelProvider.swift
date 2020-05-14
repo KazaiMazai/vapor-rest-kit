@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-protocol ResourceModelProviding where EagerLoading.Model == Model, Sorting.Model == Model, Filtering.Model == Model  {
+protocol ResourceModelProvider where EagerLoading.Model == Model, Sorting.Model == Model, Filtering.Model == Model  {
     associatedtype Model
     associatedtype Sorting: SortProvider
     associatedtype EagerLoading: EagerLoadProvider
@@ -28,7 +28,7 @@ protocol ResourceModelProviding where EagerLoading.Model == Model, Sorting.Model
     func idResourcePathFor(endpoint: String) -> [PathComponent]
 }
 
-extension ResourceModelProviding where Model.IDValue: LosslessStringConvertible {
+extension ResourceModelProvider where Model.IDValue: LosslessStringConvertible {
     var idKey: String { Model.schema }
     var idPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
 

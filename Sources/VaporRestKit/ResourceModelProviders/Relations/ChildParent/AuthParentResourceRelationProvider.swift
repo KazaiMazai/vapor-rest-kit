@@ -2,17 +2,17 @@
 //  File.swift
 //  
 //
-//  Created by Sergey Kazakov on 02.05.2020.
+//  Created by Sergey Kazakov on 04.05.2020.
 //
 
 import Vapor
 import Fluent
 
-protocol AuthChildrenResourceModelProviding: ChildrenResourceModelProviding where RelatedModel: Authenticatable {
+protocol AuthParentResourceRelationProvider: ParentResourceRelationProvider where RelatedModel: Authenticatable {
 
 }
 
-extension AuthChildrenResourceModelProviding {
+extension AuthParentResourceRelationProvider {
     var rootIdComponentKey: String { "me" }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: "\(self.rootIdComponentKey)") }
 

@@ -12,7 +12,7 @@ protocol ItemResourceControllerProtocol: ResourceControllerProtocol {
 
 }
 
-extension ItemResourceControllerProtocol where Self: ResourceModelProviding {
+extension ItemResourceControllerProtocol where Self: ResourceModelProvider {
     var sortingHandler: SortingUnsupported<Model> { return SortingUnsupported<Model>() }
     var filteringHandler: FilteringUnsupported<Model> { return FilteringUnsupported<Model>() }
 }

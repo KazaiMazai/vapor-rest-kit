@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- CreateAuthParentResourceController
 
-open struct CreateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, AuthParentResourceModelProviding
+struct CreateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -30,7 +30,7 @@ open struct CreateAuthParentResourceController<Model, RelatedModel, Output, Inpu
 
 //MARK:- ReadAuthParentResourceController
 
-struct ReadAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: ReadableResourceController, AuthParentResourceModelProviding
+struct ReadAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: ReadableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -48,7 +48,7 @@ struct ReadAuthParentResourceController<Model, RelatedModel, Output, EagerLoadin
 
 //MARK:- UpdateAuthParentResourceController
 
-struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: UpdateableResourceController, AuthParentResourceModelProviding
+struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: UpdateableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -68,7 +68,7 @@ struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
 
 //MARK:- PatchAuthParentResourceController
 
-struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, EagerLoading>: PatchableResourceController, AuthParentResourceModelProviding
+struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, EagerLoading>: PatchableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Patch: ResourcePatchModel,
@@ -88,7 +88,7 @@ struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, Eag
 
 //MARK:- DeleteAuthParentResourceController
 
-struct DeleteAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: DeletableResourceController, AuthParentResourceModelProviding
+struct DeleteAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: DeletableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -106,7 +106,7 @@ struct DeleteAuthParentResourceController<Model, RelatedModel, Output, EagerLoad
 
 //MARK:- CollectionAuthParentResourceController
 
-struct CollectionAuthParentResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, AuthParentResourceModelProviding
+struct CollectionAuthParentResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, AuthParentResourceModelProvider
 
     where
     Output: ResourceOutputModel,

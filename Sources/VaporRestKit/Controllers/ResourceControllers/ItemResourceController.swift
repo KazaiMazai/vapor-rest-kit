@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- CreateResourceController
 
-open struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableResourceController, ResourceModelProviding
+struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableResourceController, ResourceModelProvider
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -24,7 +24,7 @@ open struct CreateResourceController<Model, Output, Input, EagerLoading>: Creata
 
 //MARK:- ReadResourceController
 
-open struct ReadResourceController<Model, Output, EagerLoading>: ReadableResourceController, ResourceModelProviding
+struct ReadResourceController<Model, Output, EagerLoading>: ReadableResourceController, ResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -36,7 +36,7 @@ open struct ReadResourceController<Model, Output, EagerLoading>: ReadableResourc
 
 //MARK:- CreateResourceController
 
-open struct UpdateResourceController<Model, Output, Input, EagerLoading>: UpdateableResourceController, ResourceModelProviding
+struct UpdateResourceController<Model, Output, Input, EagerLoading>: UpdateableResourceController, ResourceModelProvider
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -50,7 +50,7 @@ open struct UpdateResourceController<Model, Output, Input, EagerLoading>: Update
 
 //MARK:- PatchResourceController
 
-open struct PatchResourceController<Model, Output, Patch, EagerLoading>: PatchableResourceController, ResourceModelProviding
+struct PatchResourceController<Model, Output, Patch, EagerLoading>: PatchableResourceController, ResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -65,7 +65,7 @@ open struct PatchResourceController<Model, Output, Patch, EagerLoading>: Patchab
 
 //MARK:- DeleteResourceController
 
-open struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceController, ResourceModelProviding
+struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceController, ResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -78,7 +78,7 @@ open struct DeleteResourceController<Model, Output, EagerLoading>: DeletableReso
 
 //MARK:- CollectionResourceController
 
-open struct CollectionResourceController<Model, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, ResourceModelProviding
+struct CollectionResourceController<Model, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, ResourceModelProvider
 
     where
     Output: ResourceOutputModel,

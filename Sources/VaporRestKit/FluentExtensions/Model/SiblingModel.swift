@@ -27,7 +27,7 @@ extension SiblingRepresentable {
 
 //MARK:- SiblingModel
 
-class SiblingModel<From, To, Name>: Model, Content
+final class SiblingModel<From, To, Name>: Model, Content
     where From: Fluent.Model,
         To: Fluent.Model,
         Name: SiblingRepresentable {

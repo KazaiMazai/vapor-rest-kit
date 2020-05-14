@@ -8,11 +8,11 @@
 import Vapor
 import Fluent
 
-protocol SiblingsResourceRelationProviding: SiblingsResourceModelProviding {
+protocol ParentResourceRelationProvider: ParentResourceModelProvider {
 
 }
 
-extension SiblingsResourceRelationProviding {
+extension ParentResourceRelationProvider {
     func idResourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         let relationPath = PathComponent(stringLiteral: "relation")

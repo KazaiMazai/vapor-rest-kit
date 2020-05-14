@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- CreateRelatedResourceController
 
-open struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Input, EagerLoading>: CreatableResourceController, SiblingsResourceModelProviding
+struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Input, EagerLoading>: CreatableResourceController, SiblingsResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -31,7 +31,7 @@ open struct CreateRelatedResourceController<Model, RelatedModel, Through, Output
 
 //MARK:- ReadRelatedResourceController
 
-open struct ReadRelatedResourceController<Model, RelatedModel, Through, Output, EagerLoading>: ReadableResourceController, SiblingsResourceModelProviding
+struct ReadRelatedResourceController<Model, RelatedModel, Through, Output, EagerLoading>: ReadableResourceController, SiblingsResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -50,7 +50,7 @@ open struct ReadRelatedResourceController<Model, RelatedModel, Through, Output, 
 
 //MARK:- UpdateRelatedResourceController
 
-open struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Input, EagerLoading>: UpdateableResourceController, SiblingsResourceModelProviding
+struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Input, EagerLoading>: UpdateableResourceController, SiblingsResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -71,8 +71,8 @@ open struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output
 
 //MARK:- PatchRelatedResourceController
 
-open struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patch, EagerLoading>:
-    PatchableResourceController, SiblingsResourceModelProviding
+struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patch, EagerLoading>:
+    PatchableResourceController, SiblingsResourceModelProvider
 
     where
     Output: ResourceOutputModel,
@@ -93,8 +93,8 @@ open struct PatchRelatedResourceController<Model, RelatedModel, Through, Output,
 
 //MARK:- DeleteRelatedResourceController
 
-open struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, EagerLoading>:
-    DeletableResourceController, SiblingsResourceModelProviding
+struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, EagerLoading>:
+    DeletableResourceController, SiblingsResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -112,7 +112,7 @@ open struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output
 
 //MARK:- CollectionRelatedResourceController
 
-open struct CollectionRelatedResourceController<Model, RelatedModel, Through, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, SiblingsResourceModelProviding
+struct CollectionRelatedResourceController<Model, RelatedModel, Through, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, SiblingsResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

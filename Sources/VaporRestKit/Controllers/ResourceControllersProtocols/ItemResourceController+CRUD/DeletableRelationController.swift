@@ -12,7 +12,7 @@ protocol DeletableRelationController: ItemResourceControllerProtocol {
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 }
 
-extension DeletableRelationController where Self: ChildrenResourceRelationProviding {
+extension DeletableRelationController where Self: ChildrenResourceRelationProvider {
 
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         return try self.findWithRelated(req)
@@ -22,7 +22,7 @@ extension DeletableRelationController where Self: ChildrenResourceRelationProvid
     }
 }
 
-extension DeletableRelationController where Self: ParentResourceRelationProviding {
+extension DeletableRelationController where Self: ParentResourceRelationProvider {
       func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         return try self.findWithRelated(req)
                        .flatMapThrowing {
@@ -36,7 +36,7 @@ extension DeletableRelationController where Self: ParentResourceRelationProvidin
     }
 }
 
-extension DeletableRelationController where Self: SiblingsResourceRelationProviding {
+extension DeletableRelationController where Self: SiblingsResourceRelationProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         return try findWithRelated(req)
                     .flatMap { $0.resource.detached(from: $0.relatedResoure, with: self.siblingKeyPath, on: req.db) }

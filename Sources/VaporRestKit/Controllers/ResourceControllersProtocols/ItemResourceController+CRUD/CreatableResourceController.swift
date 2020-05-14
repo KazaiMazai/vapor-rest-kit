@@ -14,7 +14,7 @@ protocol CreatableResourceController: ItemResourceControllerProtocol {
     func create(_ req: Request) throws -> EventLoopFuture<Output>
 }
 
-extension CreatableResourceController where Self: ResourceModelProviding,
+extension CreatableResourceController where Self: ResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model  {
 
@@ -28,7 +28,7 @@ extension CreatableResourceController where Self: ResourceModelProviding,
     }
 }
 
-extension CreatableResourceController where Self: ChildrenResourceModelProviding,
+extension CreatableResourceController where Self: ChildrenResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model {
 
@@ -44,7 +44,7 @@ extension CreatableResourceController where Self: ChildrenResourceModelProviding
     }
 }
 
-extension CreatableResourceController where Self: ParentResourceModelProviding,
+extension CreatableResourceController where Self: ParentResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model  {
 
@@ -72,7 +72,7 @@ extension CreatableResourceController where Self: ParentResourceModelProviding,
     }
 }
 
-extension CreatableResourceController where Self: SiblingsResourceModelProviding,
+extension CreatableResourceController where Self: SiblingsResourceModelProvider,
                                             Input: ResourceUpdateModel,
                                             Model == Input.Model {
 

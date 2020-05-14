@@ -12,7 +12,7 @@ protocol CreatableRelationController: ItemResourceControllerProtocol {
     func create(_ req: Request) throws -> EventLoopFuture<Output>
 }
 
-extension CreatableRelationController where Self: ChildrenResourceRelationProviding {
+extension CreatableRelationController where Self: ChildrenResourceRelationProvider {
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return try self.findWithRelated(req)
                        .flatMapThrowing { try $0.resource.attached(to: $0.relatedResource, with: self.childrenKeyPath) }
@@ -21,7 +21,7 @@ extension CreatableRelationController where Self: ChildrenResourceRelationProvid
     }
 }
 
-extension CreatableRelationController where Self: ParentResourceRelationProviding {
+extension CreatableRelationController where Self: ParentResourceRelationProvider {
       func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return try self.findWithRelated(req)
                        .flatMapThrowing {
@@ -34,7 +34,7 @@ extension CreatableRelationController where Self: ParentResourceRelationProvidin
     }
 }
 
-extension CreatableRelationController where Self: SiblingsResourceRelationProviding {
+extension CreatableRelationController where Self: SiblingsResourceRelationProvider {
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return try findWithRelated(req)
                     .flatMap { $0.resource.attached(to: $0.relatedResoure, with: self.siblingKeyPath, on: req.db) }

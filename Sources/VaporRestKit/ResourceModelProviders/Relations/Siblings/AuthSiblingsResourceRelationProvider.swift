@@ -2,17 +2,17 @@
 //  File.swift
 //  
 //
-//  Created by Sergey Kazakov on 02.05.2020.
+//  Created by Sergey Kazakov on 04.05.2020.
 //
 
 import Vapor
 import Fluent
 
-protocol AuthParentResourceModelProviding: ParentResourceModelProviding where RelatedModel: Authenticatable {
+protocol AuthSiblingsResourceRelationProvider: SiblingsResourceRelationProvider where RelatedModel: Authenticatable {
 
 }
 
-extension AuthParentResourceModelProviding {
+extension AuthSiblingsResourceRelationProvider {
     var rootIdComponentKey: String { "me" }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: "\(self.rootIdComponentKey)") }
 
@@ -21,6 +21,3 @@ extension AuthParentResourceModelProviding {
         return req.eventLoop.makeSucceededFuture(related)
     }
 }
-
-
-

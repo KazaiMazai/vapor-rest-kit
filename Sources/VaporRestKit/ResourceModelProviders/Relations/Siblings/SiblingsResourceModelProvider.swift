@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-protocol SiblingsResourceModelProviding: ResourceModelProviding
+protocol SiblingsResourceModelProvider: ResourceModelProvider
     where Model.IDValue: LosslessStringConvertible,
         RelatedModel: Fluent.Model,
         Through: Fluent.Model,
@@ -30,7 +30,7 @@ protocol SiblingsResourceModelProviding: ResourceModelProviding
 
 }
 
-extension SiblingsResourceModelProviding {
+extension SiblingsResourceModelProvider {
     var idKey: String { Model.schema }
     var idPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
     var rootIdComponentKey: String { RelatedModel.schema }
@@ -59,7 +59,7 @@ extension SiblingsResourceModelProviding {
 
 //MARK:- Can be overriden
 
-extension SiblingsResourceModelProviding {
+extension SiblingsResourceModelProvider {
     func findRelated(_ req: Request) throws -> EventLoopFuture<RelatedModel> {
       return try RelatedModel.query(on: req.db)
                             .findBy(rootIdComponentKey, from: req)
@@ -68,7 +68,7 @@ extension SiblingsResourceModelProviding {
 
 //MARK:- Private
 
-extension SiblingsResourceModelProviding {
+extension SiblingsResourceModelProvider {
     fileprivate func findOn(_ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
                             req: Request) throws -> EventLoopFuture<Model> {
         return try findWithRelatedOn(siblingKeyPath, req: req).map { $0.resource }

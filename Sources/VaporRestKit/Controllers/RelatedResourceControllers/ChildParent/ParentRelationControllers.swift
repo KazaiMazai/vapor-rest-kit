@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- CreateParentResourceController
 
-open struct CreateParentRelationController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableRelationController, ParentResourceRelationProviding
+struct CreateParentRelationController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableRelationController, ParentResourceRelationProvider
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -30,7 +30,7 @@ open struct CreateParentRelationController<Model, RelatedModel, Output, Input, E
 
 //MARK:- DeleteParentRelationController
 
-struct DeleteParentRelationController<Model, RelatedModel, Output, EagerLoading>: DeletableRelationController, ParentResourceRelationProviding
+struct DeleteParentRelationController<Model, RelatedModel, Output, EagerLoading>: DeletableRelationController, ParentResourceRelationProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

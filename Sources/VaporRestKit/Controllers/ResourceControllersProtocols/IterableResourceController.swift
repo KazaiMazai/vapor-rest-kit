@@ -29,7 +29,7 @@ protocol IterableResourceController: ResourceControllerProtocol {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>>
 }
 
-extension IterableResourceController where Self: ResourceModelProviding {
+extension IterableResourceController where Self: ResourceModelProvider {
     func readWithCursorPagination(_ req: Request) throws -> EventLoopFuture<CursorPage<Output>> {
         return try prepareQueryBuilder(req)
             .flatMap { $0.paginateWithCursor(for: req, config: self.paginationConfig) }
@@ -49,12 +49,12 @@ extension IterableResourceController where Self: ResourceModelProviding {
     }
 }
 
-extension IterableResourceController where Self: ResourceModelProviding {
+extension IterableResourceController where Self: ResourceModelProvider {
     var config: IterableControllerConfig { return .paginateWithCursor }
     var paginationConfig: CursorPaginationConfig { return .defaultConfig }
 }
 
-extension IterableResourceController where Self: ResourceModelProviding {
+extension IterableResourceController where Self: ResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
         let queryBuilder = try Model.query(on: req.db)
             .with(self.eagerLoadHandler, for: req)
@@ -65,7 +65,7 @@ extension IterableResourceController where Self: ResourceModelProviding {
     }
 }
 
-extension IterableResourceController where Self: ChildrenResourceModelProviding {
+extension IterableResourceController where Self: ChildrenResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
         return try findRelated(req).map { $0.query(keyPath: self.childrenKeyPath, on: req.db) }
             .flatMapThrowing { try $0.with(self.eagerLoadHandler, for: req) }
@@ -74,7 +74,7 @@ extension IterableResourceController where Self: ChildrenResourceModelProviding 
     }
 }
 
-extension IterableResourceController where Self: ParentResourceModelProviding {
+extension IterableResourceController where Self: ParentResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
         return try findRelated(req)
             .map { $0.query(keyPath: self.inversedChildrenKeyPath, on: req.db) }
@@ -84,7 +84,7 @@ extension IterableResourceController where Self: ParentResourceModelProviding {
     }
 }
 
-extension IterableResourceController where Self: SiblingsResourceModelProviding {
+extension IterableResourceController where Self: SiblingsResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
         return try findRelated(req)
             .map { $0.queryRelated(keyPath: self.siblingKeyPath, on: req.db) }
