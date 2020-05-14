@@ -10,7 +10,7 @@ import Vapor
 
 //MARK:- FilteringKey Protocol
 
-protocol FilteringKey: RawRepresentable, Codable where RawValue == String {
+public protocol FilteringKey: RawRepresentable, Codable where RawValue == String {
     associatedtype Model: Fluent.Model
 
     func filterFor(queryBuilder: QueryBuilder<Model>, method: DatabaseQuery.Filter.Method, value: String) -> QueryBuilder<Model>
@@ -20,7 +20,7 @@ protocol FilteringKey: RawRepresentable, Codable where RawValue == String {
 
 //MARK:- FilterProvider Protocol
 
-protocol FilterProvider where Key: FilteringKey, Key.Model == Model {
+public protocol FilterProvider where Key: FilteringKey, Key.Model == Model {
     associatedtype Model
     associatedtype Key
 
@@ -41,40 +41,42 @@ extension FilterProvider {
 
 //MARK:- StaticFiltering Protocol
 
-protocol StaticFiltering: FilterProvider { }
+public protocol StaticFiltering: FilterProvider { }
 
-extension StaticFiltering {
+public extension StaticFiltering {
     var supportsDynamicFilterKeys: Bool { return false }
 }
 
 //MARK: DynamicFiltering Protocol
 
-protocol DynamicFiltering: FilterProvider { }
+public protocol DynamicFiltering: FilterProvider { }
 
-extension DynamicFiltering {
+public extension DynamicFiltering {
     var supportsDynamicFilterKeys: Bool { return true }
 }
 
 //MARK:- EmptyFilteringKey
 
-enum EmptyFilteringKey<Model: Fluent.Model>: String, FilteringKey {
+public enum EmptyFilteringKey<Model: Fluent.Model>: String, FilteringKey {
     case empty
 
-    func filterFor(queryBuilder: QueryBuilder<Model>, method: DatabaseQuery.Filter.Method, value: String) -> QueryBuilder<Model> {
+    public func filterFor(queryBuilder: QueryBuilder<Model>, method: DatabaseQuery.Filter.Method, value: String) -> QueryBuilder<Model> {
         return queryBuilder
     }
 
-    static func filterFor(queryBuilder: QueryBuilder<Model>, lhs: EmptyFilteringKey<Model>, method: DatabaseQuery.Filter.Method, rhs: EmptyFilteringKey<Model>) -> QueryBuilder<Model> {
+    public static func filterFor(queryBuilder: QueryBuilder<Model>, lhs: EmptyFilteringKey<Model>, method: DatabaseQuery.Filter.Method, rhs: EmptyFilteringKey<Model>) -> QueryBuilder<Model> {
          return queryBuilder
     }
 }
 
 //MARK:- FilteringUnsupported
 
-struct FilteringUnsupported<Model: Fluent.Model>: StaticFiltering {
-    typealias Key = EmptyFilteringKey<Model>
+public struct FilteringUnsupported<Model: Fluent.Model>: StaticFiltering {
+    public typealias Key = EmptyFilteringKey<Model>
 
-    func defaultFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    public init() { }
+
+    public func defaultFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         return queryBuilder
     }
 }
