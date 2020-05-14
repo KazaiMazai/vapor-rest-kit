@@ -11,7 +11,7 @@ import Vapor
 
 //MARK:- SortingKey Protocol
 
-protocol SortingKey: RawRepresentable where RawValue == String {
+public protocol SortingKey: RawRepresentable where RawValue == String {
     associatedtype Model: Fluent.Model
 
     func sortFor(_ queryBuilder: QueryBuilder<Model>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model>
@@ -19,7 +19,7 @@ protocol SortingKey: RawRepresentable where RawValue == String {
 
 //MARK:- SortProvider Protocol
 
-protocol SortProvider where Key: SortingKey, Key.Model == Model {
+public protocol SortProvider where Key: SortingKey, Key.Model == Model {
     associatedtype Model
     associatedtype Key
 
@@ -32,13 +32,15 @@ protocol SortProvider where Key: SortingKey, Key.Model == Model {
     init()
 }
 
-extension SortProvider {
+public extension SortProvider {
     func uniqueKeySorting(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         return queryBuilder.sort(\Model._$id, .ascending)
     }
+}
 
+extension SortProvider {
     func sortFor(builder: QueryBuilder<Model>,
-                       sortDescriptors: [SortDescriptor<Self.Key>]) -> QueryBuilder<Model> {
+                 sortDescriptors: [SortDescriptor<Self.Key>]) -> QueryBuilder<Model> {
         var queryBuilder = builder
         sortDescriptors.forEach { queryBuilder =  $0.key.sortFor(queryBuilder, direction: $0.direction) }
 
@@ -48,38 +50,40 @@ extension SortProvider {
 
 //MARK:- StaticSorting Protocol
 
-protocol StaticSorting: SortProvider { }
+public protocol StaticSorting: SortProvider { }
 
-extension StaticSorting {
+public extension StaticSorting {
     var supportsDynamicSortKeys: Bool { return false }
 }
 
 //MARK: DynamicSorting Protocol
 
-protocol DynamicSorting: SortProvider { }
+public protocol DynamicSorting: SortProvider { }
 
-extension DynamicSorting {
+public extension DynamicSorting {
     var supportsDynamicSortKeys: Bool { return true }
 }
 
 
 //MARK:- EmptySortingKey
 
-enum EmptySortingKey<Model: Fluent.Model>: String, SortingKey {
+public enum EmptySortingKey<Model: Fluent.Model>: String, SortingKey {
     case empty
 
-    func sortFor(_ queryBuilder: QueryBuilder<Model>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model> {
-       return queryBuilder
+    public func sortFor(_ queryBuilder: QueryBuilder<Model>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model> {
+        return queryBuilder
     }
 }
 
 
 //MARK:- SortingUnsupported
 
-struct SortingUnsupported<Model: Fluent.Model>: StaticSorting {
-    typealias Key = EmptySortingKey<Model>
+public struct SortingUnsupported<Model: Fluent.Model>: StaticSorting {
+    public typealias Key = EmptySortingKey<Model>
 
-    func defaultSorting(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    public init() { }
+
+    public func defaultSorting(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         return queryBuilder
     }
 }
