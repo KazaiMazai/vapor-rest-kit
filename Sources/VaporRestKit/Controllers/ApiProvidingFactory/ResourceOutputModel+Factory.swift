@@ -13,9 +13,9 @@ public extension ResourceOutputModel {
         EagerLoading> {
 
             return ResourceControllerFactory<Self.Model,
-                                        Self,
-                                        EagerLoading>(modelType: Model.self,
-                                                      outputType: Self.self,
-                                                      eagerLoading: eagerLoading)
+                Self,
+                EagerLoading>(modelType: Model.self,
+                              outputType: Self.self,
+                              eagerLoading: eagerLoading)
     }
 }

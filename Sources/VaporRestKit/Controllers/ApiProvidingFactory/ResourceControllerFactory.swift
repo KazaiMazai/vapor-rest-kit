@@ -40,22 +40,22 @@ public extension ResourceControllerFactory {
                               relationName: relationName)
     }
 
-    func relatedTo<RelatedModel>(_ child: ChildrenKeyPath<RelatedModel, Model>,
+    func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
                                  relationName: String) -> RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>(self,
-                                                                                           child: child,
+                                                                                           child: childrenKeyPath,
                                                                                            relationName: relationName)
     }
 
-    func relatedTo<RelatedModel>(_ reversedChild: ChildrenKeyPath<Model, RelatedModel>,
+    func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
                                  relationName: String) -> RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerFactory<Model,
             RelatedModel,
             Output,
             EagerLoading>(self,
-                          reversedChild: reversedChild,
+                          reversedChild: childrenKeyPath,
                           relationName: relationName)
     }
 }
