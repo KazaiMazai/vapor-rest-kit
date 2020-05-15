@@ -10,29 +10,31 @@ import Fluent
 
 enum IterableControllerConfig {
     case fetchAll
-    case paginateWithCursor
+    case paginateWithCursor(CursorPaginationConfig)
     case paginateByPage
+
+    static let defaultConfig: IterableControllerConfig = .paginateWithCursor(CursorPaginationConfig.defaultConfig)
 }
 
 protocol IterableResourceController: ResourceControllerProtocol {
     associatedtype Output
     associatedtype Model
     
-    func readWithCursorPagination(_: Request) throws -> EventLoopFuture<CursorPage<Output>>
+    func readWithCursorPagination(_: Request, paginationConfig: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
 
     func readWithPagination(_: Request) throws -> EventLoopFuture<Page<Output>>
 
     func readAll(_: Request) throws -> EventLoopFuture<[Output]>
-
+ 
     var config: IterableControllerConfig { get }
 
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>>
 }
 
 extension IterableResourceController where Self: ResourceModelProvider {
-    func readWithCursorPagination(_ req: Request) throws -> EventLoopFuture<CursorPage<Output>> {
+    func readWithCursorPagination(_ req: Request, paginationConfig: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>> {
         return try prepareQueryBuilder(req)
-            .flatMap { $0.paginateWithCursor(for: req, config: self.paginationConfig) }
+            .flatMap { $0.paginateWithCursor(for: req, config: paginationConfig) }
             .map { $0.map { Output($0) } }
     }
 
@@ -47,11 +49,6 @@ extension IterableResourceController where Self: ResourceModelProvider {
             .flatMap { $0.all() }
             .map { $0.map { Output($0) } }
     }
-}
-
-extension IterableResourceController where Self: ResourceModelProvider {
-    var config: IterableControllerConfig { return .paginateWithCursor }
-    var paginationConfig: CursorPaginationConfig { return .defaultConfig }
 }
 
 extension IterableResourceController where Self: ResourceModelProvider {

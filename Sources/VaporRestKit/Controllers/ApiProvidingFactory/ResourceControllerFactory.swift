@@ -99,7 +99,9 @@ extension ResourceControllerFactory {
             EagerLoading>()
     }
 
-    func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type) -> APIMethodsProviding
+    func collection<Sorting, Filtering>(sorting: Sorting.Type,
+                                        filtering: Filtering.Type,
+                                        config: IterableControllerConfig = .defaultConfig) -> APIMethodsProviding
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -110,7 +112,7 @@ extension ResourceControllerFactory {
                 Output,
                 Sorting,
                 EagerLoading,
-                Filtering>()
+                Filtering>(config: config)
     }
 }
 

@@ -93,7 +93,7 @@ extension SiblingsResourceControllerFactory {
                           siblingKeyPath: relation)
     }
 
-    func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type) -> APIMethodsProviding
+    func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type, config: IterableControllerConfig = .defaultConfig) -> APIMethodsProviding
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -107,7 +107,7 @@ extension SiblingsResourceControllerFactory {
                 Sorting,
                 EagerLoading,
                 Filtering>(relationNamePath: relationName,
-                           siblingKeyPath: relation)
+                           siblingKeyPath: relation, config: config)
     }
 }
 
@@ -127,7 +127,8 @@ extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable 
                               siblingKeyPath: relation)
     }
 
-    func update<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> APIMethodsProviding
+    func update<Input>(input: Input.Type,
+                       authenticatable: RelatedModel.Type) -> APIMethodsProviding
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -141,7 +142,8 @@ extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable 
                               siblingKeyPath: relation)
     }
 
-    func patch<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> APIMethodsProviding
+    func patch<Input>(input: Input.Type,
+                      authenticatable: RelatedModel.Type) -> APIMethodsProviding
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -164,7 +166,10 @@ extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable 
                           siblingKeyPath: relation)
     }
 
-    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type, sorting: Sorting.Type, filtering: Filtering.Type) -> APIMethodsProviding
+    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
+                                        sorting: Sorting.Type,
+                                        filtering: Filtering.Type,
+                                        config: IterableControllerConfig = .defaultConfig) -> APIMethodsProviding
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -178,6 +183,7 @@ extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable 
                 Sorting,
                 EagerLoading,
                 Filtering>(relationNamePath: relationName,
-                           siblingKeyPath: relation)
+                           siblingKeyPath: relation,
+                           config: config)
     }
 }

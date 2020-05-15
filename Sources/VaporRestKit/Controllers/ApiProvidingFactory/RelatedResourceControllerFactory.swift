@@ -56,7 +56,7 @@ RelatedModel.IDValue: LosslessStringConvertible {
     }
 
     func relationController() -> RelationControllerFactory<Model, RelatedModel, Output, EagerLoading> {
-        return  RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>(resourceFactory: self)
+        return RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>(resourceFactory: self)
     }
 }
 
@@ -69,11 +69,20 @@ extension RelatedResourceControllerFactory {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return CreateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                          childrenKeyPath: relationKeyPath)
+                return CreateChildrenResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  childrenKeyPath: relationKeyPath)
+
             case .reversedChild(let relationKeyPath):
-                return CreateParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                        inversedChildrenKeyPath: relationKeyPath)
+                return CreateParentResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  inversedChildrenKeyPath: relationKeyPath)
             }
     }
 
@@ -85,11 +94,19 @@ extension RelatedResourceControllerFactory {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return UpdateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                          childrenKeyPath: relationKeyPath)
+                return UpdateChildrenResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  childrenKeyPath: relationKeyPath)
             case .reversedChild(let relationKeyPath):
-                return UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                        inversedChildrenKeyPath: relationKeyPath)
+                return UpdateParentResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  inversedChildrenKeyPath: relationKeyPath)
             }
     }
 
@@ -101,11 +118,20 @@ extension RelatedResourceControllerFactory {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return PatchChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                         childrenKeyPath: relationKeyPath)
+                return PatchChildrenResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  childrenKeyPath: relationKeyPath)
+
             case .reversedChild(let relationKeyPath):
-                return PatchParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                       inversedChildrenKeyPath: relationKeyPath)
+                return PatchParentResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  inversedChildrenKeyPath: relationKeyPath)
             }
     }
 
@@ -113,15 +139,24 @@ extension RelatedResourceControllerFactory {
 
         switch relationType {
         case .child(let relationKeyPath):
-            return DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoading>(relationNamePath: relationName,
-                                                                                               childrenKeyPath: relationKeyPath)
+            return DeleteChildrenResourceController<Model,
+                RelatedModel,
+                Output,
+                EagerLoading>(relationNamePath: relationName,
+                              childrenKeyPath: relationKeyPath)
+
         case .reversedChild(let relationKeyPath):
-            return DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>(relationNamePath: relationName,
-                                                                                             inversedChildrenKeyPath: relationKeyPath)
+            return DeleteParentResourceController<Model,
+                RelatedModel,
+                Output,
+                EagerLoading>(relationNamePath: relationName,
+                              inversedChildrenKeyPath: relationKeyPath)
         }
     }
 
-    func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type) -> APIMethodsProviding
+    func collection<Sorting, Filtering>(sorting: Sorting.Type,
+                                        filtering: Filtering.Type,
+                                        config: IterableControllerConfig = .defaultConfig) -> APIMethodsProviding
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -130,11 +165,24 @@ extension RelatedResourceControllerFactory {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return CollectionChildResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>(relationNamePath: relationName,
-                                                                                                                        childrenKeyPath: relationKeyPath)
+                return CollectionChildResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Sorting,
+                    EagerLoading,
+                    Filtering>(relationNamePath: relationName,
+                               childrenKeyPath: relationKeyPath,
+                               config: config)
+
             case .reversedChild(let relationKeyPath):
-                return CollectionParentResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>(relationNamePath: relationName,
-                                                                                                                         inversedChildrenKeyPath: relationKeyPath)
+                return CollectionParentResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Sorting,
+                    EagerLoading,
+                    Filtering>(relationNamePath: relationName,
+                               inversedChildrenKeyPath: relationKeyPath,
+                               config: config)
             }
     }
 }
@@ -148,11 +196,20 @@ extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return CreateAuthChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                              childrenKeyPath: relationKeyPath)
+                return CreateAuthChildrenResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  childrenKeyPath: relationKeyPath)
+
             case .reversedChild(let relationKeyPath):
-                return CreateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                            inversedChildrenKeyPath: relationKeyPath)
+                return CreateAuthParentResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  inversedChildrenKeyPath: relationKeyPath)
             }
     }
 
@@ -164,11 +221,20 @@ extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return UpdateAuthChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                              childrenKeyPath: relationKeyPath)
+                return UpdateAuthChildrenResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  childrenKeyPath: relationKeyPath)
+
             case .reversedChild(let relationKeyPath):
-                return UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                            inversedChildrenKeyPath: relationKeyPath)
+                return UpdateAuthParentResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  inversedChildrenKeyPath: relationKeyPath)
             }
     }
 
@@ -179,26 +245,44 @@ extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return PatchAuthChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                             childrenKeyPath: relationKeyPath)
+                return PatchAuthChildrenResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  childrenKeyPath: relationKeyPath)
+
             case .reversedChild(let relationKeyPath):
-                return PatchParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>(relationNamePath: relationName,
-                                                                                                       inversedChildrenKeyPath: relationKeyPath)
+                return PatchParentResourceController<Model,
+                    RelatedModel,
+                    Output, Input,
+                    EagerLoading>(relationNamePath: relationName,
+                                  inversedChildrenKeyPath: relationKeyPath)
             }
     }
 
     func delete(authenticatable: RelatedModel.Type) -> APIMethodsProviding  {
         switch relationType {
         case .child(let relationKeyPath):
-            return DeleteAuthChildrenResourceController<Model, RelatedModel, Output, EagerLoading>(relationNamePath: relationName,
-                                                                                                   childrenKeyPath: relationKeyPath)
+            return DeleteAuthChildrenResourceController<Model,
+                RelatedModel,
+                Output,
+                EagerLoading>(relationNamePath: relationName,
+                              childrenKeyPath: relationKeyPath)
+
         case .reversedChild(let relationKeyPath):
-            return DeleteAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>(relationNamePath: relationName,
-                                                                                                 inversedChildrenKeyPath: relationKeyPath)
+            return DeleteAuthParentResourceController<Model,
+                RelatedModel,
+                Output,
+                EagerLoading>(relationNamePath: relationName,
+                              inversedChildrenKeyPath: relationKeyPath)
         }
     }
 
-    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type, sorting: Sorting.Type, filtering: Filtering.Type) -> APIMethodsProviding
+    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
+                                        sorting: Sorting.Type,
+                                        filtering: Filtering.Type,
+                                        config: IterableControllerConfig = .defaultConfig) -> APIMethodsProviding
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -207,13 +291,24 @@ extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
 
             switch relationType {
             case .child(let relationKeyPath):
-                return CollectionAuthChildResourceController<Model, RelatedModel,
-                    Output, Sorting, EagerLoading, Filtering>(relationNamePath: relationName,
-                                                              childrenKeyPath: relationKeyPath)
+                return CollectionAuthChildResourceController<Model,
+                    RelatedModel,
+                    Output,
+                    Sorting,
+                    EagerLoading,
+                    Filtering>(relationNamePath: relationName,
+                               childrenKeyPath: relationKeyPath,
+                               config: config)
+
             case .reversedChild(let relationKeyPath):
                 return CollectionAuthParentResourceController<Model,
-                    RelatedModel, Output, Sorting, EagerLoading, Filtering>(relationNamePath: relationName,
-                                                                            inversedChildrenKeyPath: relationKeyPath)
+                    RelatedModel,
+                    Output,
+                    Sorting,
+                    EagerLoading,
+                    Filtering>(relationNamePath: relationName,
+                               inversedChildrenKeyPath: relationKeyPath,
+                               config: config)
             }
     }
 }

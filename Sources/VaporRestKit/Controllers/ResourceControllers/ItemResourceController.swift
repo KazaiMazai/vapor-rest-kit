@@ -89,6 +89,8 @@ struct CollectionResourceController<Model, Output, Sorting, EagerLoading, Filter
     Filtering: FilterProvider,
     Filtering.Model == Model,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model  {
+EagerLoading.Model == Model  {
 
+    let config: IterableControllerConfig
+    
 }

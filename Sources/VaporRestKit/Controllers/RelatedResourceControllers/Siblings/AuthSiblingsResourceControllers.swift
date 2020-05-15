@@ -135,6 +135,7 @@ struct CollectionRelatedAuthResourceController<Model, RelatedModel, Through, Out
 
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
+    let config: IterableControllerConfig
 
 }
 

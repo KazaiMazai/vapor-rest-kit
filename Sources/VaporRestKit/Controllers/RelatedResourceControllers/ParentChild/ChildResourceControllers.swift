@@ -123,5 +123,6 @@ struct CollectionChildResourceController<Model, RelatedModel, Output, Sorting, E
 
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
+    let config: IterableControllerConfig
 
 }

@@ -42,8 +42,11 @@ extension IterableResourceController where Self: ResourceModelProvider {
         switch config {
         case .fetchAll:
             routeBuilder.on(.GET, path, body: .collect, use: self.readAll)
-        case .paginateWithCursor:
-            routeBuilder.on(.GET, path, body: .collect, use: self.readWithCursorPagination)
+        case .paginateWithCursor(let paginationConfig):
+            routeBuilder.on(.GET,
+                            path,
+                            body: .collect,
+                            use: { req in return try self.readWithCursorPagination(req, paginationConfig: paginationConfig) })
         case .paginateByPage:
             routeBuilder.on(.GET, path, body: .collect, use: self.readWithPagination)
         }
