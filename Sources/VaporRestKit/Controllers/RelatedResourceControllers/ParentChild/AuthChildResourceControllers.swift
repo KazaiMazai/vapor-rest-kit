@@ -131,5 +131,6 @@ struct CollectionAuthChildResourceController<Model, RelatedModel, Output, Sortin
 
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
+    let config: IterableControllerConfig
 
 }

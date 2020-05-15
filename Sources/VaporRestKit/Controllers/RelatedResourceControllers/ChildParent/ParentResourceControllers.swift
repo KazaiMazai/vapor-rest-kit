@@ -117,5 +117,6 @@ struct CollectionParentResourceController<Model, RelatedModel, Output, Sorting, 
 
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
+    let config: IterableControllerConfig
 
 }

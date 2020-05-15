@@ -129,5 +129,6 @@ struct CollectionRelatedResourceController<Model, RelatedModel, Through, Output,
 
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
+    let config: IterableControllerConfig
 
 }

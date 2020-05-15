@@ -10,11 +10,11 @@ import Fluent
 
 //MARK:- ChildrenKeyPath
 
-typealias ChildrenKeyPath<From: Fluent.Model, To: Fluent.Model> = KeyPath<From, ChildrenProperty<From, To>>
+public typealias ChildrenKeyPath<From: Fluent.Model, To: Fluent.Model> = KeyPath<From, ChildrenProperty<From, To>>
 
 //MARK:- SiblingKeyPath
 
-typealias SiblingKeyPath<From: Fluent.Model, To: Fluent.Model, Through: Fluent.Model> = KeyPath<From, SiblingsProperty<From, To, Through>>
+public typealias SiblingKeyPath<From: Fluent.Model, To: Fluent.Model, Through: Fluent.Model> = KeyPath<From, SiblingsProperty<From, To, Through>>
 
 //MARK:- Model + Relations Extension
 

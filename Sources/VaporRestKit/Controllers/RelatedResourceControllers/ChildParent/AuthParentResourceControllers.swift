@@ -124,5 +124,5 @@ struct CollectionAuthParentResourceController<Model, RelatedModel, Output, Sorti
 
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
-
+    let config: IterableControllerConfig
 }

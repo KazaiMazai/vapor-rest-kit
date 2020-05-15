@@ -10,11 +10,9 @@ import Fluent
 
 //MARK:- CreateAuthParentRelationController
 
-struct CreateAuthParentRelationController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableRelationController, AuthParentResourceRelationProvider
+struct CreateAuthParentRelationController<Model, RelatedModel, Output, EagerLoading>: CreatableRelationController, AuthParentResourceRelationProvider
     where
     Output: ResourceOutputModel,
-    Input: ResourceUpdateModel,
-    Model == Input.Model,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     RelatedModel: Fluent.Model,
@@ -41,9 +39,14 @@ struct DeleteAuthParentRelationController<Model, RelatedModel, Output, EagerLoad
     RelatedModel.IDValue: LosslessStringConvertible,
     RelatedModel: Authenticatable,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
+
+
+
+
+

@@ -11,7 +11,7 @@ import Fluent
 
 //MARK:- EagerLoadingKey Protocol
 
-protocol EagerLoadingKey: RawRepresentable where RawValue == String {
+public protocol EagerLoadingKey: RawRepresentable where RawValue == String {
     associatedtype Model: Fluent.Model
 
     func eagerLoadFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
@@ -19,7 +19,7 @@ protocol EagerLoadingKey: RawRepresentable where RawValue == String {
 
 //MARK:- EagerLoadProvider Protocol
 
-protocol EagerLoadProvider where Key: EagerLoadingKey, Key.Model == Model {
+public protocol EagerLoadProvider where Key: EagerLoadingKey, Key.Model == Model {
     associatedtype Model
     associatedtype Key
 
@@ -42,37 +42,39 @@ extension EagerLoadProvider where Key.RawValue == String {
 
 //MARK:- StaticEagerLoading Protocol
 
-protocol StaticEagerLoading: EagerLoadProvider { }
+public protocol StaticEagerLoading: EagerLoadProvider { }
 
-extension StaticEagerLoading {
+public extension StaticEagerLoading {
     var supportsDynamicEagerLoadingKeys: Bool { return false }
 }
 
 //MARK: DynamicEagerLoading Protocol
 
-protocol DynamicEagerLoading: EagerLoadProvider { }
+public protocol DynamicEagerLoading: EagerLoadProvider { }
 
-extension DynamicEagerLoading {
+public extension DynamicEagerLoading {
     var supportsDynamicEagerLoadingKeys: Bool { return true }
 }
 
 
 //MARK:- EmptyEagerLoadKey
 
-enum EmptyEagerLoadKey<Model: Fluent.Model>: String, EagerLoadingKey {
+public enum EmptyEagerLoadKey<Model: Fluent.Model>: String, EagerLoadingKey {
     case empty
 
-    func eagerLoadFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    public func eagerLoadFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         return queryBuilder
     }
 }
 
 //MARK:- EagerLoadingUnsupported
 
-struct EagerLoadingUnsupported<Model: Fluent.Model>: StaticEagerLoading {
-    typealias Key = EmptyEagerLoadKey<Model>
+public struct EagerLoadingUnsupported<Model: Fluent.Model>: StaticEagerLoading {
+    public typealias Key = EmptyEagerLoadKey<Model>
 
-    func defaultEagerLoading(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+    public init() { }
+
+    public func defaultEagerLoading(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         return queryBuilder
     }
 }

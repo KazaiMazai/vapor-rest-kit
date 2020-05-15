@@ -10,11 +10,9 @@ import Fluent
 
 //MARK:- CreateAuthChildrenRelationController
 
-struct CreateAuthChildrenRelationController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableRelationController, AuthChildrenResourceRelationProvider
+struct CreateAuthChildrenRelationController<Model, RelatedModel, Output, EagerLoading>: CreatableRelationController, AuthChildrenResourceRelationProvider
 
     where Output: ResourceOutputModel,
-          Input: ResourceUpdateModel,
-          Model == Input.Model,
           Model == Output.Model,
           RelatedModel: Fluent.Model,
           Model.IDValue: LosslessStringConvertible,
