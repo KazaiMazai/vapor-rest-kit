@@ -14,7 +14,7 @@ struct ResourceControllerFactory<Model, Output, EagerLoading>
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
     init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                       outputType: Output.Type = Output.self,
