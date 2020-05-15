@@ -14,7 +14,7 @@ struct ResourceControllerFactory<Model, Output, EagerLoading>
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
     init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                       outputType: Output.Type = Output.self,
@@ -30,12 +30,12 @@ struct ResourceControllerFactory<Model, Output, EagerLoading>
         EagerLoading> {
 
             return SiblingsResourceControllerFactory<Model,
-                                                    RelatedModel,
-                                                    Through,
-                                                    Output,
-                                                    EagerLoading>(self,
-                                                                  relation: relation,
-                                                                  relationName: relationName)
+                RelatedModel,
+                Through,
+                Output,
+                EagerLoading>(self,
+                              relation: relation,
+                              relationName: relationName)
     }
 
     func relatedTo<RelatedModel>(_ child: ChildrenKeyPath<RelatedModel, Model>,
@@ -49,9 +49,12 @@ struct ResourceControllerFactory<Model, Output, EagerLoading>
     func relatedTo<RelatedModel>(_ reversedChild: ChildrenKeyPath<Model, RelatedModel>,
                                  relationName: String) -> RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading> {
 
-        return RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>(self,
-                                                                                           reversedChild: reversedChild,
-                                                                                           relationName: relationName)
+        return RelatedResourceControllerFactory<Model,
+            RelatedModel,
+            Output,
+            EagerLoading>(self,
+                          reversedChild: reversedChild,
+                          relationName: relationName)
     }
 }
 
@@ -62,10 +65,10 @@ extension ResourceControllerFactory {
         Input: ResourceUpdateModel,
         Model == Input.Model {
 
-        return CreateResourceController<Model,
-                                        Output,
-                                        Input,
-                                        EagerLoading>()
+            return CreateResourceController<Model,
+                Output,
+                Input,
+                EagerLoading>()
     }
 
     func update<Input>(input: Input.Type) -> APIMethodsProviding
@@ -73,10 +76,10 @@ extension ResourceControllerFactory {
         Input: ResourceUpdateModel,
         Model == Input.Model {
 
-        return UpdateResourceController<Model,
-                                        Output,
-                                        Input,
-                                        EagerLoading>()
+            return UpdateResourceController<Model,
+                Output,
+                Input,
+                EagerLoading>()
     }
 
     func patch<Input>(input: Input.Type) -> APIMethodsProviding
@@ -84,18 +87,17 @@ extension ResourceControllerFactory {
         Input: ResourcePatchModel,
         Model == Input.Model {
 
-        return PatchResourceController<Model,
-                                        Output,
-                                        Input,
-                                        EagerLoading>()
+            return PatchResourceController<Model,
+                Output,
+                Input,
+                EagerLoading>()
     }
 
     func delete() -> APIMethodsProviding {
         return DeleteResourceController<Model,
-                                        Output,
-                                        EagerLoading>()
+            Output,
+            EagerLoading>()
     }
-
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type) -> APIMethodsProviding
         where
@@ -104,7 +106,11 @@ extension ResourceControllerFactory {
         Filtering: FilterProvider,
         Filtering.Model == Model {
 
-        return CollectionResourceController<Model, Output, Sorting, EagerLoading, Filtering>()
+            return CollectionResourceController<Model,
+                Output,
+                Sorting,
+                EagerLoading,
+                Filtering>()
     }
 }
 
