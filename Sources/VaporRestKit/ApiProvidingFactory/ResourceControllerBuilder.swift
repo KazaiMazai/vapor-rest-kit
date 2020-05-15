@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-public final class ResourceControllerFactory<Model, Output, EagerLoading>: APIMethodsProviding
+public final class ResourceControllerBuilder<Model, Output, EagerLoading>: APIMethodsProviding
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -16,39 +16,35 @@ public final class ResourceControllerFactory<Model, Output, EagerLoading>: APIMe
     EagerLoading: EagerLoadProvider,
 EagerLoading.Model == Model {
 
-
-
-
-
     internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
-                                      outputType: Output.Type = Output.self,
-                                      eagerLoading: EagerLoading.Type = EagerLoading.self) {
+                                               outputType: Output.Type = Output.self,
+                                               eagerLoading: EagerLoading.Type = EagerLoading.self) {
 
     }
 
     fileprivate var controllers: [APIMethodsProviding] = []
 
-    fileprivate func adding(_ controller: APIMethodsProviding) -> ResourceControllerFactory  {
+    fileprivate func adding(_ controller: APIMethodsProviding) -> ResourceControllerBuilder  {
         controllers.append(controller)
         return self
     }
 }
 
-public extension ResourceControllerFactory {
+public extension ResourceControllerBuilder {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
         CompoundResourceController(with: controllers).addMethodsTo(routeBuilder, on: endpoint)
     }
 }
 
-public extension ResourceControllerFactory {
+public extension ResourceControllerBuilder {
     func relatedTo<RelatedModel, Through>(relation: SiblingKeyPath<RelatedModel, Model, Through>,
-                                          relationName: String) -> SiblingsResourceControllerFactory<Model,
+                                          relationName: String) -> SiblingsResourceControllerBuilder<Model,
         RelatedModel,
         Through,
         Output,
         EagerLoading> {
 
-            return SiblingsResourceControllerFactory<Model,
+            return SiblingsResourceControllerBuilder<Model,
                 RelatedModel,
                 Through,
                 Output,
@@ -58,17 +54,17 @@ public extension ResourceControllerFactory {
     }
 
     func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                                 relationName: String) -> RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading> {
+                                 relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
-        return RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>(self,
+        return RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>(self,
                                                                                            childrenKeyPath: childrenKeyPath,
                                                                                            relationName: relationName)
     }
 
     func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                                 relationName: String) -> RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading> {
+                                 relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
-        return RelatedResourceControllerFactory<Model,
+        return RelatedResourceControllerBuilder<Model,
             RelatedModel,
             Output,
             EagerLoading>(self,
@@ -78,8 +74,8 @@ public extension ResourceControllerFactory {
 }
 
 
-extension ResourceControllerFactory {
-    func create<Input>(input: Input.Type) -> ResourceControllerFactory
+extension ResourceControllerBuilder {
+    func create<Input>(input: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -91,14 +87,14 @@ extension ResourceControllerFactory {
     }
 
 
-    func read() -> ResourceControllerFactory {
+    func read() -> ResourceControllerBuilder {
         return adding(ReadResourceController<Model,
             Output,
             EagerLoading>())
     }
 
 
-    func update<Input>(input: Input.Type) -> ResourceControllerFactory
+    func update<Input>(input: Input.Type) -> ResourceControllerBuilder
 
         where
         Input: ResourceUpdateModel,
@@ -110,7 +106,7 @@ extension ResourceControllerFactory {
                 EagerLoading>())
     }
 
-    func patch<Input>(input: Input.Type) -> ResourceControllerFactory
+    func patch<Input>(input: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -121,7 +117,7 @@ extension ResourceControllerFactory {
                 EagerLoading>())
     }
 
-    func delete() -> ResourceControllerFactory {
+    func delete() -> ResourceControllerBuilder {
         return adding(DeleteResourceController<Model,
             Output,
             EagerLoading>())
@@ -129,7 +125,7 @@ extension ResourceControllerFactory {
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> ResourceControllerFactory
+                                        config: IterableControllerConfig = .defaultConfig) -> ResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,

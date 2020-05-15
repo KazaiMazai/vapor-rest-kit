@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-public final class RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>: APIMethodsProviding
+public final class RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>: APIMethodsProviding
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -18,24 +18,24 @@ public final class RelatedResourceControllerFactory<Model, RelatedModel, Output,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible {
 
-    internal let resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>
+    internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
     internal let keyPathType: KeyPathType
     internal let relationName: String
 
-    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
                   relationName: String) {
 
-        self.resourceFactory = resourceFactory
+        self.resourceControllerBuilder = resourceControllerBuilder
         self.keyPathType = .children(childrenKeyPath)
         self.relationName = relationName
     }
 
-    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourceFactory: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
                   relationName: String) {
 
-        self.resourceFactory = resourceFactory
+        self.resourceControllerBuilder = resourceFactory
         self.keyPathType = .inversedChildren(childrenKeyPath)
         self.relationName = relationName
     }
@@ -47,27 +47,27 @@ public final class RelatedResourceControllerFactory<Model, RelatedModel, Output,
 
     fileprivate var controllers: [APIMethodsProviding] = []
 
-    fileprivate func adding(_ controller: APIMethodsProviding) -> RelatedResourceControllerFactory  {
+    fileprivate func adding(_ controller: APIMethodsProviding) -> RelatedResourceControllerBuilder  {
         controllers.append(controller)
         return self
     }
 }
 
-public extension RelatedResourceControllerFactory {
-    var relationController: RelationControllerFactory<Model, RelatedModel, Output, EagerLoading> {
-        return RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>(resourceFactory: self)
+public extension RelatedResourceControllerBuilder {
+    var relation: RelationControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+        return RelationControllerBuilder<Model, RelatedModel, Output, EagerLoading>(resourceControllerBuilder: self)
     }
 }
 
-public extension RelatedResourceControllerFactory {
+public extension RelatedResourceControllerBuilder {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
-        resourceFactory.addMethodsTo(routeBuilder, on: endpoint)
+        resourceControllerBuilder.addMethodsTo(routeBuilder, on: endpoint)
         CompoundResourceController(with: controllers).addMethodsTo(routeBuilder, on: endpoint)
     }
 }
 
-public extension RelatedResourceControllerFactory {
-    func create<Input>(with: Input.Type) -> RelatedResourceControllerFactory
+public extension RelatedResourceControllerBuilder {
+    func create<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -91,7 +91,7 @@ public extension RelatedResourceControllerFactory {
             }
     }
 
-    func read() -> RelatedResourceControllerFactory {
+    func read() -> RelatedResourceControllerBuilder {
             switch keyPathType {
             case .children(let relationKeyPath):
                 return adding(ReadChildrenResourceController<Model,
@@ -109,7 +109,7 @@ public extension RelatedResourceControllerFactory {
             }
     }
 
-    func update<Input>(with: Input.Type) -> RelatedResourceControllerFactory
+    func update<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -132,7 +132,7 @@ public extension RelatedResourceControllerFactory {
             }
     }
 
-    func patch<Input>(with: Input.Type) -> RelatedResourceControllerFactory
+    func patch<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -156,7 +156,7 @@ public extension RelatedResourceControllerFactory {
             }
     }
 
-    func delete() -> RelatedResourceControllerFactory  {
+    func delete() -> RelatedResourceControllerBuilder  {
 
         switch keyPathType {
         case .children(let relationKeyPath):
@@ -177,7 +177,7 @@ public extension RelatedResourceControllerFactory {
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> RelatedResourceControllerFactory
+                                        config: IterableControllerConfig = .defaultConfig) -> RelatedResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -208,8 +208,8 @@ public extension RelatedResourceControllerFactory {
     }
 }
 
-public extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
-    func create<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerFactory
+public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
+    func create<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -233,7 +233,7 @@ public extension RelatedResourceControllerFactory where RelatedModel: Authentica
             }
     }
 
-    func read() -> RelatedResourceControllerFactory {
+    func read() -> RelatedResourceControllerBuilder {
             switch keyPathType {
             case .children(let relationKeyPath):
                 return adding(ReadAuthChildrenResourceController<Model,
@@ -251,7 +251,7 @@ public extension RelatedResourceControllerFactory where RelatedModel: Authentica
             }
     }
 
-    func update<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerFactory
+    func update<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -275,7 +275,7 @@ public extension RelatedResourceControllerFactory where RelatedModel: Authentica
             }
     }
 
-    func patch<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerFactory
+    func patch<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -298,7 +298,7 @@ public extension RelatedResourceControllerFactory where RelatedModel: Authentica
             }
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> RelatedResourceControllerFactory  {
+    func delete(authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder  {
         switch keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteAuthChildrenResourceController<Model,
@@ -319,7 +319,7 @@ public extension RelatedResourceControllerFactory where RelatedModel: Authentica
     func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
                                         sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> RelatedResourceControllerFactory
+                                        config: IterableControllerConfig = .defaultConfig) -> RelatedResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,

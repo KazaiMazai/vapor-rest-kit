@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-public final class SiblingsResourceControllerFactory<Model, RelatedModel, Through, Output, EagerLoading>: APIMethodsProviding
+public final class SiblingsResourceControllerBuilder<Model, RelatedModel, Through, Output, EagerLoading>: APIMethodsProviding
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -19,46 +19,46 @@ public final class SiblingsResourceControllerFactory<Model, RelatedModel, Throug
     RelatedModel.IDValue: LosslessStringConvertible,
 Through: Fluent.Model {
 
-    internal let resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>
-    internal let relation: SiblingKeyPath<RelatedModel, Model, Through>
+    internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
+    internal let relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     internal let relationName: String
 
-    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   relation: SiblingKeyPath<RelatedModel, Model, Through>,
                   relationName: String) {
 
-        self.resourceFactory = resourceFactory
-        self.relation = relation
+        self.resourceControllerBuilder = resourControllerBuilder
+        self.relationKeyPath = relation
         self.relationName = relationName
     }
 
     fileprivate var controllers: [APIMethodsProviding] = []
 
-    fileprivate func adding(_ controller: APIMethodsProviding) -> SiblingsResourceControllerFactory  {
+    fileprivate func adding(_ controller: APIMethodsProviding) -> SiblingsResourceControllerBuilder  {
         controllers.append(controller)
         return self
     }
 }
 
-public extension SiblingsResourceControllerFactory {
+public extension SiblingsResourceControllerBuilder {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
-        resourceFactory.addMethodsTo(routeBuilder, on: endpoint)
+        resourceControllerBuilder.addMethodsTo(routeBuilder, on: endpoint)
         CompoundResourceController(with: controllers).addMethodsTo(routeBuilder, on: endpoint)
     }
 }
 
-public extension SiblingsResourceControllerFactory {
-    var relationController: SiblingsRelationControllerFactory<Model, RelatedModel, Through, Output, EagerLoading> {
-        return SiblingsRelationControllerFactory<Model,
+public extension SiblingsResourceControllerBuilder {
+    var relation: SiblingsRelationControllerBuilder<Model, RelatedModel, Through, Output, EagerLoading> {
+        return SiblingsRelationControllerBuilder<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(resourceFactory: self)
+            EagerLoading>(resourceControllerBuilder: self)
     }
 }
 
-public extension SiblingsResourceControllerFactory {
-    func create<Input>(input: Input.Type) -> SiblingsResourceControllerFactory
+public extension SiblingsResourceControllerBuilder {
+    func create<Input>(input: Input.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -69,21 +69,21 @@ public extension SiblingsResourceControllerFactory {
                 Output,
                 Input,
                 EagerLoading>(relationNamePath: relationName,
-                              siblingKeyPath: relation))
+                              siblingKeyPath: relationKeyPath))
     }
 
-    func read() -> SiblingsResourceControllerFactory {
+    func read() -> SiblingsResourceControllerBuilder {
 
         return adding(ReadRelatedResourceController<Model,
             RelatedModel,
             Through,
             Output,
             EagerLoading>(relationNamePath: relationName,
-                          siblingKeyPath: relation))
+                          siblingKeyPath: relationKeyPath))
     }
 
 
-    func update<Input>(input: Input.Type) -> SiblingsResourceControllerFactory
+    func update<Input>(input: Input.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -94,10 +94,10 @@ public extension SiblingsResourceControllerFactory {
                 Output,
                 Input,
                 EagerLoading>(relationNamePath: relationName,
-                              siblingKeyPath: relation))
+                              siblingKeyPath: relationKeyPath))
     }
 
-    func patch<Input>(input: Input.Type) -> SiblingsResourceControllerFactory
+    func patch<Input>(input: Input.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -108,19 +108,19 @@ public extension SiblingsResourceControllerFactory {
                 Output,
                 Input,
                 EagerLoading>(relationNamePath: relationName,
-                              siblingKeyPath: relation))
+                              siblingKeyPath: relationKeyPath))
     }
 
-    func delete() -> SiblingsResourceControllerFactory {
+    func delete() -> SiblingsResourceControllerBuilder {
         return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
             Through,
             Output,
             EagerLoading>(relationNamePath: relationName,
-                          siblingKeyPath: relation))
+                          siblingKeyPath: relationKeyPath))
     }
 
-    func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type, config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerFactory
+    func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type, config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -134,12 +134,12 @@ public extension SiblingsResourceControllerFactory {
                 Sorting,
                 EagerLoading,
                 Filtering>(relationNamePath: relationName,
-                           siblingKeyPath: relation, config: config))
+                           siblingKeyPath: relationKeyPath, config: config))
     }
 }
 
-public extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable {
-    func create<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> SiblingsResourceControllerFactory
+public extension SiblingsResourceControllerBuilder where RelatedModel: Authenticatable {
+    func create<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -150,20 +150,20 @@ public extension SiblingsResourceControllerFactory where RelatedModel: Authentic
                 Output,
                 Input,
                 EagerLoading>(relationNamePath: relationName,
-                              siblingKeyPath: relation))
+                              siblingKeyPath: relationKeyPath))
     }
 
-    func read(authenticatable: RelatedModel.Type) -> SiblingsResourceControllerFactory {
+    func read(authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
         return adding(ReadRelatedAuthResourceController<Model,
             RelatedModel,
             Through,
             Output,
             EagerLoading>(relationNamePath: relationName,
-                          siblingKeyPath: relation))
+                          siblingKeyPath: relationKeyPath))
     }
 
     func update<Input>(input: Input.Type,
-                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerFactory
+                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -174,11 +174,11 @@ public extension SiblingsResourceControllerFactory where RelatedModel: Authentic
                 Output,
                 Input,
                 EagerLoading>(relationNamePath: relationName,
-                              siblingKeyPath: relation))
+                              siblingKeyPath: relationKeyPath))
     }
 
     func patch<Input>(input: Input.Type,
-                      authenticatable: RelatedModel.Type) -> SiblingsResourceControllerFactory
+                      authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -189,22 +189,22 @@ public extension SiblingsResourceControllerFactory where RelatedModel: Authentic
                 Output,
                 Input,
                 EagerLoading>(relationNamePath: relationName,
-                              siblingKeyPath: relation))
+                              siblingKeyPath: relationKeyPath))
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> SiblingsResourceControllerFactory {
+    func delete(authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
         return adding(DeleteRelatedAuthResourceController<Model,
             RelatedModel,
             Through,
             Output,
             EagerLoading>(relationNamePath: relationName,
-                          siblingKeyPath: relation))
+                          siblingKeyPath: relationKeyPath))
     }
 
     func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
                                         sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerFactory
+                                        config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
@@ -218,7 +218,7 @@ public extension SiblingsResourceControllerFactory where RelatedModel: Authentic
                 Sorting,
                 EagerLoading,
                 Filtering>(relationNamePath: relationName,
-                           siblingKeyPath: relation,
+                           siblingKeyPath: relationKeyPath,
                            config: config))
     }
 }

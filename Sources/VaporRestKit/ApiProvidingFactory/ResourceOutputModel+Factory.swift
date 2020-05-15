@@ -8,11 +8,11 @@
 import Foundation
 
 public extension ResourceOutputModel {
-    static func resourceController<EagerLoading>(eagerLoading: EagerLoading.Type) -> ResourceControllerFactory<Self.Model,
+    static func resourceController<EagerLoading>(eagerLoading: EagerLoading.Type) -> ResourceControllerBuilder<Self.Model,
         Self,
         EagerLoading> {
 
-            return ResourceControllerFactory<Self.Model,
+            return ResourceControllerBuilder<Self.Model,
                 Self,
                 EagerLoading>(modelType: Model.self,
                               outputType: Self.self,
