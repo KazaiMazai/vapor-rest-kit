@@ -26,32 +26,11 @@ struct UserControllers {
         }
 
         var v2: APIMethodsProviding {
-            return User.Output
+            return User.OutputV2
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedTo(relation: \Todo.$assignees, relationName: "assignees")
-                .create(input: User.Input.self)
-                .read()
-                .update(input: User.Input.self)
-                .patch(input: User.PatchInput.self)
-                .delete()
-                .collection(sorting: SortingUnsupported.self,
-                            filtering: FilteringUnsupported.self)
-
+                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
 
-
-        //        let v2 = CompoundResourceController(with:[
-        //            User.OutputV2
-        //                .resourceController(eagerLoading: EagerLoadingUnsupported.self)
-        //                .read(),
-        //
-        //            User.OutputV2
-        //                .resourceController(eagerLoading: EagerLoadingUnsupported.self)
-        //                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
-        //
-        //
-        //
-        //        ])
 
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {

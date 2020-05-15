@@ -37,8 +37,8 @@ public extension ResourceControllerBuilder {
 }
 
 public extension ResourceControllerBuilder {
-    func relatedTo<RelatedModel, Through>(relation: SiblingKeyPath<RelatedModel, Model, Through>,
-                                          relationName: String) -> SiblingsResourceControllerBuilder<Model,
+    func related<RelatedModel, Through>(with siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+                                        relationName: String) -> SiblingsResourceControllerBuilder<Model,
         RelatedModel,
         Through,
         Output,
@@ -49,20 +49,20 @@ public extension ResourceControllerBuilder {
                 Through,
                 Output,
                 EagerLoading>(self,
-                              relation: relation,
+                              relation: siblingKeyPath,
                               relationName: relationName)
     }
 
-    func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                                 relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+                               relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>(self,
                                                                                            childrenKeyPath: childrenKeyPath,
                                                                                            relationName: relationName)
     }
 
-    func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                                 relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+                               relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model,
             RelatedModel,
