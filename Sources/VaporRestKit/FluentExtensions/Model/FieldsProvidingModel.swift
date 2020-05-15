@@ -9,6 +9,6 @@ import Fluent
 
 //MARK:- FieldsProvidingModel
         
-protocol FieldsProvidingModel: Model {
+public protocol FieldsProvidingModel: Model {
     associatedtype Fields: FieldKeyRepresentable
 }

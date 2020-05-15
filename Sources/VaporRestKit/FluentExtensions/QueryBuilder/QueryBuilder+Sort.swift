@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- QueryBuilder Extension
 
-extension QueryBuilder {
+public extension QueryBuilder {
     func sort<Sorting: SortProvider>(_ sortProvider: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
 
         guard sortProvider.supportsDynamicSortKeys else {

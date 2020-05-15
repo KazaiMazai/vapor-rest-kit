@@ -11,11 +11,11 @@ import Vapor
 
 //MARK:- FieldKeyRepresentable
 
-protocol FieldKeyRepresentable: RawRepresentable {
+public protocol FieldKeyRepresentable: RawRepresentable {
 
 }
 
-extension FieldKeyRepresentable where RawValue == String  {
+public extension FieldKeyRepresentable where RawValue == String  {
     var key: FieldKey {
         return FieldKey.string(rawValue.camelCaseToSnakeCase())
     }
