@@ -70,7 +70,31 @@ extension Todo: InitMigratableSchema {
     }
 }
 
+extension Todo {
+    struct Output: ResourceOutputModel {
+        let id: Int?
+        let title: String
 
+        init(_ model: Todo) {
+            id = model.id
+            title = model.title
+        }
+    }
+
+    struct Input: ResourceUpdateModel {
+        let title: String
+
+        func update(_ model: Todo) -> Todo {
+            model.title = title
+            return model
+        }
+
+
+        static func validations(_ validations: inout Validations) {
+
+        }
+    }
+}
 //
 //extension Todo {
 //    static func seed(on database: Database) throws {

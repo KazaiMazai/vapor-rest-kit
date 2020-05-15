@@ -26,3 +26,4 @@ public protocol ResourcePatchModel: Content, Validatable {
     func patch(_: Model) -> Model
 }
 
+

@@ -73,6 +73,12 @@ extension ResourceControllerFactory {
                 EagerLoading>()
     }
 
+    func read() -> APIMethodsProviding {
+        return ReadResourceController<Model,
+            Output,
+            EagerLoading>()
+    }
+
     func update<Input>(input: Input.Type) -> APIMethodsProviding
         where
         Input: ResourceUpdateModel,
