@@ -13,10 +13,10 @@ import Foundation
  - SeeAlso: `AnyEncodable`
  - SeeAlso: `AnyDecodable`
  */
-public struct AnyCodable: Codable {
-    public let value: Any
+struct AnyCodable: Codable {
+    let value: Any
     
-    public init<T>(_ value: T?) {
+    init<T>(_ value: T?) {
         self.value = value ?? ()
     }
 }
@@ -24,7 +24,7 @@ public struct AnyCodable: Codable {
 extension AnyCodable: _AnyEncodable, _AnyDecodable {}
 
 extension AnyCodable: Equatable {
-    public static func ==(lhs: AnyCodable, rhs: AnyCodable) -> Bool {
+    static func ==(lhs: AnyCodable, rhs: AnyCodable) -> Bool {
         switch (lhs.value, rhs.value) {
         case is (Void, Void):
             return true
@@ -69,7 +69,7 @@ extension AnyCodable: Equatable {
 }
 
 extension AnyCodable: CustomStringConvertible {
-    public var description: String {
+    var description: String {
         switch value {
         case is Void:
             return String(describing: nil as Any?)
@@ -82,7 +82,7 @@ extension AnyCodable: CustomStringConvertible {
 }
 
 extension AnyCodable: CustomDebugStringConvertible {
-    public var debugDescription: String {
+    var debugDescription: String {
         switch value {
         case let value as CustomDebugStringConvertible:
             return "AnyCodable(\(value.debugDescription))"

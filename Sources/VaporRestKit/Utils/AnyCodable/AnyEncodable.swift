@@ -26,10 +26,10 @@ import Foundation
      let encoder = JSONEncoder()
      let json = try! encoder.encode(dictionary)
  */
-public struct AnyEncodable: Encodable {
-    public let value: Any
+struct AnyEncodable: Encodable {
+    let value: Any
     
-    public init<T>(_ value: T?) {
+    init<T>(_ value: T?) {
         self.value = value ?? ()
     }
 }
@@ -45,7 +45,7 @@ extension AnyEncodable: _AnyEncodable {}
 // MARK: - Encodable
 
 extension _AnyEncodable {
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         
         switch self.value {
@@ -97,7 +97,7 @@ extension _AnyEncodable {
 }
 
 extension AnyEncodable: Equatable {
-    public static func ==(lhs: AnyEncodable, rhs: AnyEncodable) -> Bool {
+    static func ==(lhs: AnyEncodable, rhs: AnyEncodable) -> Bool {
         switch (lhs.value, rhs.value) {
         case is (Void, Void):
             return true
@@ -142,7 +142,7 @@ extension AnyEncodable: Equatable {
 }
 
 extension AnyEncodable: CustomStringConvertible {
-    public var description: String {
+    var description: String {
         switch value {
         case is Void:
             return String(describing: nil as Any?)
@@ -155,7 +155,7 @@ extension AnyEncodable: CustomStringConvertible {
 }
 
 extension AnyEncodable: CustomDebugStringConvertible {
-    public var debugDescription: String {
+    var debugDescription: String {
         switch value {
         case let value as CustomDebugStringConvertible:
             return "AnyEncodable(\(value.debugDescription))"
@@ -168,39 +168,39 @@ extension AnyEncodable: CustomDebugStringConvertible {
 extension AnyEncodable: ExpressibleByNilLiteral, ExpressibleByBooleanLiteral, ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral, ExpressibleByStringLiteral, ExpressibleByArrayLiteral, ExpressibleByDictionaryLiteral {}
 
 extension _AnyEncodable {
-    public init(nilLiteral: ()) {
+    init(nilLiteral: ()) {
         self.init(nil as Any?)
     }
 
-    public init(uuidLiteral value: UUID) {
+    init(uuidLiteral value: UUID) {
            self.init(value)
        }
 
-    public init(booleanLiteral value: Bool) {
+    init(booleanLiteral value: Bool) {
         self.init(value)
     }
 
-    public init(integerLiteral value: Int) {
+    init(integerLiteral value: Int) {
         self.init(value)
     }
 
-    public init(floatLiteral value: Double) {
+    init(floatLiteral value: Double) {
         self.init(value)
     }
 
-    public init(extendedGraphemeClusterLiteral value: String) {
+    init(extendedGraphemeClusterLiteral value: String) {
         self.init(value)
     }
     
-    public init(stringLiteral value: String) {
+    init(stringLiteral value: String) {
         self.init(value)
     }
 
-    public init(arrayLiteral elements: Any...) {
+    init(arrayLiteral elements: Any...) {
         self.init(elements)
     }
 
-    public init(dictionaryLiteral elements: (AnyHashable, Any)...) {
+    init(dictionaryLiteral elements: (AnyHashable, Any)...) {
         self.init(Dictionary<AnyHashable, Any>(elements, uniquingKeysWith: { (first, _) in first }))
     }
 }
