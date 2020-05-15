@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-public struct RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>
+public final class RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>: APIMethodsProviding
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -19,81 +19,100 @@ public struct RelationControllerFactory<Model, RelatedModel, Output, EagerLoadin
     RelatedModel.IDValue: LosslessStringConvertible {
 
     internal let resourceFactory: RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>
-    
+
+    internal init(resourceFactory: RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>) {
+        self.resourceFactory = resourceFactory
+    }
+
+    fileprivate var controllers: [APIMethodsProviding] = []
+
+    fileprivate func adding(_ controller: APIMethodsProviding) -> RelationControllerFactory  {
+        controllers.append(controller)
+        return self
+    }
+
+}
+
+
+public extension RelationControllerFactory {
+    func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
+        resourceFactory.addMethodsTo(routeBuilder, on: endpoint)
+        CompoundResourceController(with: controllers).addMethodsTo(routeBuilder, on: endpoint)
+    }
 }
 
 public extension RelationControllerFactory {
-    func create() -> APIMethodsProviding {
+    func create() -> RelationControllerFactory {
         switch resourceFactory.keyPathType {
         case .children(let relationKeyPath):
-            return CreateChildrenRelationController<Model,
+            return adding(CreateChildrenRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              childrenKeyPath: relationKeyPath)
+                              childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
-            return CreateParentRelationController<Model,
+            return adding(CreateParentRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              inversedChildrenKeyPath: relationKeyPath)
+                              inversedChildrenKeyPath: relationKeyPath))
         }
     }
 
-    func delete() -> APIMethodsProviding {
+    func delete() -> RelationControllerFactory {
         switch resourceFactory.keyPathType {
         case .children(let relationKeyPath):
-            return DeleteChildrenRelationController<Model,
+            return adding(DeleteChildrenRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              childrenKeyPath: relationKeyPath)
+                              childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
-            return DeleteParentRelationController<Model,
+            return adding(DeleteParentRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              inversedChildrenKeyPath: relationKeyPath)
+                              inversedChildrenKeyPath: relationKeyPath))
         }
     }
 }
 
 public extension RelationControllerFactory where RelatedModel: Authenticatable {
-    func create(authenticatable: RelatedModel.Type) -> APIMethodsProviding {
+    func create(authenticatable: RelatedModel.Type) -> RelationControllerFactory {
         switch resourceFactory.keyPathType {
         case .children(let relationKeyPath):
-            return CreateAuthChildrenRelationController<Model,
+            return adding(CreateAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              childrenKeyPath: relationKeyPath)
+                              childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
-            return CreateAuthParentRelationController<Model,
+            return adding(CreateAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              inversedChildrenKeyPath: relationKeyPath)
+                              inversedChildrenKeyPath: relationKeyPath))
         }
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> APIMethodsProviding {
+    func delete(authenticatable: RelatedModel.Type) -> RelationControllerFactory {
         switch resourceFactory.keyPathType {
         case .children(let relationKeyPath):
-            return DeleteAuthChildrenRelationController<Model,
+            return adding(DeleteAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              childrenKeyPath: relationKeyPath)
+                              childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
-            return DeleteAuthParentRelationController<Model,
+            return adding(DeleteAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
                 EagerLoading>(relationNamePath: resourceFactory.relationName,
-                              inversedChildrenKeyPath: relationKeyPath)
+                              inversedChildrenKeyPath: relationKeyPath))
         }
     }
 }

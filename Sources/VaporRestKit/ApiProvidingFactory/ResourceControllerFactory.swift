@@ -8,18 +8,35 @@
 import Vapor
 import Fluent
 
-public struct ResourceControllerFactory<Model, Output, EagerLoading>
+public final class ResourceControllerFactory<Model, Output, EagerLoading>: APIMethodsProviding
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
+
+
+
+
 
     internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                       outputType: Output.Type = Output.self,
                                       eagerLoading: EagerLoading.Type = EagerLoading.self) {
 
+    }
+
+    fileprivate var controllers: [APIMethodsProviding] = []
+
+    fileprivate func adding(_ controller: APIMethodsProviding) -> ResourceControllerFactory  {
+        controllers.append(controller)
+        return self
+    }
+}
+
+public extension ResourceControllerFactory {
+    func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
+        CompoundResourceController(with: controllers).addMethodsTo(routeBuilder, on: endpoint)
     }
 }
 
@@ -62,65 +79,68 @@ public extension ResourceControllerFactory {
 
 
 extension ResourceControllerFactory {
-    func create<Input>(input: Input.Type) -> APIMethodsProviding
+    func create<Input>(input: Input.Type) -> ResourceControllerFactory
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
 
-            return CreateResourceController<Model,
+            return adding(CreateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>()
+                EagerLoading>())
     }
 
-    func read() -> APIMethodsProviding {
-        return ReadResourceController<Model,
+
+    func read() -> ResourceControllerFactory {
+        return adding(ReadResourceController<Model,
             Output,
-            EagerLoading>()
+            EagerLoading>())
     }
 
-    func update<Input>(input: Input.Type) -> APIMethodsProviding
+
+    func update<Input>(input: Input.Type) -> ResourceControllerFactory
+
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
 
-            return UpdateResourceController<Model,
+            return adding(UpdateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>()
+                EagerLoading>())
     }
 
-    func patch<Input>(input: Input.Type) -> APIMethodsProviding
+    func patch<Input>(input: Input.Type) -> ResourceControllerFactory
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
 
-            return PatchResourceController<Model,
+            return adding(PatchResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>()
+                EagerLoading>())
     }
 
-    func delete() -> APIMethodsProviding {
-        return DeleteResourceController<Model,
+    func delete() -> ResourceControllerFactory {
+        return adding(DeleteResourceController<Model,
             Output,
-            EagerLoading>()
+            EagerLoading>())
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> APIMethodsProviding
+                                        config: IterableControllerConfig = .defaultConfig) -> ResourceControllerFactory
         where
         Sorting: SortProvider,
         Sorting.Model == Model,
         Filtering: FilterProvider,
         Filtering.Model == Model {
 
-            return CollectionResourceController<Model,
+            return adding(CollectionResourceController<Model,
                 Output,
                 Sorting,
                 EagerLoading,
-                Filtering>(config: config)
+                Filtering>(config: config))
     }
 }
 
