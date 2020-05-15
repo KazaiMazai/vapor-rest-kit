@@ -34,7 +34,7 @@ public struct SiblingsResourceControllerFactory<Model, RelatedModel, Through, Ou
 }
 
 public extension SiblingsResourceControllerFactory {
-    func relationController() -> SiblingsRelationControllerFactory<Model, RelatedModel, Through, Output, EagerLoading> {
+    var relationController: SiblingsRelationControllerFactory<Model, RelatedModel, Through, Output, EagerLoading> {
         return  SiblingsRelationControllerFactory<Model,
             RelatedModel,
             Through,

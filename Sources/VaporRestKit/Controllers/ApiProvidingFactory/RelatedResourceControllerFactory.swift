@@ -55,7 +55,11 @@ public struct RelatedResourceControllerFactory<Model, RelatedModel, Output, Eage
         case reversedChild(ChildrenKeyPath<Model, RelatedModel>)
     }
 
-    public func relationController() -> RelationControllerFactory<Model, RelatedModel, Output, EagerLoading> {
+
+}
+
+public extension RelatedResourceControllerFactory {
+    var relationController: RelationControllerFactory<Model, RelatedModel, Output, EagerLoading> {
         return RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>(resourceFactory: self)
     }
 }
