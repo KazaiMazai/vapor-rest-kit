@@ -44,7 +44,7 @@ public extension ResourceControllerFactory {
                                  relationName: String) -> RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>(self,
-                                                                                           child: childrenKeyPath,
+                                                                                           childrenKeyPath: childrenKeyPath,
                                                                                            relationName: relationName)
     }
 
@@ -55,7 +55,7 @@ public extension ResourceControllerFactory {
             RelatedModel,
             Output,
             EagerLoading>(self,
-                          reversedChild: childrenKeyPath,
+                          childrenKeyPath: childrenKeyPath,
                           relationName: relationName)
     }
 }

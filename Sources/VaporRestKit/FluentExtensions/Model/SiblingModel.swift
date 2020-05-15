@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- SiblingRepresentable
 
-protocol SiblingRepresentable where From: Model, To: Model, Through: Model {
+public protocol SiblingRepresentable where From: Model, To: Model, Through: Model {
     associatedtype From
     associatedtype To
     associatedtype Through
@@ -19,7 +19,7 @@ protocol SiblingRepresentable where From: Model, To: Model, Through: Model {
     static var through: SiblingModel<From, To, Self>.Type { get }
 }
 
-extension SiblingRepresentable {
+public extension SiblingRepresentable {
     static var siblingName: String  { String(describing: self).camelCaseToSnakeCase() }
 
     static var through: SiblingModel<From, To, Self>.Type { return SiblingModel<From, To, Self>.self }
@@ -27,27 +27,27 @@ extension SiblingRepresentable {
 
 //MARK:- SiblingModel
 
-final class SiblingModel<From, To, Name>: Model, Content
+public final class SiblingModel<From, To, Name>: Model, Content
     where From: Fluent.Model,
         To: Fluent.Model,
         Name: SiblingRepresentable {
 
-    static var schema: String {
+    public static var schema: String {
         return "\(From.schema)_\(To.schema)_\(Name.siblingName)_pivot"
     }
 
     @ID(key: .id)
-    var id: UUID?
+    public var id: UUID?
 
     @Parent(key: Fields.fromId.key)
-    var from: From
+    public var from: From
 
     @Parent(key: Fields.toId.key)
-    var to: To
+    public var to: To
 
-    init() { }
+    public init() { }
 
-    init(fromId: From.IDValue , toId: To.IDValue) {
+    public init(fromId: From.IDValue , toId: To.IDValue) {
         self.$from.id = fromId
         self.$to.id = toId
     }
@@ -56,7 +56,7 @@ final class SiblingModel<From, To, Name>: Model, Content
 //MARK:- SiblingModel + FieldsProvidingModel
 
 extension SiblingModel: FieldsProvidingModel {
-    enum Fields: String, FieldKeyRepresentable {
+    public enum Fields: String, FieldKeyRepresentable {
         case fromId
         case toId
     }
@@ -66,7 +66,7 @@ extension SiblingModel: FieldsProvidingModel {
 //MARK:- SiblingModel + InitMigratableSchema
 
 extension SiblingModel: InitMigratableSchema where From.IDValue == UUID, To.IDValue == UUID  {
-    static func prepare(on schemaBuilder: SchemaBuilder) -> EventLoopFuture<Void> {
+    public static func prepare(on schemaBuilder: SchemaBuilder) -> EventLoopFuture<Void> {
         return schemaBuilder
             .id()
             .field(Fields.fromId.key, .uuid, .required, .references(From.schema, .id))

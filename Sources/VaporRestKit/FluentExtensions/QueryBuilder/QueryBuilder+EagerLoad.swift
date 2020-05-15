@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- QueryBuilder Extension
 
-extension QueryBuilder {
+public extension QueryBuilder {
     func with<EagerLoading: EagerLoadProvider>(_ eagerLoadProvider: EagerLoading, for req: Request) throws -> QueryBuilder<Model> where EagerLoading.Model == Model {
 
         guard eagerLoadProvider.supportsDynamicEagerLoadingKeys else {

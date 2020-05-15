@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- InitialMigration
 
-struct InitialMigration<T: FieldsProvidingModel> {
+public struct InitialMigration<T: FieldsProvidingModel> {
     typealias PrepareClosure = (SchemaBuilder) -> EventLoopFuture<Void>
 
     private let prepareClosure: PrepareClosure
@@ -20,7 +20,7 @@ struct InitialMigration<T: FieldsProvidingModel> {
     }
 }
 
-extension InitialMigration {
+public extension InitialMigration {
     var name: String {
         return "InitialMigration for \(T.schema)"
     }
@@ -31,11 +31,11 @@ extension InitialMigration {
 }
 
 extension InitialMigration: Migration {
-    func prepare(on database: Database) -> EventLoopFuture<Void> {
+    public  func prepare(on database: Database) -> EventLoopFuture<Void> {
         prepareClosure(database.schema(modelSchema))
     }
 
-    func revert(on database: Database) -> EventLoopFuture<Void> {
+    public  func revert(on database: Database) -> EventLoopFuture<Void> {
         database.schema(modelSchema).delete()
     }
 }

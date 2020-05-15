@@ -10,7 +10,7 @@ import Fluent
 
 //MARK:- QueryBuilder Extension
 
-extension QueryBuilder {
+public extension QueryBuilder {
     func filter<Filtering: FilterProvider>(_ filterProvider: Filtering, for req: Request) throws -> QueryBuilder<Model> where Filtering.Model == Model {
 
         let baseFiltered = filterProvider.defaultFiltering(self)
