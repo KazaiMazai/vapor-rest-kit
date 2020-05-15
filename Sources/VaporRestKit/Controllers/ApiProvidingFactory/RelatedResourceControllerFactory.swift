@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>
+public struct RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -16,13 +16,13 @@ struct RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoadin
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model,
     RelatedModel: Fluent.Model,
-RelatedModel.IDValue: LosslessStringConvertible {
+    RelatedModel.IDValue: LosslessStringConvertible {
 
-    let resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>
-    let relationType: RelationType
-    let relationName: String
+    internal let resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>
+    internal let relationType: RelationType
+    internal let relationName: String
 
-    init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
          relationType: RelationType,
          relationName: String,
          authenitcatedRelatedModel: Bool) {
@@ -32,7 +32,7 @@ RelatedModel.IDValue: LosslessStringConvertible {
         self.relationName = relationName
     }
 
-    init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
          child: ChildrenKeyPath<RelatedModel, Model>,
          relationName: String) {
 
@@ -41,7 +41,7 @@ RelatedModel.IDValue: LosslessStringConvertible {
         self.relationName = relationName
     }
 
-    init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
          reversedChild: ChildrenKeyPath<Model, RelatedModel>,
          relationName: String) {
 
@@ -50,22 +50,21 @@ RelatedModel.IDValue: LosslessStringConvertible {
         self.relationName = relationName
     }
 
-    enum RelationType {
+    internal enum RelationType {
         case child(ChildrenKeyPath<RelatedModel, Model>)
         case reversedChild(ChildrenKeyPath<Model, RelatedModel>)
     }
 
-    func relationController() -> RelationControllerFactory<Model, RelatedModel, Output, EagerLoading> {
+    public func relationController() -> RelationControllerFactory<Model, RelatedModel, Output, EagerLoading> {
         return RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>(resourceFactory: self)
     }
 }
 
-extension RelatedResourceControllerFactory {
+public extension RelatedResourceControllerFactory {
     func create<Input>(with: Input.Type) -> APIMethodsProviding
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
-
 
             switch relationType {
             case .child(let relationKeyPath):
@@ -91,7 +90,6 @@ extension RelatedResourceControllerFactory {
         Input: ResourceUpdateModel,
         Model == Input.Model  {
 
-
             switch relationType {
             case .child(let relationKeyPath):
                 return UpdateChildrenResourceController<Model,
@@ -114,7 +112,6 @@ extension RelatedResourceControllerFactory {
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
-
 
             switch relationType {
             case .child(let relationKeyPath):
@@ -187,12 +184,11 @@ extension RelatedResourceControllerFactory {
     }
 }
 
-extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
+public extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
     func create<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> APIMethodsProviding
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
-
 
             switch relationType {
             case .child(let relationKeyPath):
@@ -217,7 +213,6 @@ extension RelatedResourceControllerFactory where RelatedModel: Authenticatable {
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
-
 
             switch relationType {
             case .child(let relationKeyPath):

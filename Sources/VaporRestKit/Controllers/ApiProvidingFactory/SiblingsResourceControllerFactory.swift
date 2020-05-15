@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct SiblingsResourceControllerFactory<Model, RelatedModel, Through, Output, EagerLoading>
+public struct SiblingsResourceControllerFactory<Model, RelatedModel, Through, Output, EagerLoading>
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -19,11 +19,11 @@ struct SiblingsResourceControllerFactory<Model, RelatedModel, Through, Output, E
     RelatedModel.IDValue: LosslessStringConvertible,
     Through: Fluent.Model {
 
-    let resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>
-    let relation: SiblingKeyPath<RelatedModel, Model, Through>
-    let relationName: String
+    internal let resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>
+    internal let relation: SiblingKeyPath<RelatedModel, Model, Through>
+    internal let relationName: String
 
-    init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
+    internal init(_ resourceFactory: ResourceControllerFactory<Model, Output, EagerLoading>,
          relation: SiblingKeyPath<RelatedModel, Model, Through>,
          relationName: String) {
 
@@ -31,7 +31,9 @@ struct SiblingsResourceControllerFactory<Model, RelatedModel, Through, Output, E
         self.relation = relation
         self.relationName = relationName
     }
+}
 
+public extension SiblingsResourceControllerFactory {
     func relationController() -> SiblingsRelationControllerFactory<Model, RelatedModel, Through, Output, EagerLoading> {
         return  SiblingsRelationControllerFactory<Model,
             RelatedModel,
@@ -41,7 +43,7 @@ struct SiblingsResourceControllerFactory<Model, RelatedModel, Through, Output, E
     }
 }
 
-extension SiblingsResourceControllerFactory {
+public extension SiblingsResourceControllerFactory {
     func create<Input>(input: Input.Type) -> APIMethodsProviding
         where
         Input: ResourceUpdateModel,
@@ -111,8 +113,7 @@ extension SiblingsResourceControllerFactory {
     }
 }
 
-
-extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable {
+public extension SiblingsResourceControllerFactory where RelatedModel: Authenticatable {
     func create<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> APIMethodsProviding
         where
         Input: ResourceUpdateModel,

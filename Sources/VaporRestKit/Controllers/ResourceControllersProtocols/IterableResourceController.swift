@@ -8,12 +8,12 @@
 import Vapor
 import Fluent
 
-enum IterableControllerConfig {
+public enum IterableControllerConfig {
     case fetchAll
     case paginateWithCursor(CursorPaginationConfig)
     case paginateByPage
 
-    static let defaultConfig: IterableControllerConfig = .paginateWithCursor(CursorPaginationConfig.defaultConfig)
+    public static let defaultConfig: IterableControllerConfig = .paginateWithCursor(CursorPaginationConfig.defaultConfig)
 }
 
 protocol IterableResourceController: ResourceControllerProtocol {

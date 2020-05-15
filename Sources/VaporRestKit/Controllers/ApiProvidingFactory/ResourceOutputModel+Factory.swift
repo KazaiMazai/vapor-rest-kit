@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ResourceOutputModel {
+public extension ResourceOutputModel {
     static func resourceController<EagerLoading>(eagerLoading: EagerLoading.Type = EagerLoading.self) -> ResourceControllerFactory<Self.Model,
         Self,
         EagerLoading> {

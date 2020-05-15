@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct ResourceControllerFactory<Model, Output, EagerLoading>
+public struct ResourceControllerFactory<Model, Output, EagerLoading>
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -16,12 +16,14 @@ struct ResourceControllerFactory<Model, Output, EagerLoading>
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
+    internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                       outputType: Output.Type = Output.self,
                                       eagerLoading: EagerLoading.Type = EagerLoading.self) {
 
     }
+}
 
+public extension ResourceControllerFactory {
     func relatedTo<RelatedModel, Through>(relation: SiblingKeyPath<RelatedModel, Model, Through>,
                                           relationName: String) -> SiblingsResourceControllerFactory<Model,
         RelatedModel,

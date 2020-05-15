@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>
+public struct RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -18,11 +18,11 @@ struct RelationControllerFactory<Model, RelatedModel, Output, EagerLoading>
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible {
 
-    let resourceFactory: RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>
+    internal let resourceFactory: RelatedResourceControllerFactory<Model, RelatedModel, Output, EagerLoading>
     
 }
 
-extension RelationControllerFactory {
+public extension RelationControllerFactory {
     func create() -> APIMethodsProviding {
         switch resourceFactory.relationType {
         case .child(let relationKeyPath):
@@ -60,7 +60,7 @@ extension RelationControllerFactory {
     }
 }
 
-extension RelationControllerFactory where RelatedModel: Authenticatable {
+public extension RelationControllerFactory where RelatedModel: Authenticatable {
     func create(authenticatable: RelatedModel.Type) -> APIMethodsProviding {
         switch resourceFactory.relationType {
         case .child(let relationKeyPath):

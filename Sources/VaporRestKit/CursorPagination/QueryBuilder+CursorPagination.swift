@@ -101,7 +101,7 @@ enum CursorType {
 
 //MARK:- CursorPaginationConfig
 
-struct CursorPaginationConfig {
+public struct CursorPaginationConfig {
     static let defaultConfig = CursorPaginationConfig(limitMax: 25, defaultLimit: 10)
 
     let limitMax: Int
