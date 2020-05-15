@@ -158,7 +158,6 @@ public extension SiblingsResourceControllerFactory where RelatedModel: Authentic
             RelatedModel,
             Through,
             Output,
-            Input,
             EagerLoading>(relationNamePath: relationName,
                           siblingKeyPath: relation))
     }
