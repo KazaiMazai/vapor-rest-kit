@@ -96,6 +96,7 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let deleteHandler: Input
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

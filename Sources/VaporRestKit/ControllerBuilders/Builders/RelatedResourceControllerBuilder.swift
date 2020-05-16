@@ -156,7 +156,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-  func delete<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
+  func delete<Input>(with: Input) -> RelatedResourceControllerBuilder
         where
         Input: ResourceDeleteModel,
         Model == Input.Model {
@@ -167,7 +167,8 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(deleteHandler: with,
+                              relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
@@ -175,7 +176,8 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(deleteHandler: with,
+                              relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }
@@ -303,7 +305,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func delete<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+    func delete<Input>(with: Input, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceDeleteModel,
         Model == Input.Model  {
@@ -314,7 +316,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(deleteHandler: with,
+                              relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
@@ -322,7 +325,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(deleteHandler: with,
+                              relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }

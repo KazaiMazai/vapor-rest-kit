@@ -112,6 +112,7 @@ struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
+    let deleteHandler: Input
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

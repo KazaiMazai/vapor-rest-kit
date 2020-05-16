@@ -107,6 +107,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
+    let deleteHandler: Input
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

@@ -118,7 +118,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func delete<Input>(with: Input.Type) -> ResourceControllerBuilder
+    func delete<Input>(with: Input) -> ResourceControllerBuilder
         where
         Input: ResourceDeleteModel,
         Model == Input.Model {
@@ -126,7 +126,7 @@ extension ResourceControllerBuilder {
         return adding(DeleteResourceController<Model,
             Output,
             Input,
-            EagerLoading>())
+            EagerLoading>(deleteHandler: with))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,
