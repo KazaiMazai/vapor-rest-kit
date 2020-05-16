@@ -63,13 +63,37 @@ public struct Deleter<Model: Fluent.Model> {
 }
 
 public struct RelationMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
-    fileprivate let handler: (Model, RelatedModel, Request, Database) -> EventLoopFuture<Model>
+    public typealias Handler = (Model, RelatedModel, Request, Database) -> EventLoopFuture<(Model, RelatedModel)>
 
-    public func handle(_ model: Model, relatedModel: RelatedModel, req: Request, database: Database) -> EventLoopFuture<Model> {
-        return handler(model, relatedModel, req, database)
+    fileprivate let willDetachHandler: Handler
+    fileprivate let willAttachHandler: Handler
+
+    public init(willDetach: @escaping Handler = Self.empty, willAttach: @escaping Handler = Self.empty) {
+        self.willAttachHandler = willAttach
+        self.willDetachHandler = willDetach
     }
 
+    public func willDetach(_ model: Model,
+                           relatedModel: RelatedModel,
+                           req: Request,
+                           database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
+        return willDetachHandler(model, relatedModel, req, database)
+    }
+
+    public func willAttach(_ model: Model,
+                           relatedModel: RelatedModel,
+                           req: Request,
+                           database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
+
+        return willAttachHandler(model, relatedModel, req, database)
+    }
+
+
     public static var defaultMiddleware: RelationMiddleware<Model, RelatedModel> {
-        return RelationMiddleware(handler: { model, _, req, _ in req.eventLoop.makeSucceededFuture(model) })
+        return RelationMiddleware(willDetach: empty, willAttach: empty)
+    }
+
+    public static var empty: Handler {
+        return { model, relatedModel, req, _ in req.eventLoop.makeSucceededFuture((model, relatedModel)) }
     }
 }

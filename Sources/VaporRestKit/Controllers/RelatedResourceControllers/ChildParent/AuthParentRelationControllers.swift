@@ -21,7 +21,7 @@ struct CreateAuthParentRelationController<Model, RelatedModel, Output, EagerLoad
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -41,6 +41,7 @@ struct DeleteAuthParentRelationController<Model, RelatedModel, Output, EagerLoad
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

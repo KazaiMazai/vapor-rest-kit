@@ -41,78 +41,89 @@ public extension RelationControllerBuilder {
 }
 
 public extension RelationControllerBuilder {
-    func create() -> RelationControllerBuilder {
+    func create(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelationControllerBuilder {
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(CreateChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
             return adding(CreateParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }
 
-    func delete(input: Deleter<Model>) -> RelationControllerBuilder {
+    func delete(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelationControllerBuilder {
 
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
             return adding(DeleteParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }
 }
 
 public extension RelationControllerBuilder where RelatedModel: Authenticatable {
-    func create(authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
+    func create(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
+        
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(CreateAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
             return adding(CreateAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }
 
-    func delete(with handler: Deleter<Model> = .defaultDeleter, authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
+    func delete(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
 
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
         case .inversedChildren(let relationKeyPath):
             return adding(DeleteAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }
