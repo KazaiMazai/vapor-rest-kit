@@ -14,7 +14,7 @@ public final class ResourceControllerBuilder<Model, Output, EagerLoading>: APIMe
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
     internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                                outputType: Output.Type = Output.self,
