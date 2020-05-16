@@ -19,7 +19,7 @@ struct UserControllers {
                 .read()
                 .update(input: User.Input.self)
                 .patch(input: User.PatchInput.self)
-                .delete()
+                .delete(with: PlainDelete.self)
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
 

@@ -111,11 +111,16 @@ public extension SiblingsResourceControllerBuilder {
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete() -> SiblingsResourceControllerBuilder {
-        return adding(DeleteRelatedResourceController<Model,
+    func delete<Input>(with: Input.Type) -> SiblingsResourceControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model {
+
+            return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
             Through,
             Output,
+            Input,
             EagerLoading>(relationNamePath: relationName,
                           siblingKeyPath: relationKeyPath))
     }
@@ -192,11 +197,17 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
+    func delete<Input>(with: Input.Type,
+                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model {
+
         return adding(DeleteRelatedAuthResourceController<Model,
             RelatedModel,
             Through,
             Output,
+            Input,
             EagerLoading>(relationNamePath: relationName,
                           siblingKeyPath: relationKeyPath))
     }

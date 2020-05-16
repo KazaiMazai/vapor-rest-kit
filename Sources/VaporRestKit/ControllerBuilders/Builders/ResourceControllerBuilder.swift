@@ -117,9 +117,15 @@ extension ResourceControllerBuilder {
                 EagerLoading>())
     }
 
-    func delete() -> ResourceControllerBuilder {
+
+    func delete<Input>(with: Input.Type) -> ResourceControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model {
+
         return adding(DeleteResourceController<Model,
             Output,
+            Input,
             EagerLoading>())
     }
 

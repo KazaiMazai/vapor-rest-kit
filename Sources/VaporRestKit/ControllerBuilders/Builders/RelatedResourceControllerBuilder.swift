@@ -156,13 +156,17 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func delete() -> RelatedResourceControllerBuilder  {
+  func delete<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model {
 
         switch keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteChildrenResourceController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -170,6 +174,7 @@ public extension RelatedResourceControllerBuilder {
             return adding(DeleteParentResourceController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -298,12 +303,17 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder  {
+    func delete<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model  {
+
         switch keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteAuthChildrenResourceController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -311,6 +321,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             return adding(DeleteAuthParentResourceController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

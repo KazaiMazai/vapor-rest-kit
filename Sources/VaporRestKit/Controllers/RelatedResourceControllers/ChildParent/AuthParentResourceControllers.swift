@@ -88,11 +88,13 @@ struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, Eag
 
 //MARK:- DeleteAuthParentResourceController
 
-struct DeleteAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: DeletableResourceController, AuthParentResourceModelProvider
+struct DeleteAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: DeletableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
+    Input: ResourceDeleteModel,
+    Model == Input.Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     RelatedModel: Authenticatable,

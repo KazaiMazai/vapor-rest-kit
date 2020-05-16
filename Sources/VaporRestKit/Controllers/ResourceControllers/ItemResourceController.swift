@@ -65,11 +65,13 @@ struct PatchResourceController<Model, Output, Patch, EagerLoading>: PatchableRes
 
 //MARK:- DeleteResourceController
 
-struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceController, ResourceModelProvider
+struct DeleteResourceController<Model, Output, Input, EagerLoading>: DeletableResourceController, ResourceModelProvider
 
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
+    Input: ResourceDeleteModel,
+    Model == Input.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
@@ -89,7 +91,7 @@ struct CollectionResourceController<Model, Output, Sorting, EagerLoading, Filter
     Filtering: FilterProvider,
     Filtering.Model == Model,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model  {
+    EagerLoading.Model == Model  {
 
     let config: IterableControllerConfig
     

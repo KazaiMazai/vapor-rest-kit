@@ -89,12 +89,14 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
 
 //MARK:- DeleteChildrenResourceController
 
-struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoading>:
+struct DeleteChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>:
     DeletableResourceController, ChildrenResourceModelProvider
     where
         Output: ResourceOutputModel,
         Model == Output.Model,
         Model.IDValue: LosslessStringConvertible,
+        Input: ResourceDeleteModel,
+        Model == Input.Model,
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible,
         EagerLoading: EagerLoadProvider,
