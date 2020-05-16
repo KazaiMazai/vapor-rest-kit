@@ -23,7 +23,7 @@ Model == Patch.Model {
         let db = req.db
         return try self.find(req)
             .flatMap { patchModel.patch($0, req: req, database: db) }
-            .flatMap { $0.update(on: db).transform(to: Output($0)) }
+            .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -37,7 +37,7 @@ Model == Patch.Model {
         let db = req.db
         return try self.findWithRelated(req)
             .flatMap { patchModel.patch($0.resource, req: req, database: db) }
-            .flatMap { $0.update(on: db).transform(to: Output($0)) }
+            .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -51,7 +51,7 @@ Model == Patch.Model {
         let db = req.db
         return try self.findWithRelated(req)
             .flatMap { patchModel.patch($0.resource, req: req, database: db) }
-            .flatMap { $0.update(on: db).transform(to: Output($0)) }
+            .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -65,6 +65,6 @@ Model == Patch.Model {
         let db = req.db
         return try self.findWithRelated(req)
             .flatMap { patchModel.patch($0.resource, req: req, database: db) }
-            .flatMap { $0.update(on: db).transform(to: Output($0)) }
+            .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }

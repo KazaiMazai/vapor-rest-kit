@@ -75,7 +75,7 @@ extension Todo {
         let id: Int?
         let title: String
 
-        init(_ model: Todo) {
+        init(_ model: Todo, req: Request) {
             id = model.id
             title = model.title
         }

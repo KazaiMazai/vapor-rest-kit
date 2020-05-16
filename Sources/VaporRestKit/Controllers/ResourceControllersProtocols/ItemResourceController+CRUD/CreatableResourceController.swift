@@ -24,7 +24,7 @@ extension CreatableResourceController where Self: ResourceModelProvider,
         let db = req.db
         return inputModel
             .update(Model(), req: req, database: db)
-            .flatMap { $0.save(on: req.db).transform(to: Output($0)) }
+            .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -39,7 +39,7 @@ extension CreatableResourceController where Self: ChildrenResourceModelProvider,
         return try self.findRelated(req)
             .and(inputModel.update(Model(), req: req, database: db))
             .flatMapThrowing { try $0.1.attached(to: $0.0, with: self.childrenKeyPath) }
-            .flatMap { $0.save(on: req.db).transform(to: Output($0)) }
+            .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -59,7 +59,7 @@ extension CreatableResourceController where Self: ParentResourceModelProvider,
             .flatMapThrowing { (related, model) in (related, try model.attached(to: related, with: keyPath)) }
             .flatMap { (related, model) in [related.save(on: db), model.save(on: db)]
                 .flatten(on: req.eventLoop)
-                .transform(to: Output(model)) }
+                .transform(to: Output(model, req: req)) }
     }
 }
 
@@ -76,7 +76,7 @@ extension CreatableResourceController where Self: SiblingsResourceModelProvider,
             .and(inputModel.update(Model(),req: req, database: db))
             .flatMap { (related, model) in model.save(on: db).transform(to: (related, model)) }
             .flatMap { (related, model) in model.attached(to: related, with: self.siblingKeyPath, on: db) }
-            .map { Output($0) }
+            .map { Output($0, req: req) }
     }
 }
 

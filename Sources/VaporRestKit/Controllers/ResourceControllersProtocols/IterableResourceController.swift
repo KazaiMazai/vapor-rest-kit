@@ -35,19 +35,19 @@ extension IterableResourceController where Self: ResourceModelProvider {
     func readWithCursorPagination(_ req: Request, paginationConfig: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>> {
         return try prepareQueryBuilder(req)
             .flatMap { $0.paginateWithCursor(for: req, config: paginationConfig) }
-            .map { $0.map { Output($0) } }
+            .map { $0.map { Output($0, req: req) } }
     }
 
     func readWithPagination(_ req: Request) throws -> EventLoopFuture<Page<Output>> {
         return try prepareQueryBuilder(req)
             .flatMap { $0.paginate(for: req) }
-            .map { $0.map { Output($0) } }
+            .map { $0.map { Output($0, req: req) } }
     }
 
     func readAll(_ req: Request) throws -> EventLoopFuture<[Output]> {
         return try prepareQueryBuilder(req)
             .flatMap { $0.all() }
-            .map { $0.map { Output($0) } }
+            .map { $0.map { Output($0, req: req) } }
     }
 }
 

@@ -17,7 +17,7 @@ extension CreatableRelationController where Self: ChildrenResourceRelationProvid
         return try self.findWithRelated(req)
                        .flatMapThrowing { try $0.resource.attached(to: $0.relatedResource, with: self.childrenKeyPath) }
                        .flatMap { resource in return resource.save(on: req.db)
-                                                             .transform(to: Output(resource)) }
+                                                             .transform(to: Output(resource, req: req)) }
     }
 }
 
@@ -30,7 +30,7 @@ extension CreatableRelationController where Self: ParentResourceRelationProvider
                             return $0.relatedResource.save(on: req.db)
                                                      .transform(to: resource)}
                        .flatMap { $0 }
-                       .map { Output($0) }
+                       .map { Output($0, req: req) }
     }
 }
 
@@ -38,7 +38,7 @@ extension CreatableRelationController where Self: SiblingsResourceRelationProvid
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return try findWithRelated(req)
                     .flatMap { $0.resource.attached(to: $0.relatedResoure, with: self.siblingKeyPath, on: req.db) }
-                    .map { Output($0)}
+                    .map { Output($0, req: req)}
     }
 }
 

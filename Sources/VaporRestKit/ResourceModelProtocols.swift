@@ -11,7 +11,7 @@ import Fluent
 public protocol ResourceOutputModel: Content {
     associatedtype Model: Fields
 
-    init(_: Model)
+    init(_: Model, req: Request)
 }
 
 public protocol ResourceUpdateModel: Content, Validatable {
