@@ -29,15 +29,15 @@ extension PatchableResourceController where Self: ResourceModelProvider,
 
 extension PatchableResourceController where Self: ChildrenResourceModelProvider,
     Patch: ResourcePatchModel,
-Model == Patch.Model {
+    Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
         try Patch.validate(req)
         let patchModel = try req.content.decode(Patch.self)
         let db = req.db
         return try self.findWithRelated(req)
-            .flatMap { self.middleware.willSave($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
-            .flatMap { patchModel.patch($0.0, req: req, database: db) }
+            .flatMap { patchModel.patch($0.resource, req: req, database: db).and(value: $0.relatedResource)  }
+            .flatMap { self.middleware.willSave($0.0, relatedModel: $0.1, req: req, database: db).map { $0.0 } }
             .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }
@@ -51,8 +51,8 @@ Model == Patch.Model {
         let patchModel = try req.content.decode(Patch.self)
         let db = req.db
         return try self.findWithRelated(req)
-            .flatMap { self.middleware.willSave($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
-            .flatMap { patchModel.patch($0.0, req: req, database: db) }
+            .flatMap { patchModel.patch($0.resource, req: req, database: db).and(value: $0.relatedResource)  }
+            .flatMap { self.middleware.willSave($0.0, relatedModel: $0.1, req: req, database: db).map { $0.0 } }
             .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }
@@ -66,8 +66,8 @@ extension PatchableResourceController where Self: SiblingsResourceModelProvider,
         let patchModel = try req.content.decode(Patch.self)
         let db = req.db
         return try self.findWithRelated(req)
-            .flatMap { self.middleware.willSave($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
-            .flatMap { patchModel.patch($0.0, req: req, database: db) }
+            .flatMap { patchModel.patch($0.resource, req: req, database: db).and(value: $0.relatedResoure) }
+            .flatMap { self.middleware.willSave($0.0, relatedModel: $0.1, req: req, database: db).map { $0.0 } }
             .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
     }
 }

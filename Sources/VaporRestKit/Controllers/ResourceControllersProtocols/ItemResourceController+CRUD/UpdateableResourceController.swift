@@ -39,7 +39,7 @@ extension UpdateableResourceController where Self: ChildrenResourceModelProvider
         let keyPath = childrenKeyPath
         let db = req.db
         return try self.findWithRelated(req)
-                .flatMap {  inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResource) }
+                .flatMap { inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResource) }
                 .flatMap { self.middleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
                 .flatMapThrowing { try $0.0.attached(to: $0.1, with: keyPath) }
                 .flatMap { model in return model.save(on: req.db)
