@@ -93,12 +93,10 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
 
 //MARK:- DeleteRelatedResourceController
 
-struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, DeleteHandler, EagerLoading>:
+struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, EagerLoading>:
     DeletableResourceController, SiblingsResourceModelProvider
     where
     Output: ResourceOutputModel,
-    DeleteHandler: ResourceDeleteHandler,
-    Model == DeleteHandler.Model,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     RelatedModel: Fluent.Model,
@@ -107,7 +105,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Del
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let deleteHandler: DeleteHandler
+    let deleteHandler: Deleter<Model>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

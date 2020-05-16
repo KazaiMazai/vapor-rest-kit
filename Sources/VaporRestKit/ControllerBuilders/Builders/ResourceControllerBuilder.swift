@@ -118,14 +118,10 @@ extension ResourceControllerBuilder {
     }
 
 
-    func delete<DeleteHandler>(with handler: DeleteHandler) -> ResourceControllerBuilder
-        where
-        DeleteHandler: ResourceDeleteHandler,
-        Model == DeleteHandler.Model {
+    func delete(with handler: Deleter<Model> = .defaultDeleter) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,
-            DeleteHandler,
             EagerLoading>(deleteHandler: handler))
     }
 

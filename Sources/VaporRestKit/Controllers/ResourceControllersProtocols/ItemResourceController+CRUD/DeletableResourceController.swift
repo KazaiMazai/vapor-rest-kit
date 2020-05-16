@@ -8,17 +8,13 @@
 import Vapor
 import Fluent
 
-protocol DeletableResourceController: ItemResourceControllerProtocol
-    where
-    DeleteHandler: ResourceDeleteHandler,
-    Model == DeleteHandler.Model {
+protocol DeletableResourceController: ItemResourceControllerProtocol {
 
-    associatedtype DeleteHandler
     associatedtype Model
 
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 
-    var deleteHandler: DeleteHandler { get }
+    var deleteHandler: Deleter<Model> { get }
 }
 
 extension DeletableResourceController where Self: ResourceModelProvider {

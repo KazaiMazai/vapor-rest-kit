@@ -19,7 +19,7 @@ struct UserControllers {
                 .read()
                 .update(input: User.Input.self)
                 .patch(input: User.PatchInput.self)
-                .delete(with: PlainDelete())
+                .delete()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
 
@@ -30,8 +30,6 @@ struct UserControllers {
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
-
-
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
             switch version {

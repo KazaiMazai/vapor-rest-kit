@@ -50,3 +50,14 @@ struct SuccessOutput<Model: Fields>: ResourceOutputModel {
 }
 
  
+public struct Deleter<Model: Fluent.Model>: ResourceDeleteHandler {
+    fileprivate let handler: (Model, Request, Database) -> EventLoopFuture<Model>
+
+    public func delete(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
+        return handler(model, req, database)
+    }
+
+    public static var defaultDeleter: Deleter<Model> {
+        return Deleter(handler: { model, _, db in model.delete(on: db).transform(to: model) })
+    }
+}
