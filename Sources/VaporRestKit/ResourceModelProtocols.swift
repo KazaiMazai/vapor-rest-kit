@@ -61,3 +61,15 @@ public struct Deleter<Model: Fluent.Model>: ResourceDeleteHandler {
         return Deleter(handler: { model, _, db in model.delete(on: db).transform(to: model) })
     }
 }
+
+public struct RelationMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
+    fileprivate let handler: (Model, RelatedModel, Request, Database) -> EventLoopFuture<Model>
+
+    public func handle(_ model: Model, relatedModel: RelatedModel, req: Request, database: Database) -> EventLoopFuture<Model> {
+        return handler(model, relatedModel, req, database)
+    }
+
+    public static var defaultMiddleware: RelationMiddleware<Model, RelatedModel> {
+        return RelationMiddleware(handler: { model, _, req, _ in req.eventLoop.makeSucceededFuture(model) })
+    }
+}

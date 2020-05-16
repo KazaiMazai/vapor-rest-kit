@@ -9,9 +9,6 @@ import Vapor
 import Fluent
 
 protocol DeletableResourceController: ItemResourceControllerProtocol {
-
-    associatedtype Model
-
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 
     var deleteHandler: Deleter<Model> { get }
