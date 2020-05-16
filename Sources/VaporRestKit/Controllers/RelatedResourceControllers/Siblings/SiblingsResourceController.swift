@@ -97,7 +97,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     DeletableResourceController, SiblingsResourceModelProvider
     where
     Output: ResourceOutputModel,
-    Input: ResourceDeleteModel,
+    Input: ResourceDeleteHandler,
     Model == Input.Model,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,

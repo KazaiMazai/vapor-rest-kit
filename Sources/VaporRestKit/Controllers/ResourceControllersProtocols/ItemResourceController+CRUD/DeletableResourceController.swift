@@ -10,15 +10,15 @@ import Fluent
 
 protocol DeletableResourceController: ItemResourceControllerProtocol
     where
-    Input: ResourceDeleteModel,
-    Model == Input.Model {
+    DeleteHandler: ResourceDeleteHandler,
+    Model == DeleteHandler.Model {
 
-    associatedtype Input
+    associatedtype DeleteHandler
     associatedtype Model
 
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 
-    var deleteHandler: Input { get }
+    var deleteHandler: DeleteHandler { get }
 }
 
 extension DeletableResourceController where Self: ResourceModelProvider {

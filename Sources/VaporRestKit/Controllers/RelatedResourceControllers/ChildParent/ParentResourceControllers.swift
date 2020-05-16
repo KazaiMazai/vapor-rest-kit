@@ -88,7 +88,7 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, Input, EagerL
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
-    Input: ResourceDeleteModel,
+    Input: ResourceDeleteHandler,
     Model == Input.Model,
     Model.IDValue: LosslessStringConvertible,
     RelatedModel: Fluent.Model,

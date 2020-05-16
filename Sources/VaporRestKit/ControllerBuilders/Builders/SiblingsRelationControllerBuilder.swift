@@ -52,7 +52,7 @@ public extension SiblingsRelationControllerBuilder {
 
     func delete<Input>(input: Input.Type) -> SiblingsRelationControllerBuilder
         where
-        Input: ResourceDeleteModel,
+        Input: ResourceDeleteHandler,
         Model == Input.Model {
 
         return adding(DeleteSiblingRelationController<Model,
@@ -78,7 +78,7 @@ public extension SiblingsRelationControllerBuilder where RelatedModel: Authentic
 
     func delete<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder
         where
-        Input: ResourceDeleteModel,
+        Input: ResourceDeleteHandler,
         Model == Input.Model {
 
         return adding(DeleteAuthSiblingRelationController<Model,

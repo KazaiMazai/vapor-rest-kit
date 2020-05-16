@@ -65,18 +65,18 @@ struct PatchResourceController<Model, Output, Patch, EagerLoading>: PatchableRes
 
 //MARK:- DeleteResourceController
 
-struct DeleteResourceController<Model, Output, Input, EagerLoading>: DeletableResourceController, ResourceModelProvider
+struct DeleteResourceController<Model, Output, DeleteHandler, EagerLoading>: DeletableResourceController, ResourceModelProvider
 
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
-    Input: ResourceDeleteModel,
-    Model == Input.Model,
+    DeleteHandler: ResourceDeleteHandler,
+    Model == DeleteHandler.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let deleteHandler: Input
+    let deleteHandler: DeleteHandler
 }
 
 //MARK:- CollectionResourceController

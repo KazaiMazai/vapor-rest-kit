@@ -33,7 +33,7 @@ struct DeleteParentRelationController<Model, RelatedModel, Output, Input, EagerL
     Output: ResourceOutputModel,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
-    Input: ResourceDeleteModel,
+    Input: ResourceDeleteHandler,
     Model == Input.Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,

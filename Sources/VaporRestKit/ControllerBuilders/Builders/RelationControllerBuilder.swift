@@ -61,7 +61,7 @@ public extension RelationControllerBuilder {
 
     func delete<Input>(input: Input.Type) -> RelationControllerBuilder
         where
-        Input: ResourceDeleteModel,
+        Input: ResourceDeleteHandler,
         Model == Input.Model {
 
         switch resourceControllerBuilder.keyPathType {
@@ -105,7 +105,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
 
     func delete<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> RelationControllerBuilder
         where
-        Input: ResourceDeleteModel,
+        Input: ResourceDeleteHandler,
         Model == Input.Model {
 
         switch resourceControllerBuilder.keyPathType {
