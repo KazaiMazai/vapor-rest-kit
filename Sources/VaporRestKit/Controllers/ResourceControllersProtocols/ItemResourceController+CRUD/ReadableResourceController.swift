@@ -22,3 +22,18 @@ extension ReadableResourceController where Self: ResourceModelProvider {
     }
 }
 
+extension ReadableResourceController where Self: ChildrenResourceModelProvider {
+    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+}
+
+
+extension ReadableResourceController where Self: ParentResourceModelProvider {
+    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+
+}
+
+
+extension ReadableResourceController where Self: SiblingsResourceModelProvider {
+    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+}
+

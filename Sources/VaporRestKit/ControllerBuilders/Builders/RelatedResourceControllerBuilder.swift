@@ -67,7 +67,8 @@ public extension RelatedResourceControllerBuilder {
 }
 
 public extension RelatedResourceControllerBuilder {
-    func create<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
+    func create<Input>(with: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -78,7 +79,8 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
             case .inversedChildren(let relationKeyPath):
@@ -86,7 +88,8 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
@@ -109,7 +112,8 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func update<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
+    func update<Input>(with: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -120,19 +124,22 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
             case .inversedChildren(let relationKeyPath):
                 return adding(UpdateParentResourceController<Model,
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
 
-    func patch<Input>(with: Input.Type) -> RelatedResourceControllerBuilder
+    func patch<Input>(with: Input.Type,
+                      middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -143,7 +150,8 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
             case .inversedChildren(let relationKeyPath):
@@ -151,7 +159,8 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
@@ -211,7 +220,9 @@ public extension RelatedResourceControllerBuilder {
 }
 
 public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
-    func create<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+    func create<Input>(with: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -222,7 +233,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
             case .inversedChildren(let relationKeyPath):
@@ -230,7 +242,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
@@ -253,7 +266,9 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func update<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+    func update<Input>(with: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -264,7 +279,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
             case .inversedChildren(let relationKeyPath):
@@ -272,12 +288,15 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
 
-    func patch<Input>(with: Input.Type, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+    func patch<Input>(with: Input.Type,
+                      middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -288,19 +307,22 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
             case .inversedChildren(let relationKeyPath):
                 return adding(PatchParentResourceController<Model,
                     RelatedModel,
                     Output, Input,
-                    EagerLoading>(relationNamePath: relationName,
+                    EagerLoading>(middleware: middleware,
+                                  relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
 
-    func delete(with handler: Deleter<Model> = .defaultDeleter, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
+    func delete(with handler: Deleter<Model> = .defaultDeleter,
+                authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
         case .children(let relationKeyPath):

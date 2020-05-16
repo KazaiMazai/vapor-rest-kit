@@ -19,6 +19,7 @@ protocol ChildrenResourceModelProvider: ResourceModelProvider
     var rootIdComponentKey: String { get }
     var rootIdPathComponent: PathComponent { get }
 
+    var middleware: RelationMiddleware<Model, RelatedModel> { get }
     var relationNamePath: String { get }
     var childrenKeyPath: ChildrenKeyPath<RelatedModel, Model> { get }
 

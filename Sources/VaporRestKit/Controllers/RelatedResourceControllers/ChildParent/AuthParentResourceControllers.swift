@@ -23,6 +23,7 @@ struct CreateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -61,6 +62,7 @@ struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -81,6 +83,7 @@ struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, Eag
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

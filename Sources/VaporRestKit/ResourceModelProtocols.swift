@@ -22,7 +22,7 @@ public protocol ResourceUpdateModel: Content, Validatable {
 
 public protocol ResourcePatchModel: Content, Validatable {
     associatedtype Model: Fields
- 
+
     func patch(_: Model, req: Request, database: Database) -> EventLoopFuture<Model>
 }
 
@@ -49,7 +49,7 @@ struct SuccessOutput<Model: Fields>: ResourceOutputModel {
     init(_ model: Model, req: Request) {  }
 }
 
- 
+
 public struct Deleter<Model: Fluent.Model> {
     fileprivate let handler: (Model, Request, Database) -> EventLoopFuture<Model>
 
@@ -62,35 +62,47 @@ public struct Deleter<Model: Fluent.Model> {
     }
 }
 
+public struct ResourceMiddleware<Model: Fluent.Model> {
+    public typealias Handler = (Model, Request, Database) -> EventLoopFuture<Model>
+
+    fileprivate let willSaveHandler: Handler
+
+    public init(willSave: @escaping Handler = Self.empty) {
+        self.willSaveHandler = willSave
+    }
+
+
+    public func willSave(_ model: Model,
+                         req: Request,
+                         database: Database) -> EventLoopFuture<Model> {
+
+        return willSaveHandler(model, req, database)
+    }
+
+    public static var empty: Handler {
+        return { model, req, _ in req.eventLoop.makeSucceededFuture(model) }
+    }
+}
+
 public struct RelationMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
     public typealias Handler = (Model, RelatedModel, Request, Database) -> EventLoopFuture<(Model, RelatedModel)>
 
-    fileprivate let willDetachHandler: Handler
-    fileprivate let willAttachHandler: Handler
+    fileprivate let willSaveHandler: Handler
 
-    public init(willDetach: @escaping Handler = Self.empty, willAttach: @escaping Handler = Self.empty) {
-        self.willAttachHandler = willAttach
-        self.willDetachHandler = willDetach
+    public init(willSave: @escaping Handler = Self.empty) {
+        self.willSaveHandler = willSave
     }
 
-    public func willDetach(_ model: Model,
+    public func willSave(_ model: Model,
                            relatedModel: RelatedModel,
                            req: Request,
                            database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
-        return willDetachHandler(model, relatedModel, req, database)
-    }
-
-    public func willAttach(_ model: Model,
-                           relatedModel: RelatedModel,
-                           req: Request,
-                           database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
-
-        return willAttachHandler(model, relatedModel, req, database)
+        return willSaveHandler(model, relatedModel, req, database)
     }
 
 
     public static var defaultMiddleware: RelationMiddleware<Model, RelatedModel> {
-        return RelationMiddleware(willDetach: empty, willAttach: empty)
+        return RelationMiddleware(willSave: empty)
     }
 
     public static var empty: Handler {

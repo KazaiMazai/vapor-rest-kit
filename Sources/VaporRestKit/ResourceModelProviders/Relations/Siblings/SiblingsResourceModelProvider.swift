@@ -21,6 +21,7 @@ protocol SiblingsResourceModelProvider: ResourceModelProvider
     var rootIdComponentKey: String { get }
     var rootIdPathComponent: PathComponent { get }
 
+    var middleware: RelationMiddleware<Model, RelatedModel> { get }
     var relationNamePath: String { get }
     var siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through> { get }
 

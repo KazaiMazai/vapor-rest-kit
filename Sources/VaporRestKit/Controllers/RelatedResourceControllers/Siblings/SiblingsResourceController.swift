@@ -24,6 +24,7 @@ struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
@@ -64,6 +65,7 @@ struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
@@ -86,6 +88,7 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

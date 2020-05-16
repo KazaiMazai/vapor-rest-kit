@@ -25,6 +25,7 @@ struct CreateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
@@ -67,6 +68,7 @@ struct UpdateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
@@ -90,6 +92,7 @@ struct PatchRelatedAuthResourceController<Model, RelatedModel, Through, Output, 
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
+    let middleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

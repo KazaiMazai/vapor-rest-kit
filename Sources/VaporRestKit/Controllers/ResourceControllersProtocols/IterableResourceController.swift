@@ -90,3 +90,18 @@ extension IterableResourceController where Self: SiblingsResourceModelProvider {
             .flatMapThrowing { try $0.filter(self.filteringHandler, for: req) }
     }
 }
+
+
+
+extension IterableResourceController where Self: ChildrenResourceModelProvider {
+    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+}
+
+extension IterableResourceController where Self: ParentResourceModelProvider {
+    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+
+}
+
+extension IterableResourceController where Self: SiblingsResourceModelProvider {
+    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+}

@@ -58,7 +58,8 @@ public extension SiblingsResourceControllerBuilder {
 }
 
 public extension SiblingsResourceControllerBuilder {
-    func create<Input>(input: Input.Type) -> SiblingsResourceControllerBuilder
+    func create<Input>(input: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -68,7 +69,8 @@ public extension SiblingsResourceControllerBuilder {
                 Through,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
@@ -83,7 +85,8 @@ public extension SiblingsResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type) -> SiblingsResourceControllerBuilder
+    func update<Input>(input: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -93,11 +96,13 @@ public extension SiblingsResourceControllerBuilder {
                 Through,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
-    func patch<Input>(input: Input.Type) -> SiblingsResourceControllerBuilder
+    func patch<Input>(input: Input.Type,
+                      middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -107,7 +112,8 @@ public extension SiblingsResourceControllerBuilder {
                 Through,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
@@ -140,7 +146,9 @@ public extension SiblingsResourceControllerBuilder {
 }
 
 public extension SiblingsResourceControllerBuilder where RelatedModel: Authenticatable {
-    func create<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
+    func create<Input>(input: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -150,7 +158,8 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Through,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
@@ -164,6 +173,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func update<Input>(input: Input.Type,
+                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -174,11 +184,13 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Through,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
     func patch<Input>(input: Input.Type,
+                      middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -189,7 +201,8 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Through,
                 Output,
                 Input,
-                EagerLoading>(relationNamePath: relationName,
+                EagerLoading>(middleware: middleware,
+                              relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
