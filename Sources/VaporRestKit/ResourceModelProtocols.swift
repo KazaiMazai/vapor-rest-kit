@@ -22,8 +22,8 @@ public protocol ResourceUpdateModel: Content, Validatable {
 
 public protocol ResourcePatchModel: Content, Validatable {
     associatedtype Model: Fields
-
-    func patch(_: Model) -> Model
+ 
+    func patch(_: Model, req: Request, database: Database) -> EventLoopFuture<Model>
 }
 
 

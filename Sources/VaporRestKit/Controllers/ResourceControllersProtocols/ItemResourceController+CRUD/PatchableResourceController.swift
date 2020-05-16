@@ -14,60 +14,57 @@ protocol PatchableResourceController: ItemResourceControllerProtocol {
 }
 
 extension PatchableResourceController where Self: ResourceModelProvider,
-                                            Self.Patch: ResourcePatchModel,
-                                            Model == Patch.Model {
+    Self.Patch: ResourcePatchModel,
+Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
         try Patch.validate(req)
         let patchModel = try req.content.decode(Patch.self)
+        let db = req.db
         return try self.find(req)
-                       .flatMapThrowing { return patchModel.patch($0) }
-                       .flatMap { model in return model.update(on: req.db)
-                                                       .map { Output(model) }}
+            .flatMap { patchModel.patch($0, req: req, database: db) }
+            .flatMap { $0.update(on: db).transform(to: Output($0)) }
     }
 }
 
 extension PatchableResourceController where Self: ChildrenResourceModelProvider,
-                                            Patch: ResourcePatchModel,
-                                            Model == Patch.Model {
+    Patch: ResourcePatchModel,
+Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
         try Patch.validate(req)
         let patchModel = try req.content.decode(Patch.self)
-        
+        let db = req.db
         return try self.findWithRelated(req)
-                       .flatMapThrowing { return patchModel.patch($0.resource) }
-                       .flatMap { model in return model.update(on: req.db)
-                                                       .map { Output(model) }}
+            .flatMap { patchModel.patch($0.resource, req: req, database: db) }
+            .flatMap { $0.update(on: db).transform(to: Output($0)) }
     }
 }
 
 extension PatchableResourceController where Self: ParentResourceModelProvider,
-                                            Patch: ResourcePatchModel,
-                                            Model == Patch.Model {
+    Patch: ResourcePatchModel,
+Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
         try Patch.validate(req)
         let patchModel = try req.content.decode(Patch.self)
-
+        let db = req.db
         return try self.findWithRelated(req)
-                       .flatMapThrowing { return patchModel.patch($0.resource) }
-                       .flatMap { model in return model.update(on: req.db)
-                                                       .map { Output(model) }}
+            .flatMap { patchModel.patch($0.resource, req: req, database: db) }
+            .flatMap { $0.update(on: db).transform(to: Output($0)) }
     }
 }
 
 extension PatchableResourceController where Self: SiblingsResourceModelProvider,
-                                            Patch: ResourcePatchModel,
-                                            Model == Patch.Model {
+    Patch: ResourcePatchModel,
+Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
         try Patch.validate(req)
         let patchModel = try req.content.decode(Patch.self)
-
+        let db = req.db
         return try self.findWithRelated(req)
-                       .flatMapThrowing { return patchModel.patch($0.resource) }
-                       .flatMap { model in return model.update(on: req.db)
-                                                       .map { Output(model) }}
+            .flatMap { patchModel.patch($0.resource, req: req, database: db) }
+            .flatMap { $0.update(on: db).transform(to: Output($0)) }
     }
 }

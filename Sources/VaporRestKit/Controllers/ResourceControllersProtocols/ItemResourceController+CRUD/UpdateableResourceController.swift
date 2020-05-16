@@ -19,10 +19,11 @@ extension UpdateableResourceController where Self: ResourceModelProvider,
                                             Model == Input.Model  {
 
     func update(_ req: Request) throws -> EventLoopFuture<Output> {
-        let request = try req.content.decode(Input.self)
+        try Input.validate(req)
+        let inputModel = try req.content.decode(Input.self)
         let db = req.db
         return try self.find(req)
-                    .flatMap { return request.update($0, req: req, database: db) }
+                    .flatMap { return inputModel.update($0, req: req, database: db) }
                     .flatMap { model in return model.save(on: req.db)
                                                        .map { Output(model) }}
     }
@@ -68,7 +69,7 @@ Model == Input.Model  {
 
 extension UpdateableResourceController where Self: SiblingsResourceModelProvider,
     Input: ResourceUpdateModel,
-Model == Input.Model {
+    Model == Input.Model {
 
     func update(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)

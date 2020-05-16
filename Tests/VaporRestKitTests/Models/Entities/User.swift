@@ -101,11 +101,11 @@ extension User {
         let username: String?
         let age: Int?
 
-        func patch(_ model: User) -> User {
+        func patch(_ model: User, req: Request, database: Database) -> EventLoopFuture<User>{
             model.username = username ?? model.username
             model.age = age ?? model.age
-
-            return model
+ 
+            return req.eventLoop.makeSucceededFuture(model)
         }
 
         static func validations(_ validations: inout Validations) {
