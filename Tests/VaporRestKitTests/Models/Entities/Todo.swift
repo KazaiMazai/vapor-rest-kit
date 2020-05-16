@@ -84,7 +84,7 @@ extension Todo {
     struct Input: ResourceUpdateModel {
         let title: String
 
-        func update(_ model: Todo) -> Todo {
+        func update(_ model: Todo, req: Request, database: Database) -> Todo {
             model.title = title
             return model
         }

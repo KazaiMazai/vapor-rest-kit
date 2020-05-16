@@ -21,7 +21,8 @@ extension CreatableResourceController where Self: ResourceModelProvider,
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
-        let model = inputModel.update(Model())
+        let db = req.db
+        let model = inputModel.update(Model(), req: req, database: db)
 
         return model.save(on: req.db)
                     .map { _ in Output(model) }
@@ -35,9 +36,9 @@ extension CreatableResourceController where Self: ChildrenResourceModelProvider,
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
-
+        let db = req.db
         return try self.findRelated(req)
-                       .flatMapThrowing { return try inputModel.update(Model())
+            .flatMapThrowing { return try inputModel.update(Model(), req: req, database: db)
                                                                .attached(to: $0, with: self.childrenKeyPath) }
                        .flatMap { resource in return resource.save(on: req.db)
                                                              .map { _ in Output(resource) } }
@@ -52,8 +53,8 @@ extension CreatableResourceController where Self: ParentResourceModelProvider,
             try Input.validate(req)
             let inputModel = try req.content.decode(Input.self)
             let keyPath = inversedChildrenKeyPath
-
-            let resource = inputModel.update(Model())
+            let db = req.db
+            let resource = inputModel.update(Model(), req: req, database: db)
             return resource.save(on: req.db)
                             .transform(to: resource)
                             .flatMapThrowing { resource in
@@ -79,10 +80,10 @@ extension CreatableResourceController where Self: SiblingsResourceModelProvider,
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
-
+        let db = req.db
         return try self.findRelated(req)
                        .flatMapThrowing { relatedResource in
-                            return (inputModel.update(Model()), relatedResource)  }
+                        return (inputModel.update(Model(),req: req, database: db), relatedResource)  }
                        .flatMap { (resource, relatedResource) in
                             return resource.save(on: req.db)
                                            .transform(to: (resource, relatedResource)) }

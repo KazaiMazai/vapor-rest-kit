@@ -17,7 +17,7 @@ public protocol ResourceOutputModel: Content {
 public protocol ResourceUpdateModel: Content, Validatable {
     associatedtype Model: Fields
 
-    func update(_: Model) -> Model
+    func update(_: Model, req: Request, database: Database) -> Model
 }
 
 public protocol ResourcePatchModel: Content, Validatable {

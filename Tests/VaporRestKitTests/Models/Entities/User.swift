@@ -84,7 +84,7 @@ extension User {
         let username: String
         let age: Int
 
-        func update(_ model: User) -> User {
+        func update(_ model: User, req: Request, database: Database) -> User {
             model.username = username
             model.age = age
 
