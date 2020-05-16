@@ -88,20 +88,20 @@ struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, Eag
 
 //MARK:- DeleteAuthParentResourceController
 
-struct DeleteAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: DeletableResourceController, AuthParentResourceModelProvider
+struct DeleteAuthParentResourceController<Model, RelatedModel, Output, DeleteHandler, EagerLoading>: DeletableResourceController, AuthParentResourceModelProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
-    Input: ResourceDeleteHandler,
-    Model == Input.Model,
+    DeleteHandler: ResourceDeleteHandler,
+    Model == DeleteHandler.Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     RelatedModel: Authenticatable,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let deleteHandler: Input
+    let deleteHandler: DeleteHandler
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

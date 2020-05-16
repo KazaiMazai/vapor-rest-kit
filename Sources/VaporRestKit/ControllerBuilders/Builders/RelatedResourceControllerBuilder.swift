@@ -156,17 +156,17 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-  func delete<Input>(with handler: Input) -> RelatedResourceControllerBuilder
+  func delete<DeleteHandler>(with handler: DeleteHandler) -> RelatedResourceControllerBuilder
         where
-        Input: ResourceDeleteHandler,
-        Model == Input.Model {
+        DeleteHandler: ResourceDeleteHandler,
+        Model == DeleteHandler.Model {
 
         switch keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteChildrenResourceController<Model,
                 RelatedModel,
                 Output,
-                Input,
+                DeleteHandler,
                 EagerLoading>(deleteHandler: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
@@ -175,7 +175,7 @@ public extension RelatedResourceControllerBuilder {
             return adding(DeleteParentResourceController<Model,
                 RelatedModel,
                 Output,
-                Input,
+                DeleteHandler,
                 EagerLoading>(deleteHandler: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
@@ -305,17 +305,17 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func delete<Input>(with handler: Input, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+    func delete<DeleteHandler>(with handler: DeleteHandler, authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
-        Input: ResourceDeleteHandler,
-        Model == Input.Model  {
+        DeleteHandler: ResourceDeleteHandler,
+        Model == DeleteHandler.Model  {
 
         switch keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteAuthChildrenResourceController<Model,
                 RelatedModel,
                 Output,
-                Input,
+                DeleteHandler,
                 EagerLoading>(deleteHandler: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
@@ -324,7 +324,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             return adding(DeleteAuthParentResourceController<Model,
                 RelatedModel,
                 Output,
-                Input,
+                DeleteHandler,
                 EagerLoading>(deleteHandler: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))

@@ -30,13 +30,13 @@ struct CreateAuthParentRelationController<Model, RelatedModel, Output, EagerLoad
 
 //MARK:- DeleteAuthParentRelationController
 
-struct DeleteAuthParentRelationController<Model, RelatedModel, Output, Input, EagerLoading>: DeletableRelationController, AuthParentResourceRelationProvider
+struct DeleteAuthParentRelationController<Model, RelatedModel, Output, DeleteHandler, EagerLoading>: DeletableRelationController, AuthParentResourceRelationProvider
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
-    Input: ResourceDeleteHandler,
-    Model == Input.Model,
+    DeleteHandler: ResourceDeleteHandler,
+    Model == DeleteHandler.Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     RelatedModel: Authenticatable,

@@ -111,18 +111,18 @@ public extension SiblingsResourceControllerBuilder {
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete<Input>(with handler: Input) -> SiblingsResourceControllerBuilder
+    func delete<DeleteHandler>(with handler: DeleteHandler) -> SiblingsResourceControllerBuilder
         where
-        Input: ResourceDeleteHandler,
-        Model == Input.Model {
+        DeleteHandler: ResourceDeleteHandler,
+        Model == DeleteHandler.Model {
 
             return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
             Through,
             Output,
-            Input,
-                EagerLoading>(deleteHandler: handler, relationNamePath: relationName,
-                          siblingKeyPath: relationKeyPath))
+            DeleteHandler,
+            EagerLoading>(deleteHandler: handler, relationNamePath: relationName,
+                      siblingKeyPath: relationKeyPath))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type, config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerBuilder
@@ -197,17 +197,17 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete<Input>(with handler: Input,
+    func delete<DeleteHandler>(with handler: DeleteHandler,
                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
-        Input: ResourceDeleteHandler,
-        Model == Input.Model {
+        DeleteHandler: ResourceDeleteHandler,
+        Model == DeleteHandler.Model {
 
         return adding(DeleteRelatedAuthResourceController<Model,
             RelatedModel,
             Through,
             Output,
-            Input,
+            DeleteHandler,
             EagerLoading>(deleteHandler: handler,
                           relationNamePath: relationName,
                           siblingKeyPath: relationKeyPath))

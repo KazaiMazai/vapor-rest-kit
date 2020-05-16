@@ -93,22 +93,22 @@ struct PatchAuthChildrenResourceController<Model, RelatedModel, Output, Patch, E
 
 //MARK:- DeleteAuthChildrenResourceController
 
-struct DeleteAuthChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>:
+struct DeleteAuthChildrenResourceController<Model, RelatedModel, Output, DeleteHandler, EagerLoading>:
     DeletableResourceController, AuthChildrenResourceModelProvider
 
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
-    Input: ResourceDeleteHandler,
-    Model == Input.Model,
+    DeleteHandler: ResourceDeleteHandler,
+    Model == DeleteHandler.Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     RelatedModel: Authenticatable,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let deleteHandler: Input
+    let deleteHandler: DeleteHandler
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
