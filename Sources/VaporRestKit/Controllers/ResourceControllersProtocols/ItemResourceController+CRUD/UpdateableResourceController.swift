@@ -48,7 +48,7 @@ extension UpdateableResourceController where Self: ChildrenResourceModelProvider
 
 extension UpdateableResourceController where Self: ParentResourceModelProvider,
     Input: ResourceUpdateModel,
-Model == Input.Model  {
+    Model == Input.Model  {
 
     func update(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)

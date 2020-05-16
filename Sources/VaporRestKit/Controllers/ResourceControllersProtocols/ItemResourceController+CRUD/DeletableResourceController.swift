@@ -26,7 +26,7 @@ extension DeletableResourceController where Self: ResourceModelProvider {
         let db = req.db
         return try self.find(req)
             .flatMap { inputModel.delete($0, req: req, database: db) }
-            .flatMap { $0.delete(on: req.db).transform(to: Output($0, req: req)) }
+            .map { Output($0, req: req) }
     }
 }
 

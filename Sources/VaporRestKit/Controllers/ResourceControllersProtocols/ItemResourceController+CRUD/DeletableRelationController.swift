@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 protocol DeletableRelationController: ItemResourceControllerProtocol {
-    func delete(_ req: Request) throws -> EventLoopFuture<Output>
+     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 }
 
 extension DeletableRelationController where Self: ChildrenResourceRelationProvider {

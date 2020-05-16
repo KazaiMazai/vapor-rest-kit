@@ -33,7 +33,6 @@ public final class RelationControllerBuilder<Model, RelatedModel, Output, EagerL
 
 }
 
-
 public extension RelationControllerBuilder {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
         resourceControllerBuilder.addMethodsTo(routeBuilder, on: endpoint)
@@ -60,12 +59,17 @@ public extension RelationControllerBuilder {
         }
     }
 
-    func delete() -> RelationControllerBuilder {
+    func delete<Input>(input: Input.Type) -> RelationControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model {
+
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteChildrenRelationController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -73,6 +77,7 @@ public extension RelationControllerBuilder {
             return adding(DeleteParentRelationController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -98,12 +103,17 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
         }
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
+    func delete<Input>(input: Input.Type, authenticatable: RelatedModel.Type) -> RelationControllerBuilder
+        where
+        Input: ResourceDeleteModel,
+        Model == Input.Model {
+
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -111,6 +121,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
             return adding(DeleteAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
+                Input,
                 EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

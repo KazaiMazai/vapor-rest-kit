@@ -27,17 +27,20 @@ public protocol ResourcePatchModel: Content, Validatable {
 }
 
 public protocol ResourceDeleteModel: Content, Validatable {
-    associatedtype Model: Fields
+    associatedtype Model: Fluent.Model
 
     func delete(_: Model, req: Request, database: Database) -> EventLoopFuture<Model>
 }
 
-struct PlainDelete<Model: Fields>: ResourceDeleteModel {
+extension ResourceDeleteModel {
+    func delete(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
+        return model.delete(on: database).transform(to: model)
+    }
+}
+
+struct PlainDelete<Model: Fluent.Model>: ResourceDeleteModel {
     static func validations(_ validations: inout Validations) { }
 
-    func delete(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
-        return req.eventLoop.makeSucceededFuture(model)
-    }
 }
 
 struct SuccessOutput<Model: Fields>: ResourceOutputModel {

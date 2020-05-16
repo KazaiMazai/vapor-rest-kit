@@ -26,12 +26,14 @@ struct CreateChildrenRelationController<Model, RelatedModel, Output, EagerLoadin
 
 //MARK:- DeleteChildrenRelationController
 
-struct DeleteChildrenRelationController<Model, RelatedModel, Output, EagerLoading>:
+struct DeleteChildrenRelationController<Model, RelatedModel, Output, Input, EagerLoading>:
     DeletableRelationController, ChildrenResourceRelationProvider
     where
         Output: ResourceOutputModel,
         Model == Output.Model,
         Model.IDValue: LosslessStringConvertible,
+        Input: ResourceDeleteModel,
+        Model == Input.Model,
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible,
         EagerLoading: EagerLoadProvider,
