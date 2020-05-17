@@ -32,7 +32,7 @@ struct SuccessOutput<Model: Fields>: ResourceOutputModel {
     init(_ model: Model, req: Request) {  }
 }
 
-public struct ResourceMiddleware<Model: Fluent.Model> {
+public struct ControllerMiddleware<Model: Fluent.Model> {
     public typealias Handler = (Model, Request, Database) -> EventLoopFuture<Model>
 
     fileprivate let willSaveHandler: Handler
@@ -48,8 +48,8 @@ public struct ResourceMiddleware<Model: Fluent.Model> {
         return willSaveHandler(model, req, database)
     }
 
-    public static var defaultMiddleware: ResourceMiddleware<Model> {
-        return ResourceMiddleware(willSave: empty)
+    public static var defaultMiddleware: ControllerMiddleware<Model> {
+        return ControllerMiddleware(willSave: empty)
     }
 
     public static var empty: Handler {
@@ -57,7 +57,7 @@ public struct ResourceMiddleware<Model: Fluent.Model> {
     }
 }
 
-public struct RelationMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
+public struct RelatedControllerMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
     public typealias Handler = (Model, RelatedModel, Request, Database) -> EventLoopFuture<(Model, RelatedModel)>
 
     fileprivate let willSaveHandler: Handler
@@ -74,8 +74,8 @@ public struct RelationMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model
     }
 
 
-    public static var defaultMiddleware: RelationMiddleware<Model, RelatedModel> {
-        return RelationMiddleware(willSave: empty)
+    public static var defaultMiddleware: RelatedControllerMiddleware<Model, RelatedModel> {
+        return RelatedControllerMiddleware(willSave: empty)
     }
 
     public static var empty: Handler {

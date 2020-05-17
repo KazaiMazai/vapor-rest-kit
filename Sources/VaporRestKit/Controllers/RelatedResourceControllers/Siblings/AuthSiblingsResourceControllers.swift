@@ -25,7 +25,7 @@ struct CreateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
@@ -68,7 +68,7 @@ struct UpdateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
@@ -92,7 +92,7 @@ struct PatchRelatedAuthResourceController<Model, RelatedModel, Through, Output, 
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
@@ -114,7 +114,7 @@ struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     Through: Fluent.Model {
 
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
     let useForcedDelete: Bool
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>

@@ -41,7 +41,7 @@ public extension SiblingsRelationControllerBuilder {
 }
 
 public extension SiblingsRelationControllerBuilder {
-    func create(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsRelationControllerBuilder {
+    func create(with middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsRelationControllerBuilder {
         return adding(CreateSiblingRelationController<Model,
             RelatedModel,
             Through,
@@ -51,7 +51,7 @@ public extension SiblingsRelationControllerBuilder {
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
 
-    func delete(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsRelationControllerBuilder {
+    func delete(with middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsRelationControllerBuilder {
 
         return adding(DeleteSiblingRelationController<Model,
             RelatedModel,
@@ -64,7 +64,7 @@ public extension SiblingsRelationControllerBuilder {
 }
 
 public extension SiblingsRelationControllerBuilder where RelatedModel: Authenticatable {
-    func create(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+    func create(with middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
         
         return adding(CreateAuthSiblingRelationController<Model,
@@ -77,7 +77,7 @@ public extension SiblingsRelationControllerBuilder where RelatedModel: Authentic
     }
 
 
-    func delete(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware, authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
+    func delete(with middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware, authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
 
         return adding(DeleteAuthSiblingRelationController<Model,
             RelatedModel,

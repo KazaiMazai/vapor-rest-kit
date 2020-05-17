@@ -24,7 +24,7 @@ struct CreateAuthSiblingRelationController<Model, RelatedModel, Through, Output,
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
@@ -44,7 +44,7 @@ struct DeleteAuthSiblingRelationController<Model, RelatedModel, Through, Output,
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
