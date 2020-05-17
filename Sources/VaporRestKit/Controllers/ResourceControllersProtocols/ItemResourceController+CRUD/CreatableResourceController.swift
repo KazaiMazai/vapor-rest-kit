@@ -24,6 +24,7 @@ extension CreatableResourceController where Self: ResourceModelProvider,
         let db = req.db
         return inputModel
             .update(Model(), req: req, database: db)
+            .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
             .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
     }
 }

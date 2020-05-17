@@ -24,8 +24,9 @@ extension UpdateableResourceController where Self: ResourceModelProvider,
         let db = req.db
         return try self.find(req)
                     .flatMap { return inputModel.update($0, req: req, database: db) }
+                    .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
                     .flatMap { model in return model.save(on: req.db)
-                                                       .map { Output(model, req: req) }}
+                                                    .map { Output(model, req: req) }}
     }
 }
 

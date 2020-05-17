@@ -37,16 +37,3 @@ extension ReadableResourceController where Self: ParentResourceModelProvider {
 extension ReadableResourceController where Self: SiblingsResourceModelProvider {
     var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
-//
-//extension ItemResourceControllerProtocol where Self: ChildrenResourceModelProvider {
-//    var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
-//}
-//
-//extension ItemResourceControllerProtocol where Self: ParentResourceModelProvider {
-//   var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
-//}
-//
-//extension ItemResourceControllerProtocol where Self: SiblingsResourceModelProvider {
-//   var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
-//}
-
