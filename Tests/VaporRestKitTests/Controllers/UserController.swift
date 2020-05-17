@@ -15,9 +15,9 @@ struct UserControllers {
         var v1: APIMethodsProviding {
             return User.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-//                .create(input: User.Input.self)
+                .create(input: User.Input.self)
                 .read()
-//                .update(input: User.Input.self)
+                .update(input: User.Input.self)
                 .patch(input: User.PatchInput.self)
                 .delete()
                 .collection(sorting: SortingUnsupported.self,
