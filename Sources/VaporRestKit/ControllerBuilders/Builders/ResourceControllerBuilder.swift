@@ -123,7 +123,7 @@ extension ResourceControllerBuilder {
         return adding(DeleteResourceController<Model,
             Output,
             EagerLoading>(resourceMiddleware: middleware,
-                          deleteHandler: forced))
+                          useForcedDelete: forced))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,

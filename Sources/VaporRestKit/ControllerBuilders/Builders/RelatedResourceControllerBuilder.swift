@@ -174,7 +174,7 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              deleteHandler: forced,
+                              useForcedDelete: forced,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -183,7 +183,7 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              deleteHandler: forced,
+                              useForcedDelete: forced,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -334,7 +334,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              deleteHandler: forced,
+                              useForcedDelete: forced,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -343,7 +343,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              deleteHandler: forced,
+                              useForcedDelete: forced,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

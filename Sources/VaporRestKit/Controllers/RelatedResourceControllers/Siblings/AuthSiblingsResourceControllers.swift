@@ -115,7 +115,7 @@ struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output,
 
 
     let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
-    let deleteHandler: Bool
+    let useForcedDelete: Bool
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

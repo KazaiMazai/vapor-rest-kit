@@ -125,7 +125,7 @@ public extension SiblingsResourceControllerBuilder {
             Through,
             Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              deleteHandler: forced, relationNamePath: relationName,
+                              useForcedDelete: forced, relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
@@ -217,7 +217,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
             Through,
             Output,
             EagerLoading>(relatedResourceMiddleware: middleware,
-                          deleteHandler: forced,
+                          useForcedDelete: forced,
                           relationNamePath: relationName,
                           siblingKeyPath: relationKeyPath))
     }
