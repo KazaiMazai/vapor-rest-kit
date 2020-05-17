@@ -24,20 +24,3 @@ extension DeletableResourceController where Self: ResourceModelProvider {
 }
 
 
-extension DeletableResourceController where Self: ChildrenResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
-}
-
-
-extension DeletableResourceController where Self: ParentResourceModelProvider {
-    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
-
-}
-
-
-extension DeletableResourceController where Self: SiblingsResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
-}
-
-
-

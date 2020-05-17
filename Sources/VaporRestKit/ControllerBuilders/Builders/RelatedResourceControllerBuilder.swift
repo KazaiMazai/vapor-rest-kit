@@ -182,7 +182,8 @@ public extension RelatedResourceControllerBuilder {
             return adding(DeleteParentResourceController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(deleteHandler: forced,
+                EagerLoading>(relatedResourceMiddleware: middleware,
+                              deleteHandler: forced,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

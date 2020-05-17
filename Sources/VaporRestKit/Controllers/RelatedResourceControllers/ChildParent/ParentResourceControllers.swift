@@ -95,8 +95,10 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
+
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let deleteHandler: Bool
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
