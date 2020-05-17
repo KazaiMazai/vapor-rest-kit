@@ -26,14 +26,14 @@ extension ReadableResourceController where Self: ResourceModelProvider {
 
 
 extension ReadableResourceController where Self: ChildrenResourceModelProvider {
-    var relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
+    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
 
 extension ReadableResourceController where Self: ParentResourceModelProvider {
-    var relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
+    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
 
 }
 
 extension ReadableResourceController where Self: SiblingsResourceModelProvider {
-    var relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
+    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }

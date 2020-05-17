@@ -24,7 +24,7 @@ struct CreateAuthChildrenResourceController<Model, RelatedModel, Output, Input, 
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 }
@@ -65,7 +65,7 @@ struct UpdateAuthChildrenResourceController<Model, RelatedModel, Output, Input, 
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
@@ -88,7 +88,7 @@ struct PatchAuthChildrenResourceController<Model, RelatedModel, Output, Patch, E
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
@@ -110,7 +110,7 @@ struct DeleteAuthChildrenResourceController<Model, RelatedModel, Output, EagerLo
 EagerLoading.Model == Model {
 
 
-    var relatedResourceMiddleware: RelatedControllerMiddleware<Model, RelatedModel>
+    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let useForcedDelete: Bool
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>

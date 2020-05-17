@@ -59,7 +59,7 @@ public extension SiblingsResourceControllerBuilder {
 
 public extension SiblingsResourceControllerBuilder {
     func create<Input>(input: Input.Type,
-                       middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -86,7 +86,7 @@ public extension SiblingsResourceControllerBuilder {
 
 
     func update<Input>(input: Input.Type,
-                       middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -102,7 +102,7 @@ public extension SiblingsResourceControllerBuilder {
     }
 
     func patch<Input>(input: Input.Type,
-                      middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
+                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -118,7 +118,7 @@ public extension SiblingsResourceControllerBuilder {
     }
 
     func delete(forced: Bool = false,
-                middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder {
+                middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder {
 
             return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
@@ -149,7 +149,7 @@ public extension SiblingsResourceControllerBuilder {
 
 public extension SiblingsResourceControllerBuilder where RelatedModel: Authenticatable {
     func create<Input>(input: Input.Type,
-                       middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -175,7 +175,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func update<Input>(input: Input.Type,
-                       middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -192,7 +192,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func patch<Input>(input: Input.Type,
-                      middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -209,7 +209,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func delete(forced: Bool = false,
-                middleware: RelatedControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
 
         return adding(DeleteRelatedAuthResourceController<Model,
