@@ -84,12 +84,10 @@ extension Todo {
     struct Input: ResourceUpdateModel {
         let title: String
 
-        func update(_ model: Todo, req: Request, database: Database) -> EventLoopFuture<Todo> {
+        func update(_ model: Todo) throws -> Todo {
             model.title = title
-
-            return req.eventLoop.makeSucceededFuture(model)
+            return model
         }
-
 
         static func validations(_ validations: inout Validations) {
 

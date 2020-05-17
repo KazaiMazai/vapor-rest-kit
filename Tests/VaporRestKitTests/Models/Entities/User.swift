@@ -84,11 +84,10 @@ extension User {
         let username: String
         let age: Int
 
-        func update(_ model: User, req: Request, database: Database) -> EventLoopFuture<User> {
+        func update(_ model: User) -> User {
             model.username = username
             model.age = age
-
-            return req.eventLoop.makeSucceededFuture(model)
+            return model
         }
 
         static func validations(_ validations: inout Validations) {
