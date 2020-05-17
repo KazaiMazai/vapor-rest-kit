@@ -161,37 +161,128 @@ protocol ResourcePatchModel: Content, Validatable {
 
 ## Resource Controllers
 
-Since ResourceModelOutput is defined for a Model class, ResourceController creations turnes out as easy as:
+### Overview
 
+Basically, controller can be defined by two protocols:
+- ResourceModelProvider 
+- ResourceControllerProtocol
+
+
+
+#### ResourceModelProvider
+
+**ResourceModelProvider works with Models**. 
+ResourceModelProvider handles request query and defines the the rules how the model is obtained. 
+
+It knows if it is a kind of related models, and handles all the hassle of working with relations.
+
+##### ResourceModelProvider Naming
+Naming rules for ResourceModelProvider are the following:
+- If it is simply resource model endpoint than it's **ResourceModelProvider**
+
+###### Resource Type
+- If it contains "ModelProvider" then it is intended to work with Models as resources.
+- If it contains "RelationProvider" then it is intended to work with models' Relations. It adds "/relation" to the route path.
+
+###### Relation Type
+- If it contains "Children" then the resource model is a child of the root model
+- If it contains "Parent" then the resource model is a parent of the root model
+- if it contains "Siblings" then the resource model and root model have "to-many" relation
+
+###### Authenticatable
+- If it contains "Auth" then the root model is Authenticatable. Basically that must be User. It creates "/me/" route path. 
+
+ 
+
+
+| ResourceModelProvider                 | Route template |
+| ------------------------------------- |:--------------- | 
+| ResourceModelProviding                | /entity/:entity_id
+|*Parent / Child*|
+| ChildrenResourceModelProvider        | /:parent_entity_id/relation_name/entity/:entity_id 
+| ChildrenResourceRelationProvider     | /:parent_entity_id/relation_name/entity/:entity_id/relation 
+| AuthChildrenResourceModelProvider    | /me/relation_name/entity/:entity_id 
+| AuthChildrenResourceRelationProvider | /me/relation_name/entity/:entity_id/relation
+|*Child / Parent*|
+| ParentResourceModelProvider          | /:child_entity_id/relation_name/entity/:entity_id  
+| ParentResourceRelationProvider       | /:child_entity_id/relation_name/entity/:entity_id/relation
+| AuthParentResourceModelProvider      | /me/relation_name/entity/:entity_id
+| AuthParentResourceRelationProvider   | /me/relation_name/entity/:entity_id/relation
+|*Siblings*|
+| SiblingsResourceModelProvider        | /:related_entity_id/relation_name/entity/:entity_id 
+| SiblingsResourceRelationProvider     | /:related_entity_id/relation_name/entity/:entity_id/relation
+| AuthSiblingsResourceModelProvider    | /me/relation_name/entity/:entity_id
+| AuthSiblingsResourceRelationProvider | /me/relation_name/entity/:entity_id/relation
+
+
+
+
+#### ResourceControllerProtocol 
+ResourceControllerProtocol defines the api method that will be added to the route builder via 
 ```
-let controller = User.Output
-                        .controller(eagerLoading: EagerLoadingUnsupported.self)
-                        .create(input: User.Input.self)
-                        .read()
-                        .update(input: User.Input.self)
-                        .patch(input: User.PatchInput.self)
-                        .delete()
-                        .collection(sorting: SortingUnsupported.self,
-                                    filtering: FilteringUnsupported.self)
+addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String)
 ```
 
-ResourceOutput and Eager Loading come to be the starting point. Of the Controller. These two guys define response format.
+It's also ResourceControllerProtocol that defines resource API Output and Input if supported.
+It performs Input validation and knows what to do with the model, provided by ResourceModelProvider
 
-- create(...)
-- read(...)
-- update(...)
-- patch(...)
-- delete(...)
+There are protocols for CRUD operations over resource models: 
+- CreatableResourceController
+- ReadableResourceController
+- UpdatableResourceController
+- PatchableResourceController
+- DeletableResourceController
 
-Methods will add corresponding support of CRUD operations to the controller with 
+There is a protocol that works with resource collections
+- IterableResourceController
 
-- POST
-- GET
-- PUT
-- PATCH
-- DELETE
+There are protocols to create/delete relations between models
+- DeletableRelationController
+- CreatableRelationController
 
-API.
+Basically all controllers are intended to provide only 1 API method so that we could combine them later.
+
+
+**All these protocols has default implementaion. So behaviour can be obtained by just subclasssing from them.**
+
+
+ 
+ 
+ 
+
+For convenience, all possible supported combinations of Controllers + ModelProviders are already defined.
+Naming rules are almost the same as for ResourceModelProvider, adding method name, defining what controllers does.
+
+All supported CRUD combinations can be found in the table below:
+
+| resource type / method                | Create           | Read  |  Update  | Patch | Delete|
+| ------------------------------------- |:---------------:| -----:|---------:|------:|-------|
+| ResourceModelProvider             |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+|*Parent / Child*|
+| ChildrenResourceModelProvider        |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|  
+| ChildrenResourceRelationProvider     | :heavy_check_mark:|    |    |    | :heavy_check_mark:| 
+| AuthChildrenResourceModelProvider    |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| AuthChildrenResourceRelationProvider | :heavy_check_mark:|    |    |    | :heavy_check_mark:| 
+|*Child / Parent*|
+| ParentResourceModelProvider         |  :heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| ParentResourceRelationProvider       | :heavy_check_mark:|    |    |    | :heavy_check_mark:|  
+| AuthParentResourceModelProvider      |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| AuthParentResourceRelationProvider   | :heavy_check_mark:|    |    |    | :heavy_check_mark:|
+|*Siblings*|
+| SiblingsResourceModelProvider        |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| SiblingsResourceRelationProvider     | :heavy_check_mark:|    |    |    | :heavy_check_mark:|
+| AuthSiblingsResourceModelProvider    |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|
+| AuthSiblingsResourceRelationProvider | :heavy_check_mark:|    |    |    | :heavy_check_mark:|
+
+
+
+#### Examples
+- CreateChildrenResourceController creates resource model, as a child of the root model on provided relation.
+- DeleteChildrenResourceController search resource model by Id among children of the root model, if found, deletes it.
+
+- CreateChildrenRelationController attaches provided models on provided relation.
+- DeleteChildrenRelationController detaches provided models on provided relation.
+
 
 ### CompoundResourceController
 
