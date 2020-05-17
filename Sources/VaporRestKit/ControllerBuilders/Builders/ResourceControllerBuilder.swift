@@ -38,7 +38,7 @@ public extension ResourceControllerBuilder {
 
 public extension ResourceControllerBuilder {
     func related<RelatedModel, Through>(with siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-                                        relationName: String) -> SiblingsResourceControllerBuilder<Model,
+                                        relationName: String?) -> SiblingsResourceControllerBuilder<Model,
         RelatedModel,
         Through,
         Output,
@@ -54,7 +54,7 @@ public extension ResourceControllerBuilder {
     }
 
     func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                               relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+                               relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>(self,
                                                                                            childrenKeyPath: childrenKeyPath,
@@ -62,7 +62,7 @@ public extension ResourceControllerBuilder {
     }
 
     func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                               relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+                               relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model,
             RelatedModel,
