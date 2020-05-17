@@ -81,11 +81,34 @@ extension Todo {
         }
     }
 
+    struct OutputV2: ResourceOutputModel {
+        let id: Int?
+        let name: String
+
+        init(_ model: Todo, req: Request) {
+            id = model.id
+            name = model.title
+        }
+    }
+
     struct Input: ResourceUpdateModel {
         let title: String
 
         func update(_ model: Todo) throws -> Todo {
             model.title = title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+
+        }
+    }
+
+    struct PatchInput: ResourcePatchModel {
+        let title: String?
+
+        func patch(_ model: Todo) throws -> Todo {
+            model.title = title ?? model.title
             return model
         }
 
