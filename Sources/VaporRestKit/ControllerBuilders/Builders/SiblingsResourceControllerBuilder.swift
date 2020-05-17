@@ -17,7 +17,7 @@ public final class SiblingsResourceControllerBuilder<Model, RelatedModel, Throug
     EagerLoading.Model == Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
-Through: Fluent.Model {
+    Through: Fluent.Model {
 
     internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
     internal let relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
