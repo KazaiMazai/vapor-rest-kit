@@ -47,7 +47,7 @@ public extension RelationControllerBuilder {
             return adding(CreateChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -55,7 +55,7 @@ public extension RelationControllerBuilder {
             return adding(CreateParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -68,7 +68,7 @@ public extension RelationControllerBuilder {
             return adding(DeleteChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -76,7 +76,7 @@ public extension RelationControllerBuilder {
             return adding(DeleteParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -92,7 +92,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
             return adding(CreateAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -100,7 +100,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
             return adding(CreateAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -114,7 +114,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
             return adding(DeleteAuthChildrenRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -122,7 +122,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
             return adding(DeleteAuthParentRelationController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: resourceControllerBuilder.relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

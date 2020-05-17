@@ -46,7 +46,7 @@ public extension SiblingsRelationControllerBuilder {
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(middleware: middleware,
+            EagerLoading>(relatedResourceMiddleware: middleware,
                           relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
@@ -57,7 +57,7 @@ public extension SiblingsRelationControllerBuilder {
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(middleware: middleware,
+            EagerLoading>(relatedResourceMiddleware: middleware,
                           relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
@@ -71,7 +71,7 @@ public extension SiblingsRelationControllerBuilder where RelatedModel: Authentic
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(middleware: middleware,
+            EagerLoading>(relatedResourceMiddleware: middleware,
                           relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
@@ -83,7 +83,7 @@ public extension SiblingsRelationControllerBuilder where RelatedModel: Authentic
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(middleware: middleware,
+            EagerLoading>(relatedResourceMiddleware: middleware,
                           relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }

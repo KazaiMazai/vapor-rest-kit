@@ -21,6 +21,8 @@ protocol ResourceModelProvider where EagerLoading.Model == Model, Sorting.Model 
     var sortingHandler: Sorting { get }
     var filteringHandler: Filtering { get }
 
+    var resourceMiddleware: ResourceMiddleware<Model> { get }
+
     func find(_: Request) throws -> EventLoopFuture<Model>
 
     func resourcePathFor(endpoint: String) -> [PathComponent]

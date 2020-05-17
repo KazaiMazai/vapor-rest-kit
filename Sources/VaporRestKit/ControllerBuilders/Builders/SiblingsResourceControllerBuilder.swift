@@ -69,7 +69,7 @@ public extension SiblingsResourceControllerBuilder {
                 Through,
                 Output,
                 Input,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
@@ -96,7 +96,7 @@ public extension SiblingsResourceControllerBuilder {
                 Through,
                 Output,
                 Input,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
@@ -112,19 +112,21 @@ public extension SiblingsResourceControllerBuilder {
                 Through,
                 Output,
                 Input,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete(with handler: Deleter<Model> = .defaultDeleter) -> SiblingsResourceControllerBuilder {
+    func delete(with handler: Deleter<Model> = .defaultDeleter,
+                middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder {
 
             return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(deleteHandler: handler, relationNamePath: relationName,
-                      siblingKeyPath: relationKeyPath))
+                EagerLoading>(relatedResourceMiddleware: middleware,
+                              deleteHandler: handler, relationNamePath: relationName,
+                              siblingKeyPath: relationKeyPath))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type, config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerBuilder
@@ -158,7 +160,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Through,
                 Output,
                 Input,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
@@ -184,7 +186,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Through,
                 Output,
                 Input,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
@@ -201,19 +203,21 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Through,
                 Output,
                 Input,
-                EagerLoading>(middleware: middleware,
+                EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
                               siblingKeyPath: relationKeyPath))
     }
 
     func delete(with handler: Deleter<Model> = .defaultDeleter,
+                middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
 
         return adding(DeleteRelatedAuthResourceController<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(deleteHandler: handler,
+            EagerLoading>(relatedResourceMiddleware: middleware,
+                          deleteHandler: handler,
                           relationNamePath: relationName,
                           siblingKeyPath: relationKeyPath))
     }

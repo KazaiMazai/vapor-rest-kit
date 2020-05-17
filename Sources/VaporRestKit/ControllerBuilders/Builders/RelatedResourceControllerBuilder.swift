@@ -79,7 +79,7 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
@@ -88,7 +88,7 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
@@ -124,7 +124,7 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
             case .inversedChildren(let relationKeyPath):
@@ -132,7 +132,7 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
@@ -150,7 +150,7 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
@@ -159,20 +159,22 @@ public extension RelatedResourceControllerBuilder {
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
 
-    func delete(with handler: Deleter<Model> = .defaultDeleter) -> RelatedResourceControllerBuilder {
+    func delete(with handler: Deleter<Model> = .defaultDeleter,
+                middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware)  -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
         case .children(let relationKeyPath):
             return adding(DeleteChildrenResourceController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(deleteHandler: handler,
+                EagerLoading>(relatedResourceMiddleware: middleware,
+                              deleteHandler: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -233,7 +235,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
@@ -242,7 +244,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
@@ -279,7 +281,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
@@ -288,7 +290,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
@@ -307,7 +309,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     RelatedModel,
                     Output,
                     Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   childrenKeyPath: relationKeyPath))
 
@@ -315,13 +317,14 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 return adding(PatchParentResourceController<Model,
                     RelatedModel,
                     Output, Input,
-                    EagerLoading>(middleware: middleware,
+                    EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
                                   inversedChildrenKeyPath: relationKeyPath))
             }
     }
 
     func delete(with handler: Deleter<Model> = .defaultDeleter,
+                middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
@@ -329,7 +332,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             return adding(DeleteAuthChildrenResourceController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(deleteHandler: handler,
+                EagerLoading>(relatedResourceMiddleware: middleware,
+                              deleteHandler: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -337,7 +341,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             return adding(DeleteAuthParentResourceController<Model,
                 RelatedModel,
                 Output,
-                EagerLoading>(deleteHandler: handler,
+                EagerLoading>(relatedResourceMiddleware: middleware,
+                              deleteHandler: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

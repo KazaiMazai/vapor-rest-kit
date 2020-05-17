@@ -79,6 +79,10 @@ public struct ResourceMiddleware<Model: Fluent.Model> {
         return willSaveHandler(model, req, database)
     }
 
+    public static var defaultMiddleware: ResourceMiddleware<Model> {
+        return ResourceMiddleware(willSave: empty)
+    }
+
     public static var empty: Handler {
         return { model, req, _ in req.eventLoop.makeSucceededFuture(model) }
     }
@@ -94,9 +98,9 @@ public struct RelationMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model
     }
 
     public func willSave(_ model: Model,
-                           relatedModel: RelatedModel,
-                           req: Request,
-                           database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
+                         relatedModel: RelatedModel,
+                         req: Request,
+                         database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
         return willSaveHandler(model, relatedModel, req, database)
     }
 

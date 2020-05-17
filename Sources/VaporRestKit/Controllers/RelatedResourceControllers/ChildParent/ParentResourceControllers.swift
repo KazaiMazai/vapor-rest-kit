@@ -22,7 +22,7 @@ struct CreateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let middleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -39,7 +39,7 @@ struct ReadParentResourceController<Model, RelatedModel, Output, EagerLoading>: 
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
-
+ 
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -59,7 +59,7 @@ struct UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let middleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -79,7 +79,7 @@ struct PatchParentResourceController<Model, RelatedModel, Output, Patch, EagerLo
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let middleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

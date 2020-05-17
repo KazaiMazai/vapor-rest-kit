@@ -25,7 +25,7 @@ struct CreateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let middleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
@@ -68,7 +68,7 @@ struct UpdateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let middleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
@@ -92,7 +92,7 @@ struct PatchRelatedAuthResourceController<Model, RelatedModel, Through, Output, 
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let middleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
@@ -113,6 +113,8 @@ struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
+
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let deleteHandler: Deleter<Model>
     let relationNamePath: String
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
@@ -122,6 +124,7 @@ struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output,
 //MARK:- CollectionRelatedResourceController
 
 struct CollectionRelatedAuthResourceController<Model, RelatedModel, Through, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, AuthSiblingsResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

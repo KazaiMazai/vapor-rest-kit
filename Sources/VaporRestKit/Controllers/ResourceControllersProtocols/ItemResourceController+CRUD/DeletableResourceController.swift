@@ -30,7 +30,7 @@ extension DeletableResourceController where Self: ChildrenResourceModelProvider 
 
 
 extension DeletableResourceController where Self: ParentResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
 
 }
 

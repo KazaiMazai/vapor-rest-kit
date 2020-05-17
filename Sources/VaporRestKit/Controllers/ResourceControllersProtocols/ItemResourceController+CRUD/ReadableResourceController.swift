@@ -16,24 +16,37 @@ protocol ReadableResourceController: ItemResourceControllerProtocol {
 }
 
 extension ReadableResourceController where Self: ResourceModelProvider {
+
+
     func read(_ req: Request) throws -> EventLoopFuture<Output> {
         return try self.find(req)
                        .map { Output($0, req: req) }
     }
 }
 
-extension ReadableResourceController where Self: ChildrenResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
-}
 
+extension ReadableResourceController where Self: ChildrenResourceModelProvider {
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
+}
 
 extension ReadableResourceController where Self: ParentResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
 
 }
-
 
 extension ReadableResourceController where Self: SiblingsResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
+//
+//extension ItemResourceControllerProtocol where Self: ChildrenResourceModelProvider {
+//    var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
+//}
+//
+//extension ItemResourceControllerProtocol where Self: ParentResourceModelProvider {
+//   var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
+//}
+//
+//extension ItemResourceControllerProtocol where Self: SiblingsResourceModelProvider {
+//   var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
+//}
 

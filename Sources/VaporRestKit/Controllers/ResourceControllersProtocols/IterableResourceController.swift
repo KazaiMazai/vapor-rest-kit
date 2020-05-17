@@ -93,15 +93,20 @@ extension IterableResourceController where Self: SiblingsResourceModelProvider {
 
 
 
+
+//
+//extension IterableResourceController where Self: ResourceModelProvider {
+//    var resourceMiddleware: ResourceMiddleware<Model> { .defaultMiddleware }
+//}
+
 extension IterableResourceController where Self: ChildrenResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
 
 extension IterableResourceController where Self: ParentResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
-
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
 
 extension IterableResourceController where Self: SiblingsResourceModelProvider {
-    var middleware: RelationMiddleware<Model, RelatedModel> { return .defaultMiddleware }
+    var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
