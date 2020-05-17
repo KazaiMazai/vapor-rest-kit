@@ -75,7 +75,7 @@ public extension ResourceControllerBuilder {
 
 
 extension ResourceControllerBuilder {
-    func create<Input>(input: Input.Type, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func create<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -94,7 +94,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func update<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
 
         where
         Input: ResourceUpdateModel,
@@ -106,7 +106,7 @@ extension ResourceControllerBuilder {
                 EagerLoading>(resourceMiddleware: middleware))
     }
 
-    func patch<Input>(input: Input.Type, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func patch<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -118,7 +118,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func delete(forced: Bool = false, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
+    func delete(forced: Bool = false, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,

@@ -68,7 +68,7 @@ public extension RelatedResourceControllerBuilder {
 
 public extension RelatedResourceControllerBuilder {
     func create<Input>(with: Input.Type,
-                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -113,7 +113,7 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func update<Input>(with: Input.Type,
-                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -139,7 +139,7 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func patch<Input>(with: Input.Type,
-                      middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
+                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -166,7 +166,7 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func delete(forced: Bool = false,
-                middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware)  -> RelatedResourceControllerBuilder {
+                middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware)  -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
         case .children(let relationKeyPath):
@@ -224,7 +224,7 @@ public extension RelatedResourceControllerBuilder {
 
 public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
     func create<Input>(with: Input.Type,
-                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -270,7 +270,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
     }
 
     func update<Input>(with: Input.Type,
-                       middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -298,7 +298,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
     }
 
     func patch<Input>(with: Input.Type,
-                      middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -325,7 +325,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
     }
 
     func delete(forced: Bool = false,
-                middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 
         switch keyPathType {

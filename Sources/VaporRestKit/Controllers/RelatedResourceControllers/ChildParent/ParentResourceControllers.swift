@@ -22,7 +22,7 @@ struct CreateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -59,7 +59,7 @@ struct UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -79,7 +79,7 @@ struct PatchParentResourceController<Model, RelatedModel, Output, Patch, EagerLo
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -98,7 +98,7 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>
 EagerLoading.Model == Model {
 
 
-    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let useForcedDelete: Bool
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
