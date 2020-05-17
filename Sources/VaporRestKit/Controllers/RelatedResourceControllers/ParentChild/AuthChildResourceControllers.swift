@@ -111,7 +111,7 @@ EagerLoading.Model == Model {
 
 
     var relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
-    let deleteHandler: Deleter<Model>
+    let deleteHandler: Bool
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 

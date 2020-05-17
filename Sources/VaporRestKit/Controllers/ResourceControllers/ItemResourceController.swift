@@ -81,7 +81,7 @@ EagerLoading.Model == Model {
 
 
     let resourceMiddleware: ResourceMiddleware<Model>
-    let deleteHandler: Deleter<Model>
+    let deleteHandler: Bool
 }
 
 //MARK:- CollectionResourceController

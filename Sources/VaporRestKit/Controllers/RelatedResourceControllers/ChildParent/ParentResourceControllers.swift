@@ -39,7 +39,7 @@ struct ReadParentResourceController<Model, RelatedModel, Output, EagerLoading>: 
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
- 
+
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -97,7 +97,7 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let deleteHandler: Deleter<Model>
+    let deleteHandler: Bool
     let relationNamePath: String
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

@@ -11,7 +11,7 @@ import Fluent
 protocol DeletableResourceController: ItemResourceControllerProtocol {
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 
-    var deleteHandler: Deleter<Model> { get }
+    var deleteHandler: Bool { get}
 }
 
 extension DeletableResourceController where Self: ResourceModelProvider {
@@ -19,8 +19,7 @@ extension DeletableResourceController where Self: ResourceModelProvider {
         let db = req.db
         return try self.find(req)
             .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
-            .flatMap { self.deleteHandler.delete($0, req: req, database: db) }
-            .map { Output($0, req: req) }
+            .flatMap { $0.delete(force: self.deleteHandler, on: db).transform(to: Output($0, req: req)) } 
     }
 }
 
