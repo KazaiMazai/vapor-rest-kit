@@ -164,6 +164,25 @@ protocol ResourcePatchModel: Content, Validatable {
 Since ResourceModelOutput is defined for a Model class, ResourceController creations turnes out as easy as:
 
 ```
+let controller: APIMethodsProviding = User.Output
+                                        .controller(eagerLoading: EagerLoadingUnsupported.self)
+                                        .read()
+```
+
+ResourceOutput and Eager Loading come to be the starting point of the controller. These two guys define response format.
+The following methods will add CRUD capabilities to the controller:
+
+- create(...) via POST
+- read(...) via GET
+- update(...) via PUT
+- patch(...) via PATCH
+- delete(...) via DELETE
+
+- collection(...) adds resource listing capabilities via GET
+
+Method calls can be chained to obtain required behaviour of the controller:
+
+```
 let controller = User.Output
                         .controller(eagerLoading: EagerLoadingUnsupported.self)
                         .create(input: User.Input.self)
@@ -175,47 +194,84 @@ let controller = User.Output
                                     filtering: FilteringUnsupported.self)
 ```
 
-ResourceOutput and Eager Loading come to be the starting point. Of the Controller. These two guys define response format.
 
-- create(...)
-- read(...)
-- update(...)
-- patch(...)
-- delete(...)
+### Routes
 
-Methods will add corresponding support of CRUD operations to the controller with 
+ResourceController conforms to APIMethodsProviding protocol:
 
-- POST
-- GET
-- PUT
-- PATCH
-- DELETE
-
-API.
-
-### CompoundResourceController
-
-CompoundResourceController is simply to combine several single-api-method controllers into one. 
-
-Setup is as easy as the following lines:
 ```
-struct TodosController: VersionableController {
-    let controllerV1 = CompoundResourceController(with: [
-        ReadResourceController<Todo, TodoOutput, TodoEagerLoader>(),
-        CollectionResourceController<Todo, TodoOutput, TodoSorting, TodoEagerLoader, TodoFilter>()
-    ])
-
-    func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-        switch version {
-
-        case .v1:
-            return controllerV1.addMethodsTo(routeBuilder, on: endpoint)
-        }
-    }
+public protocol APIMethodsProviding {
+    func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String)
 }
 
 ```
+
+Let's cossider some entity controller:
+
+```
+
+let controller = Entity.Output
+                        .controller(eagerLoading: EagerLoadingUnsupported.self)
+                        .create(input: Entity.Input.self)
+                        .read()
+                        .update(input: Entity.Input.self)
+                        .patch(input: Entity.PatchInput.self)
+                        .delete()
+                        .collection(sorting: SortingUnsupported.self,
+                                    filtering: FilteringUnsupported.self)
+                                    
+                                    
+```
+
+Then 
+
+```
+controller.addMethodsTo(someBuilder)
+
+``
+
+
+
+/entity/:entity_id
+
+| HTTP Method                 | Route template | Result
+| --------------------------- |:---------------| :---------------|
+|POST | /entity/  | Create new
+|GET | /entity/:entity_id. | Show existing
+|PUT | /entity/:entity_id. | Update existing (Replace)
+|PATCH | /entity/:entity_id | Patch exsiting (Partial update)
+|GET | /entity/   | Show list
+
+
+
+
+### CompoundResourceController
+
+CompoundResourceController allows to combine several single-api-method controllers into one. Each controller should conform to
+*APIMethodsProviding* protocol.
+
+```
+let controller: APIMethodsProviding = CompoundResourceController(with: [
+                User.Output
+                    .controller(eagerLoading: EagerLoadingUnsupported.self)
+                    .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self),
+
+                CustomCreateUserController() ])
+```
+
+ #### Important
+
+ **It's up to developer to take care of http methods that are still available, otherwise Vapor will probably get sad due to attempt to use the same method several twice.**
  
+
+## Relations
+RestKit supports all kinds of Fluent relations to create nested routes:
+- Parent/Child
+- Child/Parent
+- Siblings
+
+
+
 
 
 ## API versioning
@@ -248,9 +304,9 @@ extension Todo {
         let description: String 
  
         init(_ model: Todo) {
-            self.id = asset.id
-            self.name = asset.title
-            self.description = asset.notes
+            self.id = model.id
+            self.name = model.title
+            self.description = model.notes
         }
     }
     
@@ -260,35 +316,39 @@ extension Todo {
         let notes: String
  
         init(_ model: Todo) {
-            self.id = asset.id
-            self.title = asset.title
-            self.notes = asset.notes
+            self.id = model.id
+            self.title = model.title
+            self.notes = model.notes
         }
     }
 }
 
+struct TodoController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .read()
+                .collection(sorting: SortingUnsupported.self,
+                            filtering: FilteringUnsupported.self)
 
-struct TodosController: VersionableController {
-    let controllerV1 = CompoundResourceController(with: [
-        ReadResourceController<Todo, Todo.OutputV1, TodoEagerLoader>(),
-        CollectionResourceController<Todo, Todo.OutputV1, TodoSorting, TodoEagerLoader, TodoFilter>()
-    ])
-    
-    let controllerV2 = CompoundResourceController(with: [
-        ReadResourceController<Todo, Todo.OutputV2, TodoEagerLoader>(),
-        CollectionResourceController<Todo, Todo.OutputV2, TodoSorting, TodoEagerLoader, TodoFilter>()
-    ])
+        }
 
-    func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-        switch version {
+        var apiV2: APIMethodsProviding {
+            return Todo.OutputV2
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .read()
+                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+        }
 
-        case .v1:
-            return controllerV1.addMethodsTo(routeBuilder, on: endpoint)
-        case .v2:
-            return controllerV2.addMethodsTo(routeBuilder, on: endpoint)
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            case .v2:
+                apiV2.addMethodsTo(routeBuilder, on: endpoint)
+            }
         }
     }
-}
 
 ```
 
