@@ -21,7 +21,7 @@ struct CreateChildrenRelationController<Model, RelatedModel, Output, EagerLoadin
           EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 }
 
@@ -39,7 +39,7 @@ struct DeleteChildrenRelationController<Model, RelatedModel, Output, EagerLoadin
         EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
