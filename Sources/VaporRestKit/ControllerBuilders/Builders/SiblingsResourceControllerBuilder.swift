@@ -17,15 +17,15 @@ public final class SiblingsResourceControllerBuilder<Model, RelatedModel, Throug
     EagerLoading.Model == Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
-Through: Fluent.Model {
+    Through: Fluent.Model {
 
     internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
     internal let relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
-    internal let relationName: String
+    internal let relationName: String?
 
     internal init(_ resourControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   relation: SiblingKeyPath<RelatedModel, Model, Through>,
-                  relationName: String) {
+                  relationName: String?) {
 
         self.resourceControllerBuilder = resourControllerBuilder
         self.relationKeyPath = relation

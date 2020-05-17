@@ -24,7 +24,7 @@ struct CreateSiblingRelationController<Model, RelatedModel, Through, Output, Eag
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
 
@@ -44,7 +44,7 @@ struct DeleteSiblingRelationController<Model, RelatedModel, Through, Output, Eag
 
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
