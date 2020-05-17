@@ -25,7 +25,7 @@ struct CreateAuthChildrenResourceController<Model, RelatedModel, Output, Input, 
     EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 }
 
@@ -44,7 +44,7 @@ struct ReadAuthChildrenResourceController<Model, RelatedModel, Output, EagerLoad
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -66,7 +66,7 @@ struct UpdateAuthChildrenResourceController<Model, RelatedModel, Output, Input, 
     EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -89,7 +89,7 @@ struct PatchAuthChildrenResourceController<Model, RelatedModel, Output, Patch, E
     EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -112,7 +112,7 @@ EagerLoading.Model == Model {
 
     var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let useForcedDelete: Bool
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -135,7 +135,7 @@ struct CollectionAuthChildResourceController<Model, RelatedModel, Output, Sortin
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
     let config: IterableControllerConfig
 

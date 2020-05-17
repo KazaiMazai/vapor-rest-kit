@@ -22,7 +22,7 @@ protocol SiblingsResourceModelProvider: ResourceModelProvider
     var rootIdPathComponent: PathComponent { get }
 
     var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { get }
-    var relationNamePath: String { get }
+    var relationNamePath: String? { get }
     var siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through> { get }
 
     func findWithRelated(_ req: Request) throws -> EventLoopFuture<(resource: Model, relatedResoure: RelatedModel)>
@@ -36,18 +36,19 @@ extension SiblingsResourceModelProvider {
     var idPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
     var rootIdComponentKey: String { RelatedModel.schema }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.rootIdComponentKey)") }
-    var relationPathComponent: PathComponent { return PathComponent(stringLiteral: "\(self.relationNamePath)") }
+
+    var relationPathComponent: PathComponent? { return self.relationNamePath.map { PathComponent(stringLiteral: "\($0)") } }
 
     var resourceMiddleware: ResourceControllerMiddleware<Model> { .defaultMiddleware }
 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
-        return [rootIdPathComponent, relationPathComponent, endpointPath]
+        return [rootIdPathComponent, relationPathComponent, endpointPath].compactMap { $0 }
     }
 
     func idResourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
-        return [rootIdPathComponent, relationPathComponent, endpointPath, idPathComponent]
+        return [rootIdPathComponent, relationPathComponent, endpointPath, idPathComponent].compactMap { $0 }
     }
 
     func find(_ req: Request) throws -> EventLoopFuture<Model> {
