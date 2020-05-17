@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct CompoundResourceController {
+public struct CompoundResourceController {
     let underlyingControllers: [APIMethodsProviding]
 
     init(with undelryingControllers: [APIMethodsProviding]) {
@@ -19,7 +19,7 @@ struct CompoundResourceController {
 //MARK:- APIMethodsProviding
 
 extension CompoundResourceController: APIMethodsProviding {
-    func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
+    public func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
         underlyingControllers.forEach { $0.addMethodsTo(routeBuilder, on: endpoint) }
     }
 }
