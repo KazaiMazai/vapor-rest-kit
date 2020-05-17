@@ -41,41 +41,50 @@ public extension SiblingsRelationControllerBuilder {
 }
 
 public extension SiblingsRelationControllerBuilder {
-    func create() -> SiblingsRelationControllerBuilder {
+    func create(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsRelationControllerBuilder {
         return adding(CreateSiblingRelationController<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+            EagerLoading>(relatedResourceMiddleware: middleware,
+                          relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
 
-    func delete() -> SiblingsRelationControllerBuilder {
+    func delete(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsRelationControllerBuilder {
+
         return adding(DeleteSiblingRelationController<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+            EagerLoading>(relatedResourceMiddleware: middleware,
+                          relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
 }
 
 public extension SiblingsRelationControllerBuilder where RelatedModel: Authenticatable {
-    func create(authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
+    func create(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
+        
         return adding(CreateAuthSiblingRelationController<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+            EagerLoading>(relatedResourceMiddleware: middleware,
+                          relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
 
-    func delete(authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
+
+    func delete(with middleware: RelationMiddleware<Model, RelatedModel> = .defaultMiddleware, authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
+
         return adding(DeleteAuthSiblingRelationController<Model,
             RelatedModel,
             Through,
             Output,
-            EagerLoading>(relationNamePath: resourceControllerBuilder.relationName,
+            EagerLoading>(relatedResourceMiddleware: middleware,
+                          relationNamePath: resourceControllerBuilder.relationName,
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
 }

@@ -22,6 +22,7 @@ struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
           EagerLoading: EagerLoadProvider,
           EagerLoading.Model == Model {
 
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 }
@@ -60,6 +61,7 @@ struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
@@ -82,6 +84,7 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
         EagerLoading.Model == Model {
 
 
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
@@ -98,8 +101,11 @@ struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoadin
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible,
         EagerLoading: EagerLoadProvider,
-        EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
+
+    let relatedResourceMiddleware: RelationMiddleware<Model, RelatedModel>
+    let useForcedDelete: Bool
     let relationNamePath: String
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 

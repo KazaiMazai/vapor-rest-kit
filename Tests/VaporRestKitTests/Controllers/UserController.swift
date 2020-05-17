@@ -31,8 +31,6 @@ struct UserControllers {
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
 
-
-
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
             switch version {
             case .v1:

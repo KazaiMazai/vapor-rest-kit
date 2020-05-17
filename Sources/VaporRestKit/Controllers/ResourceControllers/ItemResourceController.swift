@@ -20,6 +20,7 @@ struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableRe
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model  {
 
+    let resourceMiddleware: ResourceMiddleware<Model>
 }
 
 //MARK:- ReadResourceController
@@ -32,6 +33,7 @@ struct ReadResourceController<Model, Output, EagerLoading>: ReadableResourceCont
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let resourceMiddleware: ResourceMiddleware<Model> = .defaultMiddleware
 }
 
 //MARK:- CreateResourceController
@@ -45,6 +47,8 @@ struct UpdateResourceController<Model, Output, Input, EagerLoading>: UpdateableR
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
+
+    let resourceMiddleware: ResourceMiddleware<Model>
 
 }
 
@@ -61,6 +65,7 @@ struct PatchResourceController<Model, Output, Patch, EagerLoading>: PatchableRes
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let resourceMiddleware: ResourceMiddleware<Model>
 }
 
 //MARK:- DeleteResourceController
@@ -72,8 +77,11 @@ struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceC
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
+
+    let resourceMiddleware: ResourceMiddleware<Model>
+    let useForcedDelete: Bool
 }
 
 //MARK:- CollectionResourceController
@@ -89,8 +97,9 @@ struct CollectionResourceController<Model, Output, Sorting, EagerLoading, Filter
     Filtering: FilterProvider,
     Filtering.Model == Model,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model  {
+    EagerLoading.Model == Model  {
 
+    let resourceMiddleware: ResourceMiddleware<Model> = .defaultMiddleware
     let config: IterableControllerConfig
     
 }

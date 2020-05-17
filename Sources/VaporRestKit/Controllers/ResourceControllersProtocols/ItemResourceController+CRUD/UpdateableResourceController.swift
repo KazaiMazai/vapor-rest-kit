@@ -19,11 +19,14 @@ extension UpdateableResourceController where Self: ResourceModelProvider,
                                             Model == Input.Model  {
 
     func update(_ req: Request) throws -> EventLoopFuture<Output> {
-        let request = try req.content.decode(Input.self)
+        try Input.validate(req)
+        let inputModel = try req.content.decode(Input.self)
+        let db = req.db
         return try self.find(req)
-                       .flatMapThrowing { return request.update($0) }
-                       .flatMap { model in return model.update(on: req.db)
-                                                       .map { Output(model) }}
+                    .flatMapThrowing { try inputModel.update($0) }
+                    .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
+                    .flatMap { model in return model.save(on: req.db)
+                                                    .map { Output(model, req: req) }}
     }
 }
 
@@ -35,52 +38,50 @@ extension UpdateableResourceController where Self: ChildrenResourceModelProvider
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
         let keyPath = childrenKeyPath
-
+        let db = req.db
         return try self.findWithRelated(req)
-                       .flatMapThrowing { return try inputModel.update($0.resource)
-                                                               .attached(to: $0.relatedResource, with: keyPath) }
-                       .flatMap { model in return model.save(on: req.db)
-                                                       .map { Output(model) }}
+                .flatMapThrowing { (try inputModel.update($0.resource), $0.relatedResource) }
+                .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
+                .flatMapThrowing { try $0.0.attached(to: $0.1, with: keyPath) }
+                .flatMap { model in return model.save(on: req.db)
+                                                       .map { Output(model, req: req) }}
     }
 }
 
 extension UpdateableResourceController where Self: ParentResourceModelProvider,
-                                            Input: ResourceUpdateModel,
-                                            Model == Input.Model  {
+    Input: ResourceUpdateModel,
+    Model == Input.Model  {
 
     func update(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
         let keyPath = inversedChildrenKeyPath
-
+        let db = req.db
         return try self.findWithRelated(req)
-                       .flatMapThrowing { (resource: inputModel.update($0.resource),
-                                            relatedResource: $0.relatedResource) }
-                       .flatMapThrowing { (resource, relatedResource) in
-                                                (resource: try resource.attached(to: relatedResource, with: keyPath),
-                                                relatedResource: relatedResource) }
-                       .map { (resource, relatedResource) in
-                            [resource.save(on: req.db), relatedResource.save(on: req.db)].flatten(on: req.eventLoop)
-                                                                             .map { _ in resource }}
-                       .flatMap { $0 }
-                       .map { Output($0) }
+            .flatMapThrowing { (try inputModel.update($0.resource), $0.relatedResource) }
+            .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
+            .flatMapThrowing { (try $0.0.attached(to: $0.1, with: keyPath), $0.1) }
+            .flatMap {
+                [$0.0.save(on: db),$0.1.save(on: db)]
+                    .flatten(on: req.eventLoop)
+                    .transform(to: $0.0) }
+            .map { Output($0, req: req) }
     }
 }
 
 
 extension UpdateableResourceController where Self: SiblingsResourceModelProvider,
-                                            Input: ResourceUpdateModel,
-                                            Model == Input.Model {
+    Input: ResourceUpdateModel,
+    Model == Input.Model {
 
     func update(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
-
+        let db = req.db
         return try self.findWithRelated(req)
-                       .flatMap { return inputModel.update($0.resource)
-                                                    .attached(to: $0.relatedResoure,
-                                                            with: self.siblingKeyPath,
-                                                            on: req.db) }
-                       .map { Output($0) }
+            .flatMapThrowing { (try inputModel.update($0.resource), $0.relatedResoure) }
+            .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
+            .flatMap { $0.0.attached(to: $0.1, with: self.siblingKeyPath, on: db) }
+            .map { Output($0, req: req) }
     }
 }

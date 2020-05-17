@@ -21,74 +21,66 @@ extension CreatableResourceController where Self: ResourceModelProvider,
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
-        let model = inputModel.update(Model())
-
-        return model.save(on: req.db)
-                    .map { _ in Output(model) }
+        let db = req.db
+        return req.eventLoop
+            .tryFuture { try inputModel.update(Model()) }
+            .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
+            .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
     }
 }
 
 extension CreatableResourceController where Self: ChildrenResourceModelProvider,
-                                            Input: ResourceUpdateModel,
-                                            Model == Input.Model {
+    Input: ResourceUpdateModel,
+    Model == Input.Model {
 
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
-
+        let db = req.db
         return try self.findRelated(req)
-                       .flatMapThrowing { return try inputModel.update(Model())
-                                                               .attached(to: $0, with: self.childrenKeyPath) }
-                       .flatMap { resource in return resource.save(on: req.db)
-                                                             .map { _ in Output(resource) } }
+            .and(value: try inputModel.update(Model()))
+            .flatMap { self.relatedResourceMiddleware.willSave($0.1, relatedModel: $0.0, req: req, database: db) }
+            .flatMapThrowing { try $0.0.attached(to: $0.1, with: self.childrenKeyPath) }
+            .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
     }
 }
 
 extension CreatableResourceController where Self: ParentResourceModelProvider,
-                                            Input: ResourceUpdateModel,
-                                            Model == Input.Model  {
-
-      func create(_ req: Request) throws -> EventLoopFuture<Output> {
-            try Input.validate(req)
-            let inputModel = try req.content.decode(Input.self)
-            let keyPath = inversedChildrenKeyPath
-
-            let resource = inputModel.update(Model())
-            return resource.save(on: req.db)
-                            .transform(to: resource)
-                            .flatMapThrowing { resource in
-                                return try self.findRelated(req)
-                                               .map { (resource: resource, relatedResource: $0) }}
-                            .flatMap { $0 }
-                            .flatMapThrowing { (resource, relatedResource) in
-                                (resource: try resource.attached(to: relatedResource, with: keyPath),
-                                relatedResource: relatedResource) }
-                            .map { (resource, relatedResource) in
-                                [resource.save(on: req.db), relatedResource.save(on: req.db)]
-                                                                           .flatten(on: req.eventLoop)
-                                                                           .map { _ in resource } }
-                            .flatMap { $0 }
-                            .map { Output($0) }
-    }
-}
-
-extension CreatableResourceController where Self: SiblingsResourceModelProvider,
-                                            Input: ResourceUpdateModel,
-                                            Model == Input.Model {
+    Input: ResourceUpdateModel,
+    Model == Input.Model  {
 
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
+        let keyPath = inversedChildrenKeyPath
+        let db = req.db
+
+        return try findRelated(req)
+            .and(value: try inputModel.update(Model()))
+            .flatMap { self.relatedResourceMiddleware.willSave($0.1, relatedModel: $0.0, req: req, database: db) }
+            .flatMap { (model, related) in  model.save(on: db).transform(to: (model, related)) }
+            .flatMapThrowing { (model, related) in (try model.attached(to: related, with: keyPath), related) }
+            .flatMap { (model, related) in [related.save(on: db), model.save(on: db)]
+                .flatten(on: req.eventLoop)
+                .transform(to: Output(model, req: req)) }
+    }
+}
+
+extension CreatableResourceController where Self: SiblingsResourceModelProvider,
+    Input: ResourceUpdateModel,
+    Model == Input.Model {
+
+    func create(_ req: Request) throws -> EventLoopFuture<Output> {
+        try Input.validate(req)
+        let inputModel = try req.content.decode(Input.self)
+        let db = req.db
 
         return try self.findRelated(req)
-                       .flatMapThrowing { relatedResource in
-                            return (inputModel.update(Model()), relatedResource)  }
-                       .flatMap { (resource, relatedResource) in
-                            return resource.save(on: req.db)
-                                           .transform(to: (resource, relatedResource)) }
-                        .flatMap { (resource, relatedResource) in
-                            return resource.attached(to: relatedResource, with: self.siblingKeyPath, on: req.db) }
-                        .map { Output($0) }
+            .and(value: inputModel.update(Model()))
+            .flatMap { self.relatedResourceMiddleware.willSave($0.1, relatedModel: $0.0, req: req, database: db) }
+            .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
+            .flatMap { (model, related) in model.attached(to: related, with: self.siblingKeyPath, on: db) }
+            .map { Output($0, req: req) }
     }
 }
 

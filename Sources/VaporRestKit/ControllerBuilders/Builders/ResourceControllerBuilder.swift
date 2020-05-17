@@ -14,7 +14,7 @@ public final class ResourceControllerBuilder<Model, Output, EagerLoading>: APIMe
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
     internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                                outputType: Output.Type = Output.self,
@@ -75,7 +75,7 @@ public extension ResourceControllerBuilder {
 
 
 extension ResourceControllerBuilder {
-    func create<Input>(input: Input.Type) -> ResourceControllerBuilder
+    func create<Input>(input: Input.Type, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -83,7 +83,7 @@ extension ResourceControllerBuilder {
             return adding(CreateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>())
+                EagerLoading>(resourceMiddleware: middleware))
     }
 
 
@@ -94,7 +94,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type) -> ResourceControllerBuilder
+    func update<Input>(input: Input.Type, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
 
         where
         Input: ResourceUpdateModel,
@@ -103,10 +103,10 @@ extension ResourceControllerBuilder {
             return adding(UpdateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>())
+                EagerLoading>(resourceMiddleware: middleware))
     }
 
-    func patch<Input>(input: Input.Type) -> ResourceControllerBuilder
+    func patch<Input>(input: Input.Type, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -114,13 +114,16 @@ extension ResourceControllerBuilder {
             return adding(PatchResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>())
+                EagerLoading>(resourceMiddleware: middleware))
     }
 
-    func delete() -> ResourceControllerBuilder {
+
+    func delete(forced: Bool = false, middleware: ResourceMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
+
         return adding(DeleteResourceController<Model,
             Output,
-            EagerLoading>())
+            EagerLoading>(resourceMiddleware: middleware,
+                          useForcedDelete: forced))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,
