@@ -9,16 +9,18 @@ import Vapor
 import Fluent
 
 protocol DeletableResourceController: ItemResourceControllerProtocol {
-    func delete(_: Request) throws -> EventLoopFuture<HTTPStatus>
+    func delete(_ req: Request) throws -> EventLoopFuture<Output>
+
+    var useForcedDelete: Bool { get}
 }
 
 extension DeletableResourceController where Self: ResourceModelProvider {
-    func delete(_ req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        try self.find(req)
-                .flatMap { $0.delete(on: req.db) }
-                .map { .ok }
+    func delete(_ req: Request) throws -> EventLoopFuture<Output> {
+        let db = req.db
+        return try self.find(req)
+            .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
+            .flatMap { $0.delete(force: self.useForcedDelete, on: db).transform(to: Output($0, req: req)) } 
     }
 }
-
 
 

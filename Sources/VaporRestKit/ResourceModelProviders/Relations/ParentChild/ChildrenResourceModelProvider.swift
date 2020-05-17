@@ -19,6 +19,7 @@ protocol ChildrenResourceModelProvider: ResourceModelProvider
     var rootIdComponentKey: String { get }
     var rootIdPathComponent: PathComponent { get }
 
+    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { get }
     var relationNamePath: String { get }
     var childrenKeyPath: ChildrenKeyPath<RelatedModel, Model> { get }
 
@@ -34,6 +35,8 @@ extension ChildrenResourceModelProvider {
     var rootIdComponentKey: String { RelatedModel.schema }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.rootIdComponentKey)") }
     var relationPathComponent: PathComponent { return PathComponent(stringLiteral: "\(self.relationNamePath)") }
+
+    var resourceMiddleware: ResourceControllerMiddleware<Model> { .defaultMiddleware }
 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)

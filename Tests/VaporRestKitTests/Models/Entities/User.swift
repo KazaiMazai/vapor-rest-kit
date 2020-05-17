@@ -63,7 +63,7 @@ extension User {
         let username: String
         let age: Int
 
-        init(_ model: User) {
+        init(_ model: User, req: Request) {
             id = model.id
             username = model.username
             age = model.age
@@ -74,7 +74,7 @@ extension User {
         let id: Int?
         let username: String
 
-        init(_ model: User) {
+        init(_ model: User, req: Request) {
             id = model.id
             username = model.username
         }
@@ -87,7 +87,6 @@ extension User {
         func update(_ model: User) -> User {
             model.username = username
             model.age = age
-
             return model
         }
 
@@ -104,7 +103,6 @@ extension User {
         func patch(_ model: User) -> User {
             model.username = username ?? model.username
             model.age = age ?? model.age
-
             return model
         }
 
