@@ -95,7 +95,6 @@ extension ResourceControllerBuilder {
 
 
     func update<Input>(input: Input.Type) -> ResourceControllerBuilder
-
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {

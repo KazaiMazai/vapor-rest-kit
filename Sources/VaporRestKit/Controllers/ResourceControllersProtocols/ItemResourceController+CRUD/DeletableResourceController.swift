@@ -18,34 +18,46 @@ extension DeletableResourceController where Self: ResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
         return try self.find(req, database: db)
-            .flatMap{ self.deleter.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
+            .flatMap { self.deleter.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
     }
 }
 
 extension DeletableResourceController where Self: ChildrenResourceRelationProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
-        let db = req.db
-        return try self.findWithRelated(req, database: db)
-            .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
-            .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+        req.db.tryTransaction { db in
+            try self.findWithRelated(req, database: db)
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                                                                        relatedModel: $0.relatedResource,
+                                                                        req: req,
+                                                                        database: db) }
+                .flatMap { self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+        }
     }
 }
 
 extension DeletableResourceController where Self: ParentResourceRelationProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
-        let db = req.db
-        return try self.findWithRelated(req, database: db)
-            .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
-            .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+        req.db.tryTransaction { db in
+            try self.findWithRelated(req, database: db)
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                                                                        relatedModel: $0.relatedResource,
+                                                                        req: req,
+                                                                        database: db) }
+                .flatMap { self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+        }
     }
 }
 
 extension DeletableResourceController where Self: SiblingsResourceRelationProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
-        let db = req.db
-         return try self.findWithRelated(req, database: db)
-            .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
-            .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+        req.db.tryTransaction { db in
+            try self.findWithRelated(req, database: db)
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                                                                        relatedModel: $0.relatedResoure,
+                                                                        req: req,
+                                                                        database: db) }
+                .flatMap { self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+        }
     }
 }
 
