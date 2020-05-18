@@ -117,7 +117,7 @@ public extension SiblingsResourceControllerBuilder {
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete(forced: Bool = false,
+    func delete(forced:  DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder {
 
             return adding(DeleteRelatedResourceController<Model,
@@ -208,7 +208,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete(forced: Bool = false,
+    func delete(forced: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
 

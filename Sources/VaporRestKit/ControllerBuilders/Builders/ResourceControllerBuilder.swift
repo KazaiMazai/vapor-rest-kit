@@ -118,7 +118,8 @@ extension ResourceControllerBuilder {
     }
 
 
-    func delete(forced: Bool = false, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
+    func delete(forced:  DeleteHandler<Model> = .defaultDeleter,
+                middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,
