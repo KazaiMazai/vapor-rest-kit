@@ -11,14 +11,14 @@ import Fluent
 protocol DeletableResourceController: ItemResourceControllerProtocol {
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 
-    var useForcedDelete: DeleteHandler<Model> { get }
+    var deleter: DeleteHandler<Model> { get }
 }
 
 extension DeletableResourceController where Self: ResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
         return try self.find(req)
-            .flatMap{ self.useForcedDelete.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
+            .flatMap{ self.deleter.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -27,7 +27,7 @@ extension DeletableResourceController where Self: ChildrenResourceRelationProvid
         let db = req.db
         return try self.findWithRelated(req)
             .flatMap { self.relatedResourceMiddleware.willSave($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
-            .flatMap{ self.useForcedDelete.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+            .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
     }
 }
 
@@ -36,7 +36,7 @@ extension DeletableResourceController where Self: SiblingsResourceRelationProvid
         let db = req.db
          return try self.findWithRelated(req)
             .flatMap { self.relatedResourceMiddleware.willSave($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
-            .flatMap{ self.useForcedDelete.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+            .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
     }
 }
 

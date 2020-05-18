@@ -76,7 +76,7 @@ struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceC
 EagerLoading.Model == Model {
 
 
-    let useForcedDelete: DeleteHandler<Model>
+    let deleter: DeleteHandler<Model>
 }
 
 //MARK:- CollectionResourceController

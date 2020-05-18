@@ -118,11 +118,11 @@ extension ResourceControllerBuilder {
     }
 
 
-    func delete(forced: DeleteHandler<Model> = .defaultDeleter) -> ResourceControllerBuilder {
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,
-            EagerLoading>(useForcedDelete: forced))
+            EagerLoading>(deleter: handler))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,
