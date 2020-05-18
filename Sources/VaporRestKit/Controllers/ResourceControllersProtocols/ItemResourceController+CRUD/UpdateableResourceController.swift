@@ -40,7 +40,7 @@ extension UpdateableResourceController where Self: ChildrenResourceModelProvider
         let db = req.db
         return try self.findWithRelated(req)
                 .flatMap { inputModel.update($0.resource , req: req ,database: db).and(value: $0.relatedResource) }
-                .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.0, relatedModel: $0.1, req: req, database: db) }
                 .flatMapThrowing { try $0.0.attached(to: $0.1, with: keyPath) }
                 .flatMap { model in return model.save(on: req.db)
                                                        .map { Output(model, req: req) }}
@@ -58,7 +58,7 @@ extension UpdateableResourceController where Self: ParentResourceModelProvider,
         let db = req.db
         return try self.findWithRelated(req)
             .flatMap { inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResource) }
-            .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
+            .flatMap { self.relatedResourceMiddleware.handleRelated($0.0, relatedModel: $0.1, req: req, database: db) }
             .flatMapThrowing { (try $0.0.attached(to: $0.1, with: keyPath), $0.1) }
             .flatMap {
                 [$0.0.save(on: db),$0.1.save(on: db)]
@@ -79,7 +79,7 @@ extension UpdateableResourceController where Self: SiblingsResourceModelProvider
         let db = req.db
         return try self.findWithRelated(req)
             .flatMap { inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResoure) }
-            .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
+            .flatMap { self.relatedResourceMiddleware.handleRelated($0.0, relatedModel: $0.1, req: req, database: db) }
             .flatMap { $0.0.attached(to: $0.1, with: self.siblingKeyPath, on: db) }
             .map { Output($0, req: req) }
     }

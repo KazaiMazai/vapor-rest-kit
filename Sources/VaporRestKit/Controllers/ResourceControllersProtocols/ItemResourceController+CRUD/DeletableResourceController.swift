@@ -26,7 +26,16 @@ extension DeletableResourceController where Self: ChildrenResourceRelationProvid
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
         return try self.findWithRelated(req)
-            .flatMap { self.relatedResourceMiddleware.willSave($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
+            .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
+            .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+    }
+}
+
+extension DeletableResourceController where Self: ParentResourceRelationProvider {
+    func delete(_ req: Request) throws -> EventLoopFuture<Output> {
+        let db = req.db
+        return try self.findWithRelated(req)
+            .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
             .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
     }
 }
@@ -35,29 +44,20 @@ extension DeletableResourceController where Self: SiblingsResourceRelationProvid
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
          return try self.findWithRelated(req)
-            .flatMap { self.relatedResourceMiddleware.willSave($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
+            .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
             .flatMap{ self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
     }
 }
-
-
 
 public struct DeleteHandler<Model: Fluent.Model> {
     public typealias Handler = (Model, Bool, Request, Database) -> EventLoopFuture<Model>
 
     fileprivate let deleteHandler: Handler
-    let useForcedDelete: Bool
+    fileprivate let useForcedDelete: Bool
 
     public init(handler: @escaping Handler = Self.defaultDeleteMethod, useForcedDelete: Bool = false) {
         self.deleteHandler = handler
         self.useForcedDelete = useForcedDelete
-    }
-
-    public func performDelete(_ model: Model,
-                         req: Request,
-                         database: Database) -> EventLoopFuture<Model> {
-
-        return deleteHandler(model, useForcedDelete, req, database)
     }
 
     public static var defaultDeleter: DeleteHandler<Model> {
@@ -66,5 +66,12 @@ public struct DeleteHandler<Model: Fluent.Model> {
 
     public static var defaultDeleteMethod: Handler {
         return { model, forceDelete, _, db in model.delete(force: forceDelete, on: db).transform(to: model) }
+    }
+
+    func performDelete(_ model: Model,
+                         req: Request,
+                         database: Database) -> EventLoopFuture<Model> {
+
+        return deleteHandler(model, useForcedDelete, req, database)
     }
 }
