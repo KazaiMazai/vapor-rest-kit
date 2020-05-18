@@ -25,7 +25,7 @@ struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
 
@@ -44,7 +44,7 @@ struct ReadRelatedResourceController<Model, RelatedModel, Through, Output, Eager
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -66,7 +66,7 @@ struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -89,7 +89,7 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -109,8 +109,8 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Eag
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let useForcedDelete: Bool
-    let relationNamePath: String
+    let deleter: DeleteHandler<Model>
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -133,7 +133,7 @@ struct CollectionRelatedResourceController<Model, RelatedModel, Through, Output,
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let config: IterableControllerConfig
 

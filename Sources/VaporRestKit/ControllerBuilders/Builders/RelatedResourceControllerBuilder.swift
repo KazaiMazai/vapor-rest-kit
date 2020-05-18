@@ -20,11 +20,11 @@ public final class RelatedResourceControllerBuilder<Model, RelatedModel, Output,
 
     internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
     internal let keyPathType: KeyPathType
-    internal let relationName: String
+    internal let relationName: String?
 
     internal init(_ resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                  relationName: String) {
+                  relationName: String?) {
 
         self.resourceControllerBuilder = resourceControllerBuilder
         self.keyPathType = .children(childrenKeyPath)
@@ -33,7 +33,7 @@ public final class RelatedResourceControllerBuilder<Model, RelatedModel, Output,
 
     internal init(_ resourceFactory: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                  relationName: String) {
+                  relationName: String?) {
 
         self.resourceControllerBuilder = resourceFactory
         self.keyPathType = .inversedChildren(childrenKeyPath)
@@ -165,7 +165,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func delete(forced: Bool = false,
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware)  -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
@@ -174,7 +174,7 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -183,7 +183,7 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -324,7 +324,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func delete(forced: Bool = false,
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 
@@ -334,7 +334,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -343,7 +343,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }

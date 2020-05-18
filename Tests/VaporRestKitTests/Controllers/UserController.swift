@@ -11,7 +11,7 @@ import Vapor
 import Fluent
 
 struct UserControllers {
-    struct AllUsersController: VersionableController {
+    struct UsersController: VersionableController {
         var v1: APIMethodsProviding {
             return User.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)

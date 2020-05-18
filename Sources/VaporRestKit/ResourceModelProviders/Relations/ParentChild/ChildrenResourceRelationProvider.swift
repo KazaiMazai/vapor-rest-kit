@@ -16,6 +16,6 @@ extension ChildrenResourceRelationProvider {
     func idResourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         let relationPath = PathComponent(stringLiteral: "relation")
-        return [rootIdPathComponent, relationPathComponent, endpointPath, idPathComponent, relationPath]
+        return [rootIdPathComponent, relationPathComponent, endpointPath, idPathComponent, relationPath].compactMap { $0 }
     }
 }

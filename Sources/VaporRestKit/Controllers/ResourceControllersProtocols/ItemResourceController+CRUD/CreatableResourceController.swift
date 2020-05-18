@@ -22,9 +22,7 @@ extension CreatableResourceController where Self: ResourceModelProvider,
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
-        return req.eventLoop
-            .tryFuture { try inputModel.update(Model()) }
-            .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
+        return inputModel.update(Model(), req: req, database: db)
             .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
     }
 }
@@ -38,7 +36,7 @@ extension CreatableResourceController where Self: ChildrenResourceModelProvider,
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
         return try self.findRelated(req)
-            .and(value: try inputModel.update(Model()))
+            .and(inputModel.update(Model(), req: req, database: db))
             .flatMap { self.relatedResourceMiddleware.willSave($0.1, relatedModel: $0.0, req: req, database: db) }
             .flatMapThrowing { try $0.0.attached(to: $0.1, with: self.childrenKeyPath) }
             .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
@@ -56,7 +54,7 @@ extension CreatableResourceController where Self: ParentResourceModelProvider,
         let db = req.db
 
         return try findRelated(req)
-            .and(value: try inputModel.update(Model()))
+            .and(inputModel.update(Model(), req: req, database: db))
             .flatMap { self.relatedResourceMiddleware.willSave($0.1, relatedModel: $0.0, req: req, database: db) }
             .flatMap { (model, related) in  model.save(on: db).transform(to: (model, related)) }
             .flatMapThrowing { (model, related) in (try model.attached(to: related, with: keyPath), related) }
@@ -76,7 +74,7 @@ extension CreatableResourceController where Self: SiblingsResourceModelProvider,
         let db = req.db
 
         return try self.findRelated(req)
-            .and(value: inputModel.update(Model()))
+            .and(inputModel.update(Model(), req: req, database: db))
             .flatMap { self.relatedResourceMiddleware.willSave($0.1, relatedModel: $0.0, req: req, database: db) }
             .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
             .flatMap { (model, related) in model.attached(to: related, with: self.siblingKeyPath, on: db) }

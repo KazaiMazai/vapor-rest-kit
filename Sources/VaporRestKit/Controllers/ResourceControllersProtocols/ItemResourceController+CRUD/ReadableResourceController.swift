@@ -9,8 +9,6 @@ import Vapor
 import Fluent
 
 protocol ReadableResourceController: ItemResourceControllerProtocol {
-    associatedtype Output
-    associatedtype Model
 
     func read(_: Request) throws -> EventLoopFuture<Output>
 }
