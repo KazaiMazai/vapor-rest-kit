@@ -61,7 +61,13 @@ extension Tag {
 
 
     struct CreateInput: ResourceUpdateModel {
+        typealias Model = Tag
+
         let title: String
+
+        func update(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
+            return req.eventLoop.makeSucceededFuture(model)
+        }
 
         func update(_ model: Tag) throws -> Tag {
             model.title = title
@@ -74,6 +80,10 @@ extension Tag {
     }
 
     struct UpdateInput: ResourceUpdateModel {
+         
+
+
+ 
         let title: String
 
         func update(_ model: Tag) throws -> Tag {
@@ -89,6 +99,7 @@ extension Tag {
     struct PatchInput: ResourcePatchModel {
         let title: String?
 
+        
         func patch(_ model: Tag) throws -> Tag {
             model.title = title ?? model.title
             return model

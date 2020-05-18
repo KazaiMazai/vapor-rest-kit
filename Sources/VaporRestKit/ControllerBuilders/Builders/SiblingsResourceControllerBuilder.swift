@@ -17,7 +17,7 @@ public final class SiblingsResourceControllerBuilder<Model, RelatedModel, Throug
     EagerLoading.Model == Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
-    Through: Fluent.Model {
+Through: Fluent.Model {
 
     internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
     internal let relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
@@ -117,16 +117,16 @@ public extension SiblingsResourceControllerBuilder {
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete(forced: Bool = false,
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder {
 
-            return adding(DeleteRelatedResourceController<Model,
+        return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
             Through,
             Output,
-                EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced, relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+            EagerLoading>(relatedResourceMiddleware: middleware,
+                          deleter: handler, relationNamePath: relationName,
+                          siblingKeyPath: relationKeyPath))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type, filtering: Filtering.Type, config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerBuilder
@@ -208,7 +208,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                               siblingKeyPath: relationKeyPath))
     }
 
-    func delete(forced: Bool = false,
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
 
@@ -217,7 +217,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
             Through,
             Output,
             EagerLoading>(relatedResourceMiddleware: middleware,
-                          useForcedDelete: forced,
+                          deleter: handler,
                           relationNamePath: relationName,
                           siblingKeyPath: relationKeyPath))
     }

@@ -38,9 +38,7 @@ extension SiblingsResourceModelProvider {
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.rootIdComponentKey)") }
 
     var relationPathComponent: PathComponent? { return self.relationNamePath.map { PathComponent(stringLiteral: "\($0)") } }
-
-    var resourceMiddleware: ResourceControllerMiddleware<Model> { .defaultMiddleware }
-
+ 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         return [rootIdPathComponent, relationPathComponent, endpointPath].compactMap { $0 }

@@ -23,8 +23,7 @@ extension UpdateableResourceController where Self: ResourceModelProvider,
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
         return try self.find(req)
-                    .flatMapThrowing { try inputModel.update($0) }
-                    .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
+                    .flatMap { inputModel.update($0, req: req, database: db) }
                     .flatMap { model in return model.save(on: req.db)
                                                     .map { Output(model, req: req) }}
     }
@@ -40,7 +39,7 @@ extension UpdateableResourceController where Self: ChildrenResourceModelProvider
         let keyPath = childrenKeyPath
         let db = req.db
         return try self.findWithRelated(req)
-                .flatMapThrowing { (try inputModel.update($0.resource), $0.relatedResource) }
+                .flatMap { inputModel.update($0.resource , req: req ,database: db).and(value: $0.relatedResource) }
                 .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
                 .flatMapThrowing { try $0.0.attached(to: $0.1, with: keyPath) }
                 .flatMap { model in return model.save(on: req.db)
@@ -58,7 +57,7 @@ extension UpdateableResourceController where Self: ParentResourceModelProvider,
         let keyPath = inversedChildrenKeyPath
         let db = req.db
         return try self.findWithRelated(req)
-            .flatMapThrowing { (try inputModel.update($0.resource), $0.relatedResource) }
+            .flatMap { inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResource) }
             .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
             .flatMapThrowing { (try $0.0.attached(to: $0.1, with: keyPath), $0.1) }
             .flatMap {
@@ -79,7 +78,7 @@ extension UpdateableResourceController where Self: SiblingsResourceModelProvider
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
         return try self.findWithRelated(req)
-            .flatMapThrowing { (try inputModel.update($0.resource), $0.relatedResoure) }
+            .flatMap { inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResoure) }
             .flatMap { self.relatedResourceMiddleware.willSave($0.0, relatedModel: $0.1, req: req, database: db) }
             .flatMap { $0.0.attached(to: $0.1, with: self.siblingKeyPath, on: db) }
             .map { Output($0, req: req) }

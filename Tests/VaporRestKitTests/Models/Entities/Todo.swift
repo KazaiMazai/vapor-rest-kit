@@ -92,7 +92,12 @@ extension Todo {
     }
 
     struct Input: ResourceUpdateModel {
+         
+
+         
+
         let title: String
+
 
         func update(_ model: Todo) throws -> Todo {
             model.title = title
