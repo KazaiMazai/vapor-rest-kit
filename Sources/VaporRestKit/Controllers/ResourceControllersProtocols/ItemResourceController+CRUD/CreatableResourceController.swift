@@ -23,7 +23,7 @@ extension CreatableResourceController where Self: ResourceModelProvider,
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
         return inputModel.update(Model(), req: req, database: db)
-            .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
+            .flatMap { $0.save(on: db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -35,11 +35,11 @@ extension CreatableResourceController where Self: ChildrenResourceModelProvider,
         try Input.validate(req)
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
-        return try self.findRelated(req)
+        return try self.findRelated(req, database: db)
             .and(inputModel.update(Model(), req: req, database: db))
             .flatMap { self.relatedResourceMiddleware.handleRelated($0.1, relatedModel: $0.0, req: req, database: db) }
             .flatMapThrowing { try $0.0.attached(to: $0.1, with: self.childrenKeyPath) }
-            .flatMap { $0.save(on: req.db).transform(to: Output($0, req: req)) }
+            .flatMap { $0.save(on: db).transform(to: Output($0, req: req)) }
     }
 }
 
@@ -53,7 +53,7 @@ extension CreatableResourceController where Self: ParentResourceModelProvider,
         let keyPath = inversedChildrenKeyPath
         let db = req.db
 
-        return try findRelated(req)
+        return try findRelated(req, database: db)
             .and(inputModel.update(Model(), req: req, database: db))
             .flatMap { self.relatedResourceMiddleware.handleRelated($0.1, relatedModel: $0.0, req: req, database: db) }
             .flatMap { (model, related) in  model.save(on: db).transform(to: (model, related)) }
@@ -73,7 +73,7 @@ extension CreatableResourceController where Self: SiblingsResourceModelProvider,
         let inputModel = try req.content.decode(Input.self)
         let db = req.db
 
-        return try self.findRelated(req)
+        return try self.findRelated(req, database: db)
             .and(inputModel.update(Model(), req: req, database: db))
             .flatMap { self.relatedResourceMiddleware.handleRelated($0.1, relatedModel: $0.0, req: req, database: db) }
             .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }

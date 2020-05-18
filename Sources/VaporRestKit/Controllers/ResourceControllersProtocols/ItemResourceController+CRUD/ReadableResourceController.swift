@@ -15,7 +15,8 @@ protocol ReadableResourceController: ItemResourceControllerProtocol {
 
 extension ReadableResourceController where Self: ResourceModelProvider {
     func read(_ req: Request) throws -> EventLoopFuture<Output> {
-        return try self.find(req)
+        
+        return try self.find(req, database: db)
                        .map { Output($0, req: req) }
     }
 }

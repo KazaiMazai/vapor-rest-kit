@@ -17,7 +17,7 @@ protocol CreatableRelationController: ItemResourceControllerProtocol {
 extension CreatableRelationController where Self: ChildrenResourceRelationProvider {
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
-        return try self.findWithRelated(req)
+        return try self.findWithRelated(req, database: db)
                        .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
                        .flatMapThrowing { (resource, related) in try resource.attached(to: related, with: self.childrenKeyPath) }
                        .flatMap { resource in return resource.save(on: db)
@@ -28,7 +28,7 @@ extension CreatableRelationController where Self: ChildrenResourceRelationProvid
 extension CreatableRelationController where Self: ParentResourceRelationProvider {
       func create(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
-        return try self.findWithRelated(req)
+        return try self.findWithRelated(req, database: db)
                         .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
                         .flatMapThrowing { (resource, related) in
                             try resource.attached(to: related, with: self.inversedChildrenKeyPath)
@@ -41,7 +41,7 @@ extension CreatableRelationController where Self: ParentResourceRelationProvider
 extension CreatableRelationController where Self: SiblingsResourceRelationProvider {
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
-        return try findWithRelated(req)
+        return try findWithRelated(req, database: db)
                     .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
                     .flatMap { (resource, related) in resource.attached(to: related, with: self.siblingKeyPath, on: db) }
                     .map { Output($0, req: req)}

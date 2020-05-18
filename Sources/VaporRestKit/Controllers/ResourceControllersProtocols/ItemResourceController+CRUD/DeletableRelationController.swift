@@ -19,7 +19,7 @@ extension DeletableRelationController
 
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
-        return try self.findWithRelated(req)
+        return try self.findWithRelated(req, database: db)
             .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
             .flatMapThrowing { try $0.0.detached(from: $0.1, with: self.childrenKeyPath) }
             .flatMap { resource in return resource.save(on: db)
@@ -30,7 +30,7 @@ extension DeletableRelationController
 extension DeletableRelationController where Self: ParentResourceRelationProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
-        return try self.findWithRelated(req)
+        return try self.findWithRelated(req, database: db)
             .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResource, req: req, database: db) }
             .flatMapThrowing { (resource, related) in
                 try resource.detached(from: related, with: self.inversedChildrenKeyPath)
@@ -43,7 +43,7 @@ extension DeletableRelationController where Self: ParentResourceRelationProvider
 extension DeletableRelationController where Self: SiblingsResourceRelationProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
-        return try findWithRelated(req)
+        return try findWithRelated(req, database: db)
             .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource, relatedModel: $0.relatedResoure, req: req, database: db) }
             .flatMap {(resource, related) in resource.detached(from: related, with: self.siblingKeyPath, on: db) }
             .map { Output($0, req: req)}
