@@ -8,26 +8,24 @@
 import Vapor
 import Fluent
 
-
 public struct RelatedResourceControllerMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
     public typealias Handler = (Model, RelatedModel, Request, Database) -> EventLoopFuture<(Model, RelatedModel)>
 
-    fileprivate let willSaveHandler: Handler
+    fileprivate let handler: Handler
 
-    public init(willSave: @escaping Handler = Self.empty) {
-        self.willSaveHandler = willSave
+    public init(handler: @escaping Handler = Self.empty) {
+        self.handler = handler
     }
 
-    public func willSave(_ model: Model,
+    func handleRelated(_ model: Model,
                          relatedModel: RelatedModel,
                          req: Request,
                          database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
-        return willSaveHandler(model, relatedModel, req, database)
+        return handler(model, relatedModel, req, database)
     }
 
-
     public static var defaultMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> {
-        return RelatedResourceControllerMiddleware(willSave: empty)
+        return RelatedResourceControllerMiddleware(handler: empty)
     }
 
     public static var empty: Handler {
