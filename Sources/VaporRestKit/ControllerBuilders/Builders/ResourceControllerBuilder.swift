@@ -75,7 +75,7 @@ public extension ResourceControllerBuilder {
 
 
 extension ResourceControllerBuilder {
-    func create<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func create<Input>(input: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -83,7 +83,7 @@ extension ResourceControllerBuilder {
             return adding(CreateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>(resourceMiddleware: middleware))
+                EagerLoading>())
     }
 
 
@@ -94,7 +94,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func update<Input>(input: Input.Type) -> ResourceControllerBuilder
 
         where
         Input: ResourceUpdateModel,
@@ -103,10 +103,10 @@ extension ResourceControllerBuilder {
             return adding(UpdateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>(resourceMiddleware: middleware))
+                EagerLoading>())
     }
 
-    func patch<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func patch<Input>(input: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -114,17 +114,15 @@ extension ResourceControllerBuilder {
             return adding(PatchResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>(resourceMiddleware: middleware))
+                EagerLoading>())
     }
 
 
-    func delete(forced:  DeleteHandler<Model> = .defaultDeleter,
-                middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
+    func delete(forced: DeleteHandler<Model> = .defaultDeleter) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,
-            EagerLoading>(resourceMiddleware: middleware,
-                          useForcedDelete: forced))
+            EagerLoading>(useForcedDelete: forced))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,

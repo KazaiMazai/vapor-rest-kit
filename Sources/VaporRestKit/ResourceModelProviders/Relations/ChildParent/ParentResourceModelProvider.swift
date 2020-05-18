@@ -41,9 +41,7 @@ extension ParentResourceModelProvider {
 
         return PathComponent(stringLiteral: "\(path)")
     }
-
-    var resourceMiddleware: ResourceControllerMiddleware<Model> { .defaultMiddleware }
-
+ 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         return [rootIdPathComponent, relationPathComponent, endpointPath].compactMap { $0 }

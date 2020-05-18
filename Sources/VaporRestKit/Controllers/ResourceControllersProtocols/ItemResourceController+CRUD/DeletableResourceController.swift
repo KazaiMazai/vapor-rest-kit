@@ -18,7 +18,6 @@ extension DeletableResourceController where Self: ResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         let db = req.db
         return try self.find(req)
-            .flatMap { self.resourceMiddleware.willSave($0, req: req, database: db) }
             .flatMap{ self.useForcedDelete.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
     }
 }

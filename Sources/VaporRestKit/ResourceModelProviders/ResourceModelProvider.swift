@@ -19,9 +19,7 @@ protocol ResourceModelProvider where EagerLoading.Model == Model, Sorting.Model 
 
     var eagerLoadHandler: EagerLoading { get }
     var sortingHandler: Sorting { get }
-    var filteringHandler: Filtering { get }
-
-    var resourceMiddleware: ResourceControllerMiddleware<Model> { get }
+    var filteringHandler: Filtering { get } 
 
     func find(_: Request) throws -> EventLoopFuture<Model>
 
