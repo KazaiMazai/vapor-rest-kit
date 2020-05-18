@@ -21,6 +21,16 @@ struct TodoControllers {
 
         }
 
+        var tagRelated: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(with: \Tag.$relatedTodos, relationName: "related")
+                .collection(sorting: SortingUnsupported.self,
+                            filtering: FilteringUnsupported.self)
+
+
+        }
+
         var apiV2: APIMethodsProviding {
             return Todo.OutputV2
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
@@ -38,3 +48,5 @@ struct TodoControllers {
         }
     }
 }
+
+

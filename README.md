@@ -16,8 +16,9 @@ It allows to build up Restful APIs in decalrative way.
 - Pagination by cursor/page
 
 ## Fluent Model Extensions
-
 ### FieldsProvidingModel
+#### How to stop suffering from string literals in Fluent Models' Fields
+
 
 Allows to create Model's fields as an enum and then safely use it without hassling with string literals and suffering from fat fingers.
 
@@ -50,8 +51,9 @@ final class User: Model, Content {
 
 
 ```
-
 ### InitMigratableSchema
+#### How to stop suffering from Fluent Models' initial migrations boilerplate 
+
 
 Easy-breazy stuff for creating initial migrations in three simple steps.
 1. Make your model conform to InitMigratableSchema protocol, by implementing static prepare(...) method (almost as usual)
@@ -78,7 +80,9 @@ func configureDatabaseInitialMigrations(_ app: Application) {
 
 3. PROFIT!
 
+
 ### SiblingRepresentable
+#### How to stop suffering from Siblings pivot models boiler plate
 
 Short-cut for creating many-to-many relations.
 
@@ -126,7 +130,7 @@ private func configureDatabaseInitialMigrations(_ app: Application) {
 
 ## Basics
  
-While **Mode**l is something represented as by a table in your database, Rest-Kit introduces such thing as **Resource**. Resource is a wrap over the model that is returned from backend API as response and consumed by backend API as request.
+While **Mode**l is something represented by a table in your database, RestKit introduces such thing as **ResourceModel**. ResourceModel is a wrap over the Model that is returned from backend API as a response and consumed by backend API as a request.
 
 
 At Rest-Kit, Resource is separated into **Output**:
@@ -155,67 +159,252 @@ protocol ResourcePatchModel: Content, Validatable {
 }
 
 ```
-**Input** and **Output** Resources provide managable interface for the models..
+**Input** and **Output** Resources provide managable interface for the models. Each model can have as many possible inputs and outputs as you wish, though it's better not to.
 
 
 
-## Resource Controllers
+## CRUD Controllers
 
-Since ResourceModelOutput is defined for a Model class, ResourceController creations turnes out as easy as:
+### Resource Controllers
+
+#### How to create CRUD API blazingly fast
+
+1. Create Inputs, Outputs for your model:
 
 ```
-let controller = User.Output
-                        .controller(eagerLoading: EagerLoadingUnsupported.self)
-                        .create(input: User.Input.self)
-                        .read()
-                        .update(input: User.Input.self)
-                        .patch(input: User.PatchInput.self)
-                        .delete()
-                        .collection(sorting: SortingUnsupported.self,
-                                    filtering: FilteringUnsupported.self)
+extension Todo {
+    struct Output: ResourceOutputModel {
+        let id: Int?
+        let title: String
+
+        init(_ model: Todo, req: Request) {
+            id = model.id
+            title = model.title
+        }
+    }
+    
+    struct CreateInput: ResourceUpdateModel {
+        let title: String
+
+        func update(_ model: Todo) throws -> Todo {
+            model.title = title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+            //Validate something
+        }
+    }
+    
+    
+    struct UpdateInput: ResourceUpdateModel {
+        let title: String
+
+        func update(_ model: Todo) throws -> Todo {
+            model.title = title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+            //Validate something
+        }
+    }
+
+    struct PatchInput: ResourcePatchModel {
+        let title: String?
+
+        func patch(_ model: Todo) throws -> Todo {
+            model.title = title ?? model.title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+            //Validate something
+        }
+    }
+
+}
+
 ```
 
-ResourceOutput and Eager Loading come to be the starting point. Of the Controller. These two guys define response format.
+2. Define which operations will be supported by your resource controller:
 
-- create(...)
-- read(...)
-- update(...)
-- patch(...)
-- delete(...)
+```
+let controller = Todo.Output
+                    .controller(eagerLoading: EagerLoadingUnsupported.self)
+                    .create(input: Todo.CreateInput.self)
+                    .read()
+                    .update(input: Todo.UpdateInput.self)
+                    .patch(input: Todo.PatchInput.self)
+                    .delete()
+                    .collection(sorting: SortingUnsupported.self,
+                                filtering: FilteringUnsupported.self)
 
-Methods will add corresponding support of CRUD operations to the controller with 
+``` 
+3. Add controller's methods to Vapor's routes builder:
 
-- POST
-- GET
-- PUT
-- PATCH
-- DELETE
+```
+controller.addMethodsTo(routeBuilder, on: "todos")
 
-API.
+```
+  
+This will add the following methods to your API endpoint: 
+
+
+| HTTP Method                 | Route            | Result
+| --------------------------- |:-----------------| :---------------|
+|POST       | /todos                    | Create new
+|GET        | /todos/:todoID            | Show existing
+|PUT        | /todos/:todoID            | Update existing (Replace)
+|PATCH      | /todos/:todoID            | Patch exsiting (Partial update)
+|GET        | /todos/                   | Show list
+
+### Related Resource Controllers
+
+#### How to create nestedd CRUD API with entities relations
+
+##### Siblings
+
+1. Define Inputs, Outputs as usual
+2. Define relation controller providing relation keyPath and some *relationName* or nil, if not needed.
+
+```
+let controller = Tag.Output
+        .controller(eagerLoading: EagerLoadingUnsupported.self)
+        .related(with: \Todo.$tags, relationName: "mentioned")
+        .create(input: Tag.CreateInput.self)
+        .read()
+        .update(input: Tag.UpdateInput.self)
+        .patch(input: Tag.PatchInput.self)
+        .collection(sorting: SortingUnsupported.self,
+                    filtering: FilteringUnsupported.self)
+
+```
+
+3. Add related tags controller on top of "todos" route group:
+
+
+```
+let todos = routeBuilder.grouped("todos")
+controller.addMethodsTo(todos, on: "tags")
+```
+
+This will add the following methods:
+
+
+| HTTP Method                 | Route               | Result
+| --------------------------- |:--------------------| :---------------|
+|POST       | /todos/:todoID/mentioned/tags         | Create new
+|GET        | /todos/:todoID/mentioned/tags/:tagID  | Show existing
+|PUT        | /todos/:todoID/mentioned/tags/:tagID  | Update existing (Replace)
+|PATCH      | /todos/:todoID/mentioned/tags/:tagID  | Patch exsiting (Partial update)
+|GET        | /todos/:todoID/mentioned/tags/:tagID  | Show list
+
+###### nil for *relationName*
+
+In case of nil provided as *relationName*, the following routes will be created:
+
+| HTTP Method                 | Route               | Result
+| --------------------------- |:--------------------| :---------------|
+|POST       | /todos/:todoID/tags         | Create new as related
+|GET        | /todos/:todoID/tags/:tagID  | Show existing
+|PUT        | /todos/:todoID/tags/:tagID  | Update existing (Replace)
+|PATCH      | /todos/:todoID/tags/:tagID  | Patch exsiting (Partial update)
+|GET        | /todos/:todoID/tags/:tagID  | Show list of related
+
+##### Inversed Siblings
+
+Nested controllers for siblings work in both directions. 
+We can create:
+- Tags controller for Tags mentioned in a Todo
+- Todo controller for Todos related to a Tag:
+
+1.
+```
+let controller = Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(with: \Tag.$relatedTodos, relationName: "related")
+                .collection(sorting: SortingUnsupported.self,
+                            filtering: FilteringUnsupported.self)
+
+
+```
+2.
+```
+let tags = routeBuilder.grouped("tags")
+controller.addMethodsTo(tags, on: "todos")
+```
+Will result in:
+
+| HTTP Method                 | Route               | Result
+| --------------------------- |:--------------------| :---------------|
+|POST       | /tags/:tagID/related/todos          | Create new
+|GET        | /tags/:tagID/related/todos/:todoID  | Show existing
+|PUT        | /tags/:tagID/related/todos/:todoID  | Update existing (Replace)
+|PATCH      | /tags/:tagID/related/todos/:todoID  | Patch exsiting (Partial update)
+|GET        | /tags/:tagID/related/todos/:todoID  | Show list
+
+##### Parent - Child relations
+
+
+##### Child / Parent
+
+##### Related to Authenticatable Model
+
+
+
+
+
 
 ### CompoundResourceController
+#### How to use custom controllers along with pre-implemented
 
-CompoundResourceController is simply to combine several single-api-method controllers into one. 
 
-Setup is as easy as the following lines:
+CompoundResourceController allows to combine several controllers into one.  
+
+
+1. Create your custom CustomTodoController and make it conform to *APIMethodsProviding* protocol:
+
 ```
-struct TodosController: VersionableController {
-    let controllerV1 = CompoundResourceController(with: [
-        ReadResourceController<Todo, TodoOutput, TodoEagerLoader>(),
-        CollectionResourceController<Todo, TodoOutput, TodoSorting, TodoEagerLoader, TodoFilter>()
-    ])
+struct CustomCreateUserController:  APIMethodsProviding {
 
-    func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-        switch version {
-
-        case .v1:
-            return controllerV1.addMethodsTo(routeBuilder, on: endpoint)
-        }
+    func someMethod(_ req: Request) -> EventLoopFuture<SomeResponse> {
+       //Some stuff here
+    }
+    
+    
+    func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
+        let path = resourcePathFor(endpoint: endpoint)
+        routeBuilder.on(.POST, path, body: .collect, use: self.someMethod)
     }
 }
 
 ```
+
+2. Use CompoundResourceController:
  
+```
+let controller: APIMethodsProviding = CompoundResourceController(with: [
+                Todo.Output
+                    .controller(eagerLoading: EagerLoadingUnsupported.self)
+                    .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self),
+
+                CustomCreateUserController() ])
+```
+
+ ##### Important
+
+ **It's up to developer to take care of http methods that are still available, otherwise Vapor will probably get sad due to attempt to use the same method several twice.**
+ 
+
+## Relations
+RestKit supports all kinds of Fluent relations to create nested routes:
+- Parent/Child
+- Child/Parent
+- Siblings
+
+
+
 
 
 ## API versioning
@@ -248,9 +437,9 @@ extension Todo {
         let description: String 
  
         init(_ model: Todo) {
-            self.id = asset.id
-            self.name = asset.title
-            self.description = asset.notes
+            self.id = model.id
+            self.name = model.title
+            self.description = model.notes
         }
     }
     
@@ -260,35 +449,39 @@ extension Todo {
         let notes: String
  
         init(_ model: Todo) {
-            self.id = asset.id
-            self.title = asset.title
-            self.notes = asset.notes
+            self.id = model.id
+            self.title = model.title
+            self.notes = model.notes
         }
     }
 }
 
+struct TodoController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .read()
+                .collection(sorting: SortingUnsupported.self,
+                            filtering: FilteringUnsupported.self)
 
-struct TodosController: VersionableController {
-    let controllerV1 = CompoundResourceController(with: [
-        ReadResourceController<Todo, Todo.OutputV1, TodoEagerLoader>(),
-        CollectionResourceController<Todo, Todo.OutputV1, TodoSorting, TodoEagerLoader, TodoFilter>()
-    ])
-    
-    let controllerV2 = CompoundResourceController(with: [
-        ReadResourceController<Todo, Todo.OutputV2, TodoEagerLoader>(),
-        CollectionResourceController<Todo, Todo.OutputV2, TodoSorting, TodoEagerLoader, TodoFilter>()
-    ])
+        }
 
-    func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-        switch version {
+        var apiV2: APIMethodsProviding {
+            return Todo.OutputV2
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .read()
+                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+        }
 
-        case .v1:
-            return controllerV1.addMethodsTo(routeBuilder, on: endpoint)
-        case .v2:
-            return controllerV2.addMethodsTo(routeBuilder, on: endpoint)
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            case .v2:
+                apiV2.addMethodsTo(routeBuilder, on: endpoint)
+            }
         }
     }
-}
 
 ```
 
