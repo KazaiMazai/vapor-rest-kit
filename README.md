@@ -261,8 +261,9 @@ This will add the following methods to your API endpoint:
 
 ### Related Resource Controllers
 
-#### How to create nestedd CRUD API with Siblings
- 
+#### How to create nestedd CRUD API with entities relations
+
+##### Siblings
 
 1. Define Inputs, Outputs as usual
 2. Define relation controller providing relation keyPath and some *relationName* or nil, if not needed.
@@ -299,7 +300,7 @@ This will add the following methods:
 |PATCH      | /todos/:todoID/mentioned/tags/:tagID  | Patch exsiting (Partial update)
 |GET        | /todos/:todoID/mentioned/tags/:tagID  | Show list
 
-##### nil for *relationName*
+###### nil for *relationName*
 
 In case of nil provided as *relationName*, the following routes will be created:
 
@@ -311,14 +312,14 @@ In case of nil provided as *relationName*, the following routes will be created:
 |PATCH      | /todos/:todoID/tags/:tagID  | Patch exsiting (Partial update)
 |GET        | /todos/:todoID/tags/:tagID  | Show list of related
 
-#### How to create nestedd CRUD API with Inversed Siblings
+##### Inversed Siblings
 
 Nested controllers for siblings work in both directions. 
-Meaning that we can create:
+We can create:
 - Tags controller for Tags mentioned in a Todo
 - Todo controller for Todos related to a Tag:
 
-1. Create controller with necessary methods:
+1.
 ```
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
@@ -328,7 +329,7 @@ let controller = Todo.Output
 
 
 ```
-2. Add methods to route buidler:
+2.
 ```
 let tags = routeBuilder.grouped("tags")
 controller.addMethodsTo(tags, on: "todos")
@@ -343,8 +344,7 @@ Will result in:
 |PATCH      | /tags/:tagID/related/todos/:todoID  | Patch exsiting (Partial update)
 |GET        | /tags/:tagID/related/todos/:todoID  | Show list
 
-
-#### How to create nestedd CRUD API with Parent child relations
+##### Parent - Child relations
 
 
 ##### Child / Parent
