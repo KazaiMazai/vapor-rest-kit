@@ -23,9 +23,9 @@ protocol ChildrenResourceModelProvider: ResourceModelProvider
     var relationNamePath: String? { get }
     var childrenKeyPath: ChildrenKeyPath<RelatedModel, Model> { get }
 
-    func findWithRelated(_ req: Request) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)>
+    func findWithRelated(_ req: Request, database: Database) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)>
 
-    func findRelated(_ req: Request) throws -> EventLoopFuture<RelatedModel>
+    func findRelated(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel>
 
 }
 
@@ -42,9 +42,7 @@ extension ChildrenResourceModelProvider {
 
         return PathComponent(stringLiteral: "\(path)")
     }
-
-    var resourceMiddleware: ResourceControllerMiddleware<Model> { .defaultMiddleware }
-
+ 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         return [rootIdPathComponent, relationPathComponent, endpointPath].compactMap { $0 }
@@ -56,20 +54,20 @@ extension ChildrenResourceModelProvider {
     }
     
 
-    func find(_ req: Request) throws -> EventLoopFuture<Model> {
-        return try findOn(self.childrenKeyPath, req: req)
+    func find(_ req: Request, database: Database) throws -> EventLoopFuture<Model> {
+        return try findOn(self.childrenKeyPath, req: req, database: database)
     }
 
-    func findWithRelated(_ req: Request) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)> {
-        return try findWithRelatedOn(self.childrenKeyPath, req: req)
+    func findWithRelated(_ req: Request, database: Database) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)> {
+        return try findWithRelatedOn(self.childrenKeyPath, req: req, database: database)
     }
 }
 
 //MARK:- Can be overriden
 
 extension ChildrenResourceModelProvider {
-    func findRelated(_ req: Request) throws -> EventLoopFuture<RelatedModel> {
-      return try RelatedModel.query(on: req.db)
+    func findRelated(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel> {
+      return try RelatedModel.query(on: database)
                             .findBy(rootIdComponentKey, from: req)
     }
 }
@@ -78,15 +76,18 @@ extension ChildrenResourceModelProvider {
 
 extension ChildrenResourceModelProvider {
     fileprivate func findOn(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                            req: Request) throws -> EventLoopFuture<Model> {
-        return try findWithRelatedOn(childrenKeyPath, req: req).map { $0.resource }
+                            req: Request,
+                            database: Database) throws -> EventLoopFuture<Model> {
+        
+        return try findWithRelatedOn(childrenKeyPath, req: req, database: database).map { $0.resource }
     }
 
     fileprivate func findWithRelatedOn(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                                      req: Request) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)> {
+                                      req: Request,
+                                      database: Database) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)> {
 
-        return try findRelated(req).flatMapThrowing { relatedResource in
-                                          return try relatedResource.query(keyPath: childrenKeyPath, on: req.db)
+        return try findRelated(req, database: database).flatMapThrowing { relatedResource in
+                                          return try relatedResource.query(keyPath: childrenKeyPath, on: database)
                                                                     .with(self.eagerLoadHandler, for: req)
                                                                     .sort(self.sortingHandler, for: req)
                                                                     .filter(self.filteringHandler, for: req)

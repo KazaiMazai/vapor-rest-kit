@@ -109,7 +109,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Eag
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let useForcedDelete: Bool
+    let deleter: DeleteHandler<Model>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

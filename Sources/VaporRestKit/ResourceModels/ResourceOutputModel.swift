@@ -20,3 +20,5 @@ struct SuccessOutput<Model: Fields>: ResourceOutputModel {
 
     init(_ model: Model, req: Request) {  }
 }
+
+
