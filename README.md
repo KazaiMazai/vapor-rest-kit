@@ -1,16 +1,17 @@
 # Vapor RestKit
 
 This package is intended to speed up backend development using server side swift framework Vapor 4.
-It allows to build up Restful APIs in decalrative way.
 
 ## Features
 - Fluent Model convenience extensions for models initial migrations
 - Fluent Model convenience extensions for Siblings relations
 - Declarative API
-- CRUD for Resource Models  and Related Resource Models
-- All kinds of Relations
+- CRUD for Resource Models and Related Resource Models
 - CRUD for Relations
-- Controller Middlewares for custom business logic
+- All kinds of relations
+- Authenticatable Resource routes
+- Controller Middlewares for custom logic
+- Compound Controller
 - API versioning
 - API versioning for Resource Models
 - Filtering 
@@ -166,10 +167,10 @@ protocol ResourcePatchModel: Content, Validatable {
 **Input** and **Output** Resources provide managable interface for the models. Each model can have as many possible inputs and outputs as you wish, though it's better not to.
 
 
+## CRUD for Resource Models
+### Resource Controllers
 
-## Resource Controllers
-
-### How to create CRUD API
+#### How to create CRUD API
 
 1. Create Inputs, Outputs for your model:
 
@@ -262,8 +263,8 @@ This will add the following methods to your API endpoint:
 |DELETE     | /todos/:todoId            | Delete 
 |GET        | /todos                    | Show list
 
-
-### How to change Delete Output
+### DeleteOutput
+#### How to change Delete Output
 
 If defined this way, controller will return deleted model instance wrapped into output as response:
 
@@ -284,9 +285,11 @@ let controller =  SuccessOutput<Todo>
 ```
 
 
-## Related Resource Controllers
+## CRUD for Related Resource Models
 
-### How to create nested CRUD API with related models
+### Related Resource Controllers
+
+#### How to create nested CRUD API with related models
 
 ### Siblings
 
@@ -326,7 +329,7 @@ This will add the following methods:
 |DELETE     | /todos/:todoId/mentioned/tags/:tagId  | Delete 
 |GET        | /todos/:todoId/mentioned/tags         | Show list
 
-##### nil for *relationName*
+
 
 In case of nil provided as *relationName*, the following routes will be created:
 
@@ -497,8 +500,10 @@ Will result in:
 |DELETE     | /users/me/managed/todos/:todoId  | Delete 
 |GET        | /users/me/managed/todos          | Show list
 
-## Relation Controllers
-### How to create controllers for relations
+
+## CRUD for Relations 
+### RelationControllers
+#### How to create controllers for relations
 
 It's possible to create relation controllers to attach/detach existing entites
 
@@ -539,10 +544,12 @@ Relation name parameter is still optional. If nil is provided then the routes wi
 
 
 ## Controller Middlewares
-### How to add custom business logic to Resource Controller
+
+### ResourceUpdateModel
+#### How to add custom business logic to Resource Controller
 
 
-### Override ResourceUpdateModel method
+#### Override ResourceUpdateModel method
 
 Default implementation of that method is:
 
@@ -558,8 +565,8 @@ It can be made complex, but with the following restrictions:
 - **Database instance parameter should be used for obtaining event loop**
 - **Transactions should not be used because write operations are already wrapped in a transaction on upper layers**
 
-
-### Override ResourcePatchModel method
+### ResourcePatchModel
+#### Override ResourcePatchModel method
 
 Default implementation of that method is:
 
@@ -575,7 +582,8 @@ It can be made complex, but with the following restrictions:
 - **Database instance parameter should be used for obtaining event loop**
 - **Transactions should not be used because write operations are already wrapped in a transaction on upper layers**
 
-### Provide RelatedResourceControllerMiddleware for RelatedResourceControllers or RelationControllers
+### RelatedResourceControllerMiddleware
+#### How to provide custom middleware for RelatedResourceControllers or RelationControllers
 
 When creating nested controller that works with related resource or relations, it's possible to provide middleware method that will be called **before** saving to database:
 - Right **after** Resource Model is created/patched/updated in memory
@@ -613,8 +621,8 @@ For middlewares restrictions are the same:
 - **Database instance parameter should be used for obtaining event loop**
 - **Transactions should not be used because write operations are already wrapped in a transaction on upper layers**
 
-
-### Custom Delete logic with DeleteHandler
+### DeleteHandler
+#### Custom Delete logic with DeleteHandler
  
 Custon delete busiess logic can be defined via Fluent on database level: cascade delete, etc.
 Fluent also provides model lifecycle callbacks that can be used for that.
@@ -653,9 +661,9 @@ Restrictions are usual for RestKit middlewares:
 
 
 
-
-## CompoundResourceController
-### How to use custom controllers along with pre-implemented
+## Combine controllers
+### CompoundResourceController
+#### How to use custom controllers along with pre-implemented
 
 
 CompoundResourceController allows to combine several controllers into one.  
@@ -699,6 +707,7 @@ let controller: APIMethodsProviding = CompoundResourceController(with: [
 
 ## API versioning
 ### VersionableController
+#### How to distinguish api versions
 
 VersionableController protocol is to force destinguishing controllers versions.
 
@@ -712,10 +721,11 @@ open protocol VersionableController {
 ```
 
 ### Versioning via Resource Models
+#### How to manage API inputs and outputs
 
 Resource Inputs and Outputs as well as all necessary dependencies needed for Controllers and ModelProviders are required to be provided explicitly as associated types.  
 
-BTW Associated types with protocols contraints would make sure, that we haven't missed anything. Complier won't let you.
+Protocols contraints applied on associated types would make sure, that we haven't missed anything. Complier just won't let.
 
 This allows to create managable versioned Resource Models as follows:
 
@@ -779,22 +789,29 @@ struct TodoController: VersionableController {
 ## Filtering
 
 ### Static Filtering
+#### How to setup filters for controller methods
 
 ### Dynamic Filtering
+#### How to setup dynamic filters query
 
 ## Sorting
 
+
 ### Static Sorting
+#### How to setup default sorting for controller methods
 
 ### Dynamic Sorting
+#### How to setup dynamic sorting query keys
 
 ## Eager Loading
 
 ### Static Eager Loading
+#### How to setup default eager loading of nested models for controller
 
 ### Dynamic Eager Loading
+#### How to setup dynamic eager loading for query keys
 
-###  Versioned Output for Eager Loaded Resource Models
+#### How to version Output for Eager Loaded Resource Models
 
 ## Pagination
 
