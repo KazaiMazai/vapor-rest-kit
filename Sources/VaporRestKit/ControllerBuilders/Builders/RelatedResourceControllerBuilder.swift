@@ -251,7 +251,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func read() -> RelatedResourceControllerBuilder {
+    func read(authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
             switch keyPathType {
             case .children(let relationKeyPath):
                 return adding(ReadAuthChildrenResourceController<Model,

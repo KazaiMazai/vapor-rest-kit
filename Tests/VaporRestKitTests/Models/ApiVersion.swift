@@ -9,5 +9,4 @@ import Foundation
 
 enum ApiVersion {
     case v1
-    case v2
 }

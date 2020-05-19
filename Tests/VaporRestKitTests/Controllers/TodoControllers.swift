@@ -18,22 +18,78 @@ struct TodoControllers {
                 .read()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
-
         }
 
-        var tagRelated: APIMethodsProviding {
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct TodosForTagsController: VersionableController {
+        var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(with: \Tag.$relatedTodos, relationName: "related")
+                .read()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
-
-
         }
 
-        var apiV2: APIMethodsProviding {
-            return Todo.OutputV2
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct TodosForTagsRelationController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(with: \Tag.$relatedTodos, relationName: nil)
+                .read()
+                .collection(sorting: SortingUnsupported.self,
+                            filtering: FilteringUnsupported.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct MyTodosController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(with: \User.$todos, relationName: "owns")
+                .create(with: Todo.Input.self, authenticatable: User.self)
+                .read(authenticatable: User.self)
+                .update(with: Todo.Input.self, authenticatable: User.self)
+                .patch(with: Todo.PatchInput.self, authenticatable: User.self)
+                .delete(authenticatable: User.self)
+                .collection(authenticatable: User.self, sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct TodosForUserController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(with: \User.$todos, relationName: "owns")
                 .read()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -42,11 +98,27 @@ struct TodoControllers {
             switch version {
             case .v1:
                 apiV1.addMethodsTo(routeBuilder, on: endpoint)
-            case .v2:
-                apiV2.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct AssignedTodosForUserController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(with: \User.$assignedTodos, relationName: "assigned")
+                .read()
+                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
             }
         }
     }
 }
+
 
 
