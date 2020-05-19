@@ -32,7 +32,7 @@ struct TodoControllers {
         var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \Tag.$relatedTodos, relationName: "related")
+                .relatedWith(siblingKeyPath: \Tag.$relatedTodos, relationName: "related")
                 .read()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
@@ -50,7 +50,7 @@ struct TodoControllers {
         var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \Tag.$relatedTodos, relationName: nil)
+                .relatedWith(siblingKeyPath: \Tag.$relatedTodos, relationName: nil)
                 .read()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
@@ -68,7 +68,7 @@ struct TodoControllers {
         var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \User.$todos, relationName: "owns")
+                .relatedWith(childrenKeyPath: \User.$todos, relationName: "owns")
                 .create(with: Todo.Input.self, authenticatable: User.self)
                 .read(authenticatable: User.self)
                 .update(with: Todo.Input.self, authenticatable: User.self)
@@ -89,7 +89,7 @@ struct TodoControllers {
         var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \User.$todos, relationName: "owns")
+                .relatedWith(childrenKeyPath: \User.$todos, relationName: "owns")
                 .read()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -106,7 +106,7 @@ struct TodoControllers {
         var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \User.$assignedTodos, relationName: "assigned")
+                .relatedWith(siblingKeyPath: \User.$assignedTodos, relationName: "assigned")
                 .read()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }

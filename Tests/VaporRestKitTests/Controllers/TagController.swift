@@ -24,7 +24,7 @@ struct TagControllers {
         var apiV1: APIMethodsProviding {
             return Tag.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \Todo.$tags, relationName: nil)
+                .relatedWith(siblingKeyPath: \Todo.$tags, relationName: nil)
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
         }
@@ -32,8 +32,7 @@ struct TagControllers {
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
             switch version {
             case .v1:
-                let todos = routeBuilder.grouped("todos")
-                apiV1.addMethodsTo(todos, on: endpoint)
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
             }
         }
     }
@@ -49,7 +48,7 @@ struct TagControllers {
 
             return Tag.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \Todo.$tags, relationName: nil)
+                .relatedWith(siblingKeyPath: \Todo.$tags, relationName: nil)
                 .create(input: Tag.CreateInput.self, middleware: todoOwnerGuardMiddleware)
                 .read()
                 .update(input: Tag.UpdateInput.self, middleware: todoOwnerGuardMiddleware)
@@ -61,8 +60,7 @@ struct TagControllers {
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
             switch version {
             case .v1:
-                let todos = routeBuilder.grouped("todos")
-                apiV1.addMethodsTo(todos, on: endpoint)
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
             }
         }
 

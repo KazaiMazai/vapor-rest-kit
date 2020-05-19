@@ -60,7 +60,7 @@ extension StarTag {
 
     struct CreateInput: ResourceUpdateModel {
         let title: String
- 
+
         func update(_ model: StarTag) throws -> StarTag {
             model.title = title
             return model
