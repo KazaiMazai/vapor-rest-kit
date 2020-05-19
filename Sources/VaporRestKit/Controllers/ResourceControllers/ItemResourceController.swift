@@ -19,7 +19,7 @@ struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableRe
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model  {
-
+ 
 }
 
 //MARK:- ReadResourceController
@@ -45,6 +45,7 @@ struct UpdateResourceController<Model, Output, Input, EagerLoading>: UpdateableR
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
+
 
 }
 
@@ -72,8 +73,10 @@ struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceC
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
+
+    let deleter: DeleteHandler<Model>
 }
 
 //MARK:- CollectionResourceController
@@ -89,7 +92,7 @@ struct CollectionResourceController<Model, Output, Sorting, EagerLoading, Filter
     Filtering: FilterProvider,
     Filtering.Model == Model,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model  {
+    EagerLoading.Model == Model  {
 
     let config: IterableControllerConfig
     

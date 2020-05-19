@@ -14,7 +14,7 @@ public final class ResourceControllerBuilder<Model, Output, EagerLoading>: APIMe
     Model == Output.Model,
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
     internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
                                                outputType: Output.Type = Output.self,
@@ -37,8 +37,8 @@ public extension ResourceControllerBuilder {
 }
 
 public extension ResourceControllerBuilder {
-    func relatedTo<RelatedModel, Through>(relation: SiblingKeyPath<RelatedModel, Model, Through>,
-                                          relationName: String) -> SiblingsResourceControllerBuilder<Model,
+    func related<RelatedModel, Through>(with siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+                                        relationName: String?) -> SiblingsResourceControllerBuilder<Model,
         RelatedModel,
         Through,
         Output,
@@ -49,20 +49,20 @@ public extension ResourceControllerBuilder {
                 Through,
                 Output,
                 EagerLoading>(self,
-                              relation: relation,
+                              relation: siblingKeyPath,
                               relationName: relationName)
     }
 
-    func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                                 relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+                               relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>(self,
                                                                                            childrenKeyPath: childrenKeyPath,
                                                                                            relationName: relationName)
     }
 
-    func relatedTo<RelatedModel>(_ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                                 relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+                               relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model,
             RelatedModel,
@@ -95,7 +95,6 @@ extension ResourceControllerBuilder {
 
 
     func update<Input>(input: Input.Type) -> ResourceControllerBuilder
-
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -117,10 +116,12 @@ extension ResourceControllerBuilder {
                 EagerLoading>())
     }
 
-    func delete() -> ResourceControllerBuilder {
+
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter) -> ResourceControllerBuilder {
+
         return adding(DeleteResourceController<Model,
             Output,
-            EagerLoading>())
+            EagerLoading>(deleter: handler))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,

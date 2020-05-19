@@ -7,7 +7,7 @@
 
 import Vapor
 
-protocol VersionableController {
+public protocol VersionableController {
     associatedtype ApiVersion
 
     func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion)

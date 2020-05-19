@@ -24,7 +24,8 @@ struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 }
 
@@ -43,7 +44,7 @@ struct ReadRelatedResourceController<Model, RelatedModel, Through, Output, Eager
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -64,7 +65,8 @@ struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -86,7 +88,8 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -105,7 +108,9 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Eag
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let deleter: DeleteHandler<Model>
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 
 }
@@ -113,6 +118,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Eag
 //MARK:- CollectionRelatedResourceController
 
 struct CollectionRelatedResourceController<Model, RelatedModel, Through, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, SiblingsResourceModelProvider
+    
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -127,7 +133,7 @@ struct CollectionRelatedResourceController<Model, RelatedModel, Through, Output,
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let config: IterableControllerConfig
 

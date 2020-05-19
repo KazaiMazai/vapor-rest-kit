@@ -22,7 +22,8 @@ struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
           EagerLoading: EagerLoadProvider,
           EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 }
 
@@ -40,7 +41,7 @@ struct ReadChildrenResourceController<Model, RelatedModel, Output, EagerLoading>
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -60,7 +61,8 @@ struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -82,7 +84,8 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
         EagerLoading.Model == Model {
 
 
-    let relationNamePath: String
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -98,9 +101,12 @@ struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoadin
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible,
         EagerLoading: EagerLoadProvider,
-        EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
-    let relationNamePath: String
+
+    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let deleter: DeleteHandler<Model>
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 
 }
@@ -121,7 +127,7 @@ struct CollectionChildResourceController<Model, RelatedModel, Output, Sorting, E
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
     let config: IterableControllerConfig
 
