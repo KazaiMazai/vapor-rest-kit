@@ -38,10 +38,36 @@ class BaseVaporRestKitTest: XCTestCase {
     }
 
     func routes() throws {
-//        app.crud("todos", model: Todo.self) { routes, parentController in
-//            routes.get("hello") { _ in "Hello World" }
-//            routes.crud("tags", children: Tag.self, on: parentController, via: \.$tags)
-//        }
-//        app.crud("simpletodos", model: SimpleTodo.self)
+
+        ApiVersion.allCases.forEach { version in
+            let versiondGroup = app.grouped(version.path)
+
+            StarTagControllers.StarTagController().setupAPIMethods(on: versiondGroup, for: "star_tags", with: version)
+            StarControllers.StarController().setupAPIMethods(on: versiondGroup, for: "stars", with: version)
+            GalaxyControllers.GalaxyController().setupAPIMethods(on: versiondGroup, for: "galaxies", with: version)
+
+            let galaxyGroup = versiondGroup.grouped("galaxies")
+
+            StarControllers.StarForGalaxyNestedController().setupAPIMethods(on: galaxyGroup, for: "stars", with: version)
+            StarControllers.StarForGalaxyRelationNestedController().setupAPIMethods(on: galaxyGroup, for: "stars", with: version)
+
+            let starTagGroup = versiondGroup.grouped("star_tags")
+
+            StarControllers.StarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "stars", with: version)
+            StarControllers.StarForTagsRelationNestedController().setupAPIMethods(on: starTagGroup, for: "stars", with: version)
+
+            let starGroup = versiondGroup.grouped("stars")
+
+            GalaxyControllers.GalaxyForStarsNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)
+            GalaxyControllers.GalaxyForStarsRelationNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)
+
+            StarTagControllers.StarTagForStarNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
+            StarTagControllers.StarTagForStarRelationNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
+
+        }
+
+
+
+
     }
 }

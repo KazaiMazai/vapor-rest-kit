@@ -58,7 +58,7 @@ extension StarTag {
         }
     }
 
-    struct CreateInput: ResourceUpdateModel {
+    struct Input: ResourceUpdateModel {
         let title: String
 
         func update(_ model: StarTag) throws -> StarTag {
@@ -71,18 +71,6 @@ extension StarTag {
         }
     }
 
-    struct UpdateInput: ResourceUpdateModel {
-        let title: String
-
-        func update(_ model: StarTag) throws -> StarTag {
-            model.title = title
-            return model
-        }
-
-        static func validations(_ validations: inout Validations) {
-
-        }
-    }
 
     struct PatchInput: ResourcePatchModel {
         let title: String?
