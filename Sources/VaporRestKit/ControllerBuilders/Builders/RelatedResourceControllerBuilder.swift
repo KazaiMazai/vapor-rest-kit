@@ -67,7 +67,7 @@ public extension RelatedResourceControllerBuilder {
 }
 
 public extension RelatedResourceControllerBuilder {
-    func create<Input>(with: Input.Type,
+    func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -112,7 +112,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func update<Input>(with: Input.Type,
+    func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -138,7 +138,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func patch<Input>(with: Input.Type,
+    func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -223,7 +223,7 @@ public extension RelatedResourceControllerBuilder {
 }
 
 public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
-    func create<Input>(with: Input.Type,
+    func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
@@ -269,7 +269,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func update<Input>(with: Input.Type,
+    func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
@@ -297,7 +297,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func patch<Input>(with: Input.Type,
+    func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
@@ -349,10 +349,10 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
         }
     }
 
-    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
-                                        sorting: Sorting.Type,
+    func collection<Sorting, Filtering>(sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> RelatedResourceControllerBuilder
+                                        config: IterableControllerConfig = .defaultConfig,
+                                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,

@@ -33,7 +33,7 @@ struct UserControllers {
         var apiV1: APIMethodsProviding {
             return User.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(siblingKeyPath: \Todo.$assignees, relationName: "assignees")
+                .related(by: \Todo.$assignees, relationName: "assignees")
                 .read()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -57,7 +57,7 @@ struct UserControllers {
         var apiV1: APIMethodsProviding {
             return User.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(siblingKeyPath: \Todo.$assignees, relationName: "assignees")
+                .related(by: \Todo.$assignees, relationName: "assignees")
                 .relation
                 .create(with: todoOwnerGuardMiddleware)
                 .delete(with: todoOwnerGuardMiddleware)

@@ -15,10 +15,10 @@ struct GalaxyControllers {
         var apiV1: APIMethodsProviding {
             return Galaxy.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .create(input: Galaxy.Input.self)
+                .create(using: Galaxy.Input.self)
                 .read()
-                .update(input: Galaxy.Input.self)
-                .patch(input: Galaxy.PatchInput.self)
+                .update(using: Galaxy.Input.self)
+                .patch(using: Galaxy.PatchInput.self)
                 .delete()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -36,11 +36,11 @@ struct GalaxyControllers {
         var apiV1: APIMethodsProviding {
             return Galaxy.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(childrenKeyPath: \Galaxy.$stars, relationName: "belongs")
-                .create(with: Galaxy.Input.self)
+                .related(by: \Galaxy.$stars, relationName: "belongs")
+                .create(using: Galaxy.Input.self)
                 .read()
-                .update(with: Galaxy.Input.self)
-                .patch(with: Galaxy.PatchInput.self)
+                .update(using: Galaxy.Input.self)
+                .patch(using: Galaxy.PatchInput.self)
                 .delete()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -57,7 +57,7 @@ struct GalaxyControllers {
         var apiV1: APIMethodsProviding {
             return Galaxy.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(childrenKeyPath: \Galaxy.$stars, relationName: "belongs")
+                .related(by: \Galaxy.$stars, relationName: "belongs")
                 .relation
                 .create()
                 .delete()

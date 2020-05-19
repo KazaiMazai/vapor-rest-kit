@@ -24,7 +24,7 @@ struct TagControllers {
         var apiV1: APIMethodsProviding {
             return Tag.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(siblingKeyPath: \Todo.$tags, relationName: nil)
+                .related(by: \Todo.$tags, relationName: nil)
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
         }
@@ -48,11 +48,11 @@ struct TagControllers {
 
             return Tag.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(siblingKeyPath: \Todo.$tags, relationName: nil)
-                .create(input: Tag.CreateInput.self, middleware: todoOwnerGuardMiddleware)
+                .related(by: \Todo.$tags, relationName: nil)
+                .create(using: Tag.CreateInput.self, middleware: todoOwnerGuardMiddleware)
                 .read()
-                .update(input: Tag.UpdateInput.self, middleware: todoOwnerGuardMiddleware)
-                .patch(input: Tag.PatchInput.self, middleware: todoOwnerGuardMiddleware)
+                .update(using: Tag.UpdateInput.self, middleware: todoOwnerGuardMiddleware)
+                .patch(using: Tag.PatchInput.self, middleware: todoOwnerGuardMiddleware)
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
         }

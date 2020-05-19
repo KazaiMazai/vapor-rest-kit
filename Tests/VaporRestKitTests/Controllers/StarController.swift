@@ -16,10 +16,10 @@ struct StarControllers {
         var apiV1: APIMethodsProviding {
             return Star.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .create(input: Star.Input.self)
+                .create(using: Star.Input.self)
                 .read()
-                .update(input: Star.Input.self)
-                .patch(input: Star.PatchInput.self)
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
                 .delete()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -33,15 +33,15 @@ struct StarControllers {
     }
 
 
-    struct StarForStarsNestedController: VersionableController {
+    struct StarForGalaxyNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
             return Star.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(childrenKeyPath: \Galaxy.$stars, relationName: "contains")
-                .create(with: Star.Input.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .create(using: Star.Input.self)
                 .read()
-                .update(with: Star.Input.self)
-                .patch(with: Star.PatchInput.self)
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
                 .delete()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
@@ -54,15 +54,15 @@ struct StarControllers {
         }
     }
 
-    struct StarForStarsRelationNestedController: VersionableController {
+    struct StarForGalaxyRelationNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
             return Star.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .relatedWith(childrenKeyPath: \Galaxy.$stars, relationName: "contains")
-                .create(with: Star.Input.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .create(using: Star.Input.self)
                 .read()
-                .update(with: Star.Input.self)
-                .patch(with: Star.PatchInput.self)
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
                 .delete()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
