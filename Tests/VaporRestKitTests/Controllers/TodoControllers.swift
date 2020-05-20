@@ -22,7 +22,7 @@ struct TodoControllers {
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
             switch version {
-            case .v1:
+            case .v1:   
                 apiV1.addMethodsTo(routeBuilder, on: endpoint)
             }
         }

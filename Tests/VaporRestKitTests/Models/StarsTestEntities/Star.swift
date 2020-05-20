@@ -38,8 +38,8 @@ final class Star: Model, Content {
     @Field(key: Fields.title.key)
     var title: String
 
-    @Parent(key: Fields.galaxyId.key)
-    var galaxy: Galaxy
+    @OptionalParent(key: Fields.galaxyId.key)
+    var galaxy: Galaxy?
 
     @Siblings(through: Star.Relations.MarkedTags.through, from: \.$from, to: \.$to)
     var starTags: [StarTag]
@@ -83,7 +83,7 @@ extension Star {
         }
 
         static func validations(_ validations: inout Validations) {
-
+            validations.add("title", as: String.self, is: .count(3...))
         }
     }
 
@@ -96,7 +96,7 @@ extension Star {
         }
 
         static func validations(_ validations: inout Validations) {
-
+            validations.add("title", as: String?.self, is: .nil || .count(3...), required: false)
         }
     }
 }
