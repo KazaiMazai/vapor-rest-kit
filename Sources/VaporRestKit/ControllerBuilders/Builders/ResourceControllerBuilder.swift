@@ -37,7 +37,7 @@ public extension ResourceControllerBuilder {
 }
 
 public extension ResourceControllerBuilder {
-    func related<RelatedModel, Through>(with siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+    func related<RelatedModel, Through>(by siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
                                         relationName: String?) -> SiblingsResourceControllerBuilder<Model,
         RelatedModel,
         Through,
@@ -53,7 +53,7 @@ public extension ResourceControllerBuilder {
                               relationName: relationName)
     }
 
-    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+    func related<RelatedModel>(by childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
                                relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>(self,
@@ -61,7 +61,7 @@ public extension ResourceControllerBuilder {
                                                                                            relationName: relationName)
     }
 
-    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+    func related<RelatedModel>(by childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
                                relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model,
@@ -75,7 +75,7 @@ public extension ResourceControllerBuilder {
 
 
 extension ResourceControllerBuilder {
-    func create<Input>(input: Input.Type) -> ResourceControllerBuilder
+    func create<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -94,7 +94,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type) -> ResourceControllerBuilder
+    func update<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -105,7 +105,7 @@ extension ResourceControllerBuilder {
                 EagerLoading>())
     }
 
-    func patch<Input>(input: Input.Type) -> ResourceControllerBuilder
+    func patch<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {

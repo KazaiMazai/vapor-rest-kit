@@ -42,6 +42,7 @@ extension Tag: InitMigratableSchema {
         return schemaBuilder
             .field(.id, .int, .identifier(auto: true))
             .field(Fields.title.key, .string, .required)
+            .unique(on: Fields.title.key)
             .create()
     }
 }
@@ -58,18 +59,10 @@ extension Tag {
         }
     }
 
-
-
     struct CreateInput: ResourceUpdateModel {
-        typealias Model = Tag
-
         let title: String
 
-        func update(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
-            return req.eventLoop.makeSucceededFuture(model)
-        }
-
-        func update(_ model: Tag) throws -> Tag {
+        func update(_ model: Tag) -> Tag {
             model.title = title
             return model
         }
@@ -80,13 +73,9 @@ extension Tag {
     }
 
     struct UpdateInput: ResourceUpdateModel {
-         
-
-
- 
         let title: String
 
-        func update(_ model: Tag) throws -> Tag {
+        func update(_ model: Tag) -> Tag {
             model.title = title
             return model
         }
@@ -99,8 +88,7 @@ extension Tag {
     struct PatchInput: ResourcePatchModel {
         let title: String?
 
-        
-        func patch(_ model: Tag) throws -> Tag {
+        func patch(_ model: Tag) -> Tag {
             model.title = title ?? model.title
             return model
         }

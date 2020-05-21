@@ -18,9 +18,10 @@ extension CreatableRelationController where Self: ChildrenResourceRelationProvid
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return req.db.tryTransaction { db in
 
-            try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
-                                                                        relatedModel: $0.relatedResource,
+            try self.findRelated(req, database: db)
+                .and(self.find(req, database: db))
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.1,
+                                                                        relatedModel: $0.0,
                                                                         req: req,
                                                                         database: db) }
                 .flatMapThrowing { (resource, related) in
@@ -35,9 +36,10 @@ extension CreatableRelationController where Self: ParentResourceRelationProvider
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return req.db.tryTransaction { db in
 
-            try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
-                                                                        relatedModel: $0.relatedResource,
+            try self.findRelated(req, database: db)
+                .and(self.find(req, database: db))
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.1,
+                                                                        relatedModel: $0.0,
                                                                         req: req,
                                                                         database: db) }
                 .flatMapThrowing { (resource, related) in
@@ -53,9 +55,10 @@ extension CreatableRelationController where Self: SiblingsResourceRelationProvid
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
         return req.db.tryTransaction { db in
 
-            try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
-                                                                        relatedModel: $0.relatedResoure,
+            try self.findRelated(req, database: db)
+                .and(self.find(req, database: db))
+                .flatMap { self.relatedResourceMiddleware.handleRelated($0.1,
+                                                                        relatedModel: $0.0,
                                                                         req: req,
                                                                         database: db) }
                 .flatMap { (resource, related) in
