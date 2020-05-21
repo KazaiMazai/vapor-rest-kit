@@ -37,8 +37,8 @@ public extension ResourceControllerBuilder {
 }
 
 public extension ResourceControllerBuilder {
-    func related<RelatedModel, Through>(with siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-                                        relationName: String) -> SiblingsResourceControllerBuilder<Model,
+    func related<RelatedModel, Through>(by siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+                                        relationName: String?) -> SiblingsResourceControllerBuilder<Model,
         RelatedModel,
         Through,
         Output,
@@ -53,16 +53,16 @@ public extension ResourceControllerBuilder {
                               relationName: relationName)
     }
 
-    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                               relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+    func related<RelatedModel>(by childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+                               relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading>(self,
                                                                                            childrenKeyPath: childrenKeyPath,
                                                                                            relationName: relationName)
     }
 
-    func related<RelatedModel>(with childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                               relationName: String) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
+    func related<RelatedModel>(by childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+                               relationName: String?) -> RelatedResourceControllerBuilder<Model, RelatedModel, Output, EagerLoading> {
 
         return RelatedResourceControllerBuilder<Model,
             RelatedModel,
@@ -75,7 +75,7 @@ public extension ResourceControllerBuilder {
 
 
 extension ResourceControllerBuilder {
-    func create<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func create<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -83,7 +83,7 @@ extension ResourceControllerBuilder {
             return adding(CreateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>(resourceMiddleware: middleware))
+                EagerLoading>())
     }
 
 
@@ -94,8 +94,7 @@ extension ResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
-
+    func update<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -103,10 +102,10 @@ extension ResourceControllerBuilder {
             return adding(UpdateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>(resourceMiddleware: middleware))
+                EagerLoading>())
     }
 
-    func patch<Input>(input: Input.Type, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder
+    func patch<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -114,16 +113,15 @@ extension ResourceControllerBuilder {
             return adding(PatchResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>(resourceMiddleware: middleware))
+                EagerLoading>())
     }
 
 
-    func delete(forced: Bool = false, middleware: ResourceControllerMiddleware<Model> = .defaultMiddleware) -> ResourceControllerBuilder {
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,
-            EagerLoading>(resourceMiddleware: middleware,
-                          useForcedDelete: forced))
+            EagerLoading>(deleter: handler))
     }
 
     func collection<Sorting, Filtering>(sorting: Sorting.Type,

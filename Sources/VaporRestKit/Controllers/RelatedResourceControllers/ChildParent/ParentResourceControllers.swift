@@ -23,7 +23,7 @@ struct CreateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
@@ -40,7 +40,7 @@ struct ReadParentResourceController<Model, RelatedModel, Output, EagerLoading>: 
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
@@ -60,7 +60,7 @@ struct UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
@@ -80,7 +80,7 @@ struct PatchParentResourceController<Model, RelatedModel, Output, Patch, EagerLo
     EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
@@ -99,8 +99,8 @@ EagerLoading.Model == Model {
 
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let useForcedDelete: Bool
-    let relationNamePath: String
+    let deleter: DeleteHandler<Model>
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
@@ -121,7 +121,7 @@ struct CollectionParentResourceController<Model, RelatedModel, Output, Sorting, 
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
     let config: IterableControllerConfig
 

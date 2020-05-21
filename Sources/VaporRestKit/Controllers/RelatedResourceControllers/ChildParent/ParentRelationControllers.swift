@@ -18,10 +18,10 @@ struct CreateParentRelationController<Model, RelatedModel, Output, EagerLoading>
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-    EagerLoading.Model == Model {
+EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }
@@ -41,7 +41,7 @@ struct DeleteParentRelationController<Model, RelatedModel, Output, EagerLoading>
 
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
-    let relationNamePath: String
+    let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
 }

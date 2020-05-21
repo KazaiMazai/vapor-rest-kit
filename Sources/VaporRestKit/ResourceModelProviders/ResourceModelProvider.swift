@@ -19,11 +19,9 @@ protocol ResourceModelProvider where EagerLoading.Model == Model, Sorting.Model 
 
     var eagerLoadHandler: EagerLoading { get }
     var sortingHandler: Sorting { get }
-    var filteringHandler: Filtering { get }
+    var filteringHandler: Filtering { get } 
 
-    var resourceMiddleware: ResourceControllerMiddleware<Model> { get }
-
-    func find(_: Request) throws -> EventLoopFuture<Model>
+    func find(_: Request, database: Database) throws -> EventLoopFuture<Model>
 
     func resourcePathFor(endpoint: String) -> [PathComponent]
 
@@ -41,15 +39,17 @@ extension ResourceModelProvider where Model.IDValue: LosslessStringConvertible {
     var filteringHandler: Filtering { Filtering() }
 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
-        return []
+        let endpointPath = PathComponent(stringLiteral: endpoint)
+        return [endpointPath]
     }
 
     func idResourcePathFor(endpoint: String) -> [PathComponent] {
-        return [idPathComponent]
+        let endpointPath = PathComponent(stringLiteral: endpoint)
+        return [endpointPath, idPathComponent]
     }
 
-    func find(_ req: Request) throws -> EventLoopFuture<Model> {
-        return try Model.query(on: req.db)
+    func find(_ req: Request, database: Database) throws -> EventLoopFuture<Model> {
+        return try Model.query(on: database)
                         .with(self.eagerLoadHandler, for: req)
                         .sort(self.sortingHandler, for: req)
                         .filter(self.filteringHandler, for: req)

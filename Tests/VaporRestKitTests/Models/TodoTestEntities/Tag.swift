@@ -42,7 +42,60 @@ extension Tag: InitMigratableSchema {
         return schemaBuilder
             .field(.id, .int, .identifier(auto: true))
             .field(Fields.title.key, .string, .required)
+            .unique(on: Fields.title.key)
             .create()
+    }
+}
+
+
+extension Tag {
+    struct Output: ResourceOutputModel {
+        let id: Int?
+        let title: String
+
+        init(_ model: Tag, req: Request) {
+            id = model.id
+            title = model.title
+        }
+    }
+
+    struct CreateInput: ResourceUpdateModel {
+        let title: String
+
+        func update(_ model: Tag) -> Tag {
+            model.title = title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+
+        }
+    }
+
+    struct UpdateInput: ResourceUpdateModel {
+        let title: String
+
+        func update(_ model: Tag) -> Tag {
+            model.title = title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+
+        }
+    }
+
+    struct PatchInput: ResourcePatchModel {
+        let title: String?
+
+        func patch(_ model: Tag) -> Tag {
+            model.title = title ?? model.title
+            return model
+        }
+
+        static func validations(_ validations: inout Validations) {
+
+        }
     }
 }
 

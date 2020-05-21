@@ -13,9 +13,17 @@ protocol ChildrenResourceRelationProvider: ChildrenResourceModelProvider {
 }
 
 extension ChildrenResourceRelationProvider {
+    func find(_ req: Request, database: Database) throws -> EventLoopFuture<Model> {
+        return try Model.query(on: database)
+            .with(self.eagerLoadHandler, for: req)
+            .sort(self.sortingHandler, for: req)
+            .filter(self.filteringHandler, for: req)
+            .findBy(idKey, from: req)
+    }
+
     func idResourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         let relationPath = PathComponent(stringLiteral: "relation")
-        return [rootIdPathComponent, relationPathComponent, endpointPath, idPathComponent, relationPath]
+        return [rootIdPathComponent, relationPathComponent, endpointPath, idPathComponent, relationPath].compactMap { $0 }
     }
 }

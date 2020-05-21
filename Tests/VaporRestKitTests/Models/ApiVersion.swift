@@ -5,9 +5,12 @@
 //  Created by Sergey Kazakov on 15.05.2020.
 //
 
-import Foundation
+import Vapor
 
-enum ApiVersion {
+enum ApiVersion: String, CaseIterable {
     case v1
-    case v2
+
+    var path: PathComponent {
+        return PathComponent(stringLiteral: rawValue)
+    }
 }

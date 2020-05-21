@@ -20,11 +20,11 @@ public final class RelatedResourceControllerBuilder<Model, RelatedModel, Output,
 
     internal let resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>
     internal let keyPathType: KeyPathType
-    internal let relationName: String
+    internal let relationName: String?
 
     internal init(_ resourceControllerBuilder: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                  relationName: String) {
+                  relationName: String?) {
 
         self.resourceControllerBuilder = resourceControllerBuilder
         self.keyPathType = .children(childrenKeyPath)
@@ -33,7 +33,7 @@ public final class RelatedResourceControllerBuilder<Model, RelatedModel, Output,
 
     internal init(_ resourceFactory: ResourceControllerBuilder<Model, Output, EagerLoading>,
                   childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                  relationName: String) {
+                  relationName: String?) {
 
         self.resourceControllerBuilder = resourceFactory
         self.keyPathType = .inversedChildren(childrenKeyPath)
@@ -67,7 +67,7 @@ public extension RelatedResourceControllerBuilder {
 }
 
 public extension RelatedResourceControllerBuilder {
-    func create<Input>(with: Input.Type,
+    func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -112,7 +112,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func update<Input>(with: Input.Type,
+    func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -138,7 +138,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func patch<Input>(with: Input.Type,
+    func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -165,7 +165,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func delete(forced: Bool = false,
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware)  -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
@@ -174,7 +174,7 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -183,7 +183,7 @@ public extension RelatedResourceControllerBuilder {
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
@@ -223,7 +223,7 @@ public extension RelatedResourceControllerBuilder {
 }
 
 public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
-    func create<Input>(with: Input.Type,
+    func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
@@ -251,7 +251,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func read() -> RelatedResourceControllerBuilder {
+    func read(authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
             switch keyPathType {
             case .children(let relationKeyPath):
                 return adding(ReadAuthChildrenResourceController<Model,
@@ -269,7 +269,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func update<Input>(with: Input.Type,
+    func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
@@ -297,7 +297,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func patch<Input>(with: Input.Type,
+    func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
@@ -324,7 +324,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func delete(forced: Bool = false,
+    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
                 middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 
@@ -334,7 +334,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               childrenKeyPath: relationKeyPath))
 
@@ -343,16 +343,16 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                 RelatedModel,
                 Output,
                 EagerLoading>(relatedResourceMiddleware: middleware,
-                              useForcedDelete: forced,
+                              deleter: handler,
                               relationNamePath: relationName,
                               inversedChildrenKeyPath: relationKeyPath))
         }
     }
 
-    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
-                                        sorting: Sorting.Type,
+    func collection<Sorting, Filtering>(sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> RelatedResourceControllerBuilder
+                                        config: IterableControllerConfig = .defaultConfig,
+                                        authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,

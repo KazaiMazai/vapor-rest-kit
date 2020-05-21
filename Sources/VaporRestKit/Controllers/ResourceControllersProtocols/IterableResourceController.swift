@@ -53,7 +53,8 @@ extension IterableResourceController where Self: ResourceModelProvider {
 
 extension IterableResourceController where Self: ResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
-        let queryBuilder = try Model.query(on: req.db)
+        let db = req.db
+        let queryBuilder = try Model.query(on: db)
             .with(self.eagerLoadHandler, for: req)
             .sort(self.sortingHandler, for: req)
             .filter(self.filteringHandler, for: req)
@@ -64,7 +65,9 @@ extension IterableResourceController where Self: ResourceModelProvider {
 
 extension IterableResourceController where Self: ChildrenResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
-        return try findRelated(req).map { $0.query(keyPath: self.childrenKeyPath, on: req.db) }
+        let db = req.db
+        return try findRelated(req, database: db)
+            .map { $0.query(keyPath: self.childrenKeyPath, on: db) }
             .flatMapThrowing { try $0.with(self.eagerLoadHandler, for: req) }
             .flatMapThrowing { try $0.sort(self.sortingHandler, for: req) }
             .flatMapThrowing { try $0.filter(self.filteringHandler, for: req) }
@@ -73,8 +76,9 @@ extension IterableResourceController where Self: ChildrenResourceModelProvider {
 
 extension IterableResourceController where Self: ParentResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
-        return try findRelated(req)
-            .map { $0.query(keyPath: self.inversedChildrenKeyPath, on: req.db) }
+        let db = req.db
+        return try findRelated(req, database: db)
+            .map { $0.query(keyPath: self.inversedChildrenKeyPath, on: db) }
             .flatMapThrowing { try $0.with(self.eagerLoadHandler, for: req) }
             .flatMapThrowing { try $0.sort(self.sortingHandler, for: req) }
             .flatMapThrowing { try $0.filter(self.filteringHandler, for: req) }
@@ -83,21 +87,14 @@ extension IterableResourceController where Self: ParentResourceModelProvider {
 
 extension IterableResourceController where Self: SiblingsResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
-        return try findRelated(req)
-            .map { $0.queryRelated(keyPath: self.siblingKeyPath, on: req.db) }
+        let db = req.db
+        return try findRelated(req, database: db)
+            .map { $0.queryRelated(keyPath: self.siblingKeyPath, on: db) }
             .flatMapThrowing { try $0.with(self.eagerLoadHandler, for: req) }
             .flatMapThrowing { try $0.sort(self.sortingHandler, for: req) }
             .flatMapThrowing { try $0.filter(self.filteringHandler, for: req) }
     }
 }
-
-
-
-
-//
-//extension IterableResourceController where Self: ResourceModelProvider {
-//    var resourceMiddleware: ControllerMiddleware<Model> { .defaultMiddleware }
-//}
 
 extension IterableResourceController where Self: ChildrenResourceModelProvider {
     var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }

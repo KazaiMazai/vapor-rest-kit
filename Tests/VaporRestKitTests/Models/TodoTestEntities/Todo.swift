@@ -94,7 +94,8 @@ extension Todo {
     struct Input: ResourceUpdateModel {
         let title: String
 
-        func update(_ model: Todo) throws -> Todo {
+
+        func update(_ model: Todo) -> Todo {
             model.title = title
             return model
         }
@@ -107,7 +108,7 @@ extension Todo {
     struct PatchInput: ResourcePatchModel {
         let title: String?
 
-        func patch(_ model: Todo) throws -> Todo {
+        func patch(_ model: Todo) -> Todo {
             model.title = title ?? model.title
             return model
         }

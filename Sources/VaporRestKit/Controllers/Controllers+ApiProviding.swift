@@ -17,7 +17,7 @@ extension CreatableResourceController where Self: ResourceModelProvider {
 
 extension CreatableRelationController where Self: ResourceModelProvider {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
-        let path = resourcePathFor(endpoint: endpoint)
+        let path = idResourcePathFor(endpoint: endpoint)
         routeBuilder.on(.POST, path, body: .collect, use: self.create)
     }
 }
