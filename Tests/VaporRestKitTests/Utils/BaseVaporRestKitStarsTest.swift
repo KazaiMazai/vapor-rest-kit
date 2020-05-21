@@ -32,6 +32,7 @@ class BaseVaporRestKitStarsTest: XCTestCase {
     }
 
     func seed() throws {
+        try Star.seed(on: app.db)
 //        try Todo.seed(on: app.db)
 //        try Tag.seed(on: app.db)
     }
