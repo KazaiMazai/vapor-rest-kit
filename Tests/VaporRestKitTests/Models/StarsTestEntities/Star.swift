@@ -84,6 +84,7 @@ extension Star {
 
     struct Input: ResourceUpdateModel {
         let title: String
+        
 
         func update(_ model: Star) throws -> Star {
             model.title = title
@@ -98,9 +99,16 @@ extension Star {
 
     struct PatchInput: ResourcePatchModel {
         let title: String?
+        let subtitle: String?
+
+        init(title: String? = nil, subtitle: String? = nil) {
+            self.title = title
+            self.subtitle = subtitle
+        }
 
         func patch(_ model: Star) throws -> Star {
             model.title = title ?? model.title
+            model.subtitle = subtitle ?? model.subtitle
             return model
         }
 

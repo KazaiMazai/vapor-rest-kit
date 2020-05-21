@@ -26,8 +26,7 @@ struct GalaxyControllers {
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
             switch version {
             case .v1:
-                let todos = routeBuilder.grouped("todos")
-                apiV1.addMethodsTo(todos, on: endpoint)
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
             }
         }
     }
