@@ -2,7 +2,7 @@
 //  File.swift
 //  
 //
-//  Created by Sergey Kazakov on 15.05.2020.
+//  Created by Sergey Kazakov on 19.05.2020.
 //
 
 @testable import VaporRestKit
@@ -10,31 +10,16 @@ import XCTVapor
 import Vapor
 import Fluent
 
-struct UserControllers {
-    struct UsersController: VersionableController {
-        var apiv1: APIMethodsProviding {
-            return User.Output
-                .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .read()
-                .collection(sorting: SortingUnsupported.self,
-                            filtering: FilteringUnsupported.self)
-
-        }
-
-        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-            switch version {
-            case .v1:
-                apiv1.addMethodsTo(routeBuilder, on: endpoint)
-            }
-        }
-    }
-
-    struct UsersForTodoController: VersionableController {
+struct GalaxyControllers {
+    struct GalaxyController: VersionableController {
         var apiV1: APIMethodsProviding {
-            return User.Output
+            return Galaxy.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(by: \Todo.$assignees, relationName: "assignees")
+                .create(using: Galaxy.Input.self)
                 .read()
+                .update(using: Galaxy.Input.self)
+                .patch(using: Galaxy.PatchInput.self)
+                .delete()
                 .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
         }
 
@@ -46,21 +31,35 @@ struct UserControllers {
         }
     }
 
-    struct TodoAssigneesRelationController: VersionableController {
-        let todoOwnerGuardMiddleware = RelatedResourceControllerMiddleware<User, Todo>(handler: { (user, todo, req, db) in
-            db.eventLoop
-                .tryFuture { try req.auth.require(User.self) }
-                .guard( { $0.id == todo.user.id}, else: Abort(.unauthorized))
-                .transform(to: (user, todo))
-        })
-
+    struct GalaxyForStarsNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
-            return User.Output
+            return Galaxy.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(by: \Todo.$assignees, relationName: "assignees")
+                .related(by: \Galaxy.$stars, relationName: "belongs")
+                .create(using: Galaxy.Input.self)
+                .read()
+                .update(using: Galaxy.Input.self)
+                .patch(using: Galaxy.PatchInput.self)
+                .delete()
+                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct GalaxyForStarsRelationNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Galaxy.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(by: \Galaxy.$stars, relationName: "belongs")
                 .relation
-                .create(with: todoOwnerGuardMiddleware)
-                .delete(with: todoOwnerGuardMiddleware)
+                .create()
+                .delete()
         }
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {

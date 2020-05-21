@@ -58,7 +58,7 @@ public extension SiblingsResourceControllerBuilder {
 }
 
 public extension SiblingsResourceControllerBuilder {
-    func create<Input>(input: Input.Type,
+    func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -85,7 +85,7 @@ public extension SiblingsResourceControllerBuilder {
     }
 
 
-    func update<Input>(input: Input.Type,
+    func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -101,7 +101,7 @@ public extension SiblingsResourceControllerBuilder {
                               siblingKeyPath: relationKeyPath))
     }
 
-    func patch<Input>(input: Input.Type,
+    func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -148,7 +148,7 @@ public extension SiblingsResourceControllerBuilder {
 }
 
 public extension SiblingsResourceControllerBuilder where RelatedModel: Authenticatable {
-    func create<Input>(input: Input.Type,
+    func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
@@ -174,7 +174,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                           siblingKeyPath: relationKeyPath))
     }
 
-    func update<Input>(input: Input.Type,
+    func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
@@ -191,7 +191,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                               siblingKeyPath: relationKeyPath))
     }
 
-    func patch<Input>(input: Input.Type,
+    func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
@@ -222,10 +222,10 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                           siblingKeyPath: relationKeyPath))
     }
 
-    func collection<Sorting, Filtering>(authenticatable: RelatedModel.Type,
-                                        sorting: Sorting.Type,
+    func collection<Sorting, Filtering>(sorting: Sorting.Type,
                                         filtering: Filtering.Type,
-                                        config: IterableControllerConfig = .defaultConfig) -> SiblingsResourceControllerBuilder
+                                        config: IterableControllerConfig = .defaultConfig,
+                                        authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
         where
         Sorting: SortProvider,
         Sorting.Model == Model,

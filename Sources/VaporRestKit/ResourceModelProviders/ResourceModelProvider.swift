@@ -39,11 +39,13 @@ extension ResourceModelProvider where Model.IDValue: LosslessStringConvertible {
     var filteringHandler: Filtering { Filtering() }
 
     func resourcePathFor(endpoint: String) -> [PathComponent] {
-        return []
+        let endpointPath = PathComponent(stringLiteral: endpoint)
+        return [endpointPath]
     }
 
     func idResourcePathFor(endpoint: String) -> [PathComponent] {
-        return [idPathComponent]
+        let endpointPath = PathComponent(stringLiteral: endpoint)
+        return [endpointPath, idPathComponent]
     }
 
     func find(_ req: Request, database: Database) throws -> EventLoopFuture<Model> {
