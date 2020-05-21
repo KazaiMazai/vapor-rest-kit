@@ -59,12 +59,9 @@ struct StarControllers {
             return Star.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(by: \Galaxy.$stars, relationName: "contains")
-                .create(using: Star.Input.self)
-                .read()
-                .update(using: Star.Input.self)
-                .patch(using: Star.PatchInput.self)
+                .relation
+                .create()
                 .delete()
-                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: FilteringUnsupported.self)
         }
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
