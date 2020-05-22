@@ -117,7 +117,7 @@ extension Model {
     }
 
     func query<From>(keyPath childrenKeyPath: ChildrenKeyPath<From, Self>,
-                              on database: Database) -> QueryBuilder<From>
+                              on database: Database) throws -> QueryBuilder<From>
         where From: Fluent.Model {
 
         let parentKey = getParentKey(with: childrenKeyPath)
@@ -126,6 +126,9 @@ extension Model {
         case .required(let requiredKeyPath):
             return self[keyPath: requiredKeyPath].query(on: database)
         case .optional(let optionalKeyPath):
+            guard let _ = self[keyPath: optionalKeyPath].id else {
+                throw Abort(.notFound)
+            }
             return self[keyPath: optionalKeyPath].query(on: database)
         }
     }

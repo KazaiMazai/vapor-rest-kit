@@ -78,7 +78,7 @@ extension IterableResourceController where Self: ParentResourceModelProvider {
     func prepareQueryBuilder(_ req: Request) throws -> EventLoopFuture<QueryBuilder<Model>> {
         let db = req.db
         return try findRelated(req, database: db)
-            .map { $0.query(keyPath: self.inversedChildrenKeyPath, on: db) }
+            .flatMapThrowing { try $0.query(keyPath: self.inversedChildrenKeyPath, on: db) }
             .flatMapThrowing { try $0.with(self.eagerLoadHandler, for: req) }
             .flatMapThrowing { try $0.sort(self.sortingHandler, for: req) }
             .flatMapThrowing { try $0.filter(self.filteringHandler, for: req) }
