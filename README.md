@@ -27,7 +27,7 @@ This package is intended to speed up backend development using server side swift
 
 Allows to create Model's fields as an enum and then safely use it without hassling with string literals and suffering from fat fingers.
 
-```
+```swift
 extension User: FieldsProvidingModel {
     enum Fields: String, FieldKeyRepresentable {
         case username
@@ -63,7 +63,7 @@ final class User: Model, Content {
 Easy-breazy stuff for creating initial migrations in three simple steps.
 1. Make your model conform to InitMigratableSchema protocol, by implementing static prepare(...) method (almost as usual)
 
-```
+```swift
 extension User: InitMigratableSchema {
     static func prepare(on schemaBuilder: SchemaBuilder) -> EventLoopFuture<Void> {
         return schemaBuilder
@@ -77,7 +77,7 @@ extension User: InitMigratableSchema {
 
 2. Add initial migration for the model in your configuration file:
 
-```
+```swift
 func configureDatabaseInitialMigrations(_ app: Application) {
     app.migrations.add(User.createInitialMigration()) 
 }
@@ -93,7 +93,7 @@ Short-cut for creating many-to-many relations.
 
 1. Define whatever as SiblingRepresentable (enum for example)
 
-```
+```swift
 extension Todo {
     enum Relations {
         enum RelatedTags: SiblingRepresentable {
@@ -108,7 +108,7 @@ extension Todo {
 
 2. Add corresponding property with @Siblings property wrapper
 
-```
+```swift
 final class User: Model, Content {
     static let schema = "users"
 
@@ -122,7 +122,7 @@ final class User: Model, Content {
 
 3. Add initial migration for pivot Fluent model representing the sibling after related models:
 
-```
+```swift
 private func configureDatabaseInitialMigrations(_ app: Application) {
     app.migrations.add(Todo.createInitialMigration())
     app.migrations.add(Tag.createInitialMigration()) 
@@ -140,7 +140,7 @@ While **Mode**l is something represented by a table in your database, RestKit in
 
 At Rest-Kit, Resource is separated into **Output**:
 
-```
+```swift
 protocol ResourceOutputModel: Content {
     associatedtype Model: Fields
 
@@ -150,7 +150,7 @@ protocol ResourceOutputModel: Content {
 
 and **Input**:
 
-```
+```swift
 protocol ResourceUpdateModel: Content, Validatable {
     associatedtype Model: Fields
 
@@ -174,7 +174,7 @@ protocol ResourcePatchModel: Content, Validatable {
 
 1. Create Inputs, Outputs for your model:
 
-```
+```swift
 extension Todo {
     struct Output: ResourceOutputModel {
         let id: Int?
@@ -232,7 +232,7 @@ extension Todo {
 
 2. Define which operations will be supported by your resource controller:
 
-```
+```swift
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .create(input: Todo.CreateInput.self)
@@ -246,7 +246,7 @@ let controller = Todo.Output
 ``` 
 3. Add controller's methods to Vapor's routes builder:
 
-```
+```swift
 controller.addMethodsTo(routeBuilder, on: "todos")
 
 ```
@@ -268,7 +268,7 @@ This will add the following methods to your API endpoint:
 
 If defined this way, controller will return deleted model instance wrapped into output as response:
 
-```
+```swift
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .delete()
@@ -277,7 +277,7 @@ let controller = Todo.Output
 
 It's possible to define special empty Output for delete controller, or use default **SuccessOutput**:
 
-```
+```swift
 let controller =  SuccessOutput<Todo>
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .delete()
@@ -296,7 +296,7 @@ let controller =  SuccessOutput<Todo>
 1. Define Inputs, Outputs as usual
 2. Define relation controller providing sibling relation keyPath and some *relationName* or nil, if not needed.
 
-```
+```swift
 let controller = Tag.Output
         .controller(eagerLoading: EagerLoadingUnsupported.self)
         .related(with: \Todo.$tags, relationName: "mentioned")
@@ -312,7 +312,7 @@ let controller = Tag.Output
 3. Add related tags controller on top of "todos" route group:
 
 
-```
+```swift
 let todos = routeBuilder.grouped("todos")
 controller.addMethodsTo(todos, on: "tags")
 ```
@@ -350,7 +350,7 @@ We can create:
 - Todo controller for Todos related to a Tag:
 
 1. Create controller
-```
+```swift
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(with: \Tag.$relatedTodos, relationName: "related")
@@ -366,7 +366,7 @@ let controller = Todo.Output
 
 ```
 2. Add methods to route builder
-```
+```swift
 let tags = routeBuilder.grouped("tags")
 controller.addMethodsTo(tags, on: "todos")
 ```
@@ -385,7 +385,7 @@ Will result in:
 
 1. Create controller with child relation keyPath and optional *relationName*
 
-```
+```swift
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .related(with: \User.$todos, relationName: "managed")
@@ -403,7 +403,7 @@ let controller = Todo.Output
 
 2. Add methods to route builder:
 
-```
+```swift
 let users = routeBuilder.grouped("users")
 controller.addMethodsTo(userss, on: "todos")
 
@@ -427,7 +427,7 @@ Probably more rare case, but still supported. Inversed nested controller for chi
 
 1. Create controller with child relation keyPath and optional *relationName*:
 
-```
+```swift
 let controller = User.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .related(with: \User.$todos, relationName: "author")
@@ -437,7 +437,7 @@ let controller = User.Output
 
 2. Add methods to route builder:
 
-```
+```swift
 let users = routeBuilder.grouped("users")
 controller.addMethodsTo(users, on: "todos")
 
@@ -464,7 +464,7 @@ It works the same way as with other type of relations:
 
 1. Create controller with relation keyPath, optional *relationName* and mention **authenticatable** type:
 
-```
+```swift
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(with: \User.$todos, relationName: "managed")
@@ -477,13 +477,13 @@ let controller = Todo.Output
 ```
 2. Make sure that auth and auth guard middlewares are added to the routee
 
-```
+```swift
 authRoutesBuilder = routeBuilder.grouped(Authenticator(), User.guardMiddleware())
 ```
 
 3. Add methods to route builder:
 
-```
+```swift
 let users = authRoutesBuilder.grouped("users")
 controller.addMethodsTo(userss, on: "todos")
 
@@ -511,7 +511,7 @@ The proccess is almost the same as usual:
 
 1. Use **relation** property of contoller builder:
 
-```
+```swift
 let controller = Tag.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .related(with: \Todo.$tags, relationName: "relation_name")
@@ -553,7 +553,7 @@ Relation name parameter is still optional. If nil is provided then the routes wi
 
 Default implementation of that method is:
 
-```
+```swift
 func update(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
     return database.eventLoop.tryFuture { try update(model) }
 }
@@ -570,7 +570,7 @@ It can be made complex, but with the following restrictions:
 
 Default implementation of that method is:
 
-```
+```swift
 func patch(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
     return database.eventLoop.tryFuture { try patch(model) }
 }
@@ -592,7 +592,7 @@ When creating nested controller that works with related resource or relations, i
 
 1. Define middleware:
 
-```
+```swift
 let middleware = RelatedResourceControllerMiddleware<Todo, User>() { todo, user, req, database in
 
     // Do something here
@@ -605,7 +605,7 @@ let middleware = RelatedResourceControllerMiddleware<Todo, User>() { todo, user,
 ```
 
 2. Add middleware to controller 
-```
+```swift
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(with: \User.$todos, relationName: nil)
@@ -631,7 +631,7 @@ RestKit provides a way to implement delete logic on controller's layer via Delet
 
 1. Define delete handler:
 
-```
+```swift
 let deleter1 = DeleteHandler<Todo>(handler: { (todo, forceDelete, req, database) -> EventLoopFuture<Todo> in
                 //that's the default implementation:
                 return todo.delete(force: forceDelete, on: database)
@@ -646,7 +646,7 @@ let deleter
 
 2. Provide custom deleter to delete controller builder:
 
-```
+```swift
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .read()
@@ -671,7 +671,7 @@ CompoundResourceController allows to combine several controllers into one.
 
 1. Create your custom CustomTodoController and make it conform to *APIMethodsProviding* protocol:
 
-```
+```swift
 struct CustomCreateUserController:  APIMethodsProviding {
 
     func someMethod(_ req: Request) -> EventLoopFuture<SomeResponse> {
@@ -689,7 +689,7 @@ struct CustomCreateUserController:  APIMethodsProviding {
 
 2. Use CompoundResourceController:
  
-```
+```swift
 let controller: APIMethodsProviding = CompoundResourceController(with: [
                 Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
@@ -711,7 +711,7 @@ let controller: APIMethodsProviding = CompoundResourceController(with: [
 
 VersionableController protocol is to force destinguishing controllers versions.
 
-```
+```swift
 open protocol VersionableController {
     associatedtype ApiVersion
 
@@ -729,7 +729,7 @@ Protocols contraints applied on associated types would make sure, that we haven'
 
 This allows to create managable versioned Resource Models as follows:
 
-```
+```swift
 extension Todo {
     struct OutputV1: ResourceOutputModel {
         let id: UUID?
