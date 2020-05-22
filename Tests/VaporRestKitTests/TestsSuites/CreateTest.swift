@@ -8,7 +8,7 @@
 @testable import VaporRestKit
 import XCTVapor
 
-final class CreateTests: BaseVaporRestKitStarsTest {
+final class CreateTests: BaseVaporRestKitTest {
     func testCreateWithValidData() throws {
         try routes()
 

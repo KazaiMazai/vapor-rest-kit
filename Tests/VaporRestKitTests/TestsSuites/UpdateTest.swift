@@ -5,11 +5,14 @@
 //  Created by Sergey Kazakov on 20.05.2020.
 //
 
+import Foundation
+
+
 @testable import VaporRestKit
 import XCTVapor
 
-final class PatchTests: BaseVaporRestKitStarsTest {
-    func testPatchWithValidData() throws {
+final class UpdateTests: BaseVaporRestKitTest {
+    func testUpdateWithValidData() throws {
         try routes()
 
         try app.test(.GET, "v1/stars/1") { res in
@@ -33,25 +36,7 @@ final class PatchTests: BaseVaporRestKitStarsTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
-        }.test(.PATCH, "v1/stars/1", body: Star.PatchInput(title: nil)) { res in
-            XCTAssertEqual(res.status, .ok)
-            XCTAssertNotEqual(res.status, .notFound)
-
-            XCTAssertContent(Star.Output.self, res) {
-                XCTAssertNotNil($0.id)
-                XCTAssertEqual($0.id, 1)
-                XCTAssertEqual($0.title, "Sun")
-            }
-        }.test(.GET, "v1/stars/1") { res in
-            XCTAssertEqual(res.status, .ok)
-            XCTAssertNotEqual(res.status, .notFound)
-
-            XCTAssertContent(Star.Output.self, res) {
-                XCTAssertNotNil($0.id)
-                XCTAssertEqual($0.id, 1)
-                XCTAssertEqual($0.title, "Sun")
-            }
-        }.test(.PATCH, "v1/stars/1", body: Star.PatchInput(title: "Alpha Centauri")) { res in
+        }.test(.PUT, "v1/stars/1", body: Star.Input(title: "Alpha Centauri")) { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNotEqual(res.status, .notFound)
 
@@ -72,7 +57,7 @@ final class PatchTests: BaseVaporRestKitStarsTest {
         }
     }
 
-    func testPatchWithoutData() throws {
+    func testUpdateWithoutData() throws {
         struct Empty: Content {}
 
         try routes()
@@ -98,8 +83,9 @@ final class PatchTests: BaseVaporRestKitStarsTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
-        }.test(.PATCH, "v1/stars/1", body: Empty()) { res in
-            XCTAssertEqual(res.status, .ok)
+        }.test(.PUT, "v1/stars/1", body: Empty()) { res in
+            XCTAssertEqual(res.status, .badRequest)
+            XCTAssertNotEqual(res.status, .ok)
 
         }.test(.GET, "v1/stars/1") { res in
             XCTAssertEqual(res.status, .ok)
@@ -113,7 +99,7 @@ final class PatchTests: BaseVaporRestKitStarsTest {
         }
     }
 
-    func testPatchWithInvalidData() throws {
+    func testUpdateWithInvalidData() throws {
         struct Empty: Content {}
 
         try routes()
@@ -139,7 +125,7 @@ final class PatchTests: BaseVaporRestKitStarsTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
-        }.test(.PATCH, "v1/stars/1", body: Star.PatchInput(title: "S")) { res in
+        }.test(.PUT, "v1/stars/1", body: Star.Input(title: "S")) { res in
             XCTAssertEqual(res.status, .badRequest)
             XCTAssertNotEqual(res.status, .ok)
 

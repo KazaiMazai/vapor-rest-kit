@@ -9,7 +9,7 @@
 import XCTVapor
 
 
-final class CreateChildTests: BaseVaporRestKitStarsTest {
+final class CreateChildTests: BaseVaporRestKitTest {
     func testCreateWithValidData() throws {
         try routes()
 

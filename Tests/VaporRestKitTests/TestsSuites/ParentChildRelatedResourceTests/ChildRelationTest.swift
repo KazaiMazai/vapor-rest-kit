@@ -11,7 +11,7 @@ import Foundation
 import XCTVapor
 
 
-final class ChildRelationsTests: BaseVaporRestKitStarsTest {
+final class ChildRelationsTests: BaseVaporRestKitTest {
     func testCreateAndDeleteRelation() throws {
         try routes()
 
