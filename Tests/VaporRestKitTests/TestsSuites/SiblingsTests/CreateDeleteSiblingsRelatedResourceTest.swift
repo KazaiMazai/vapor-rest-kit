@@ -9,7 +9,7 @@
 import XCTVapor
 
 final class CreateSiblingsResourceTests: BaseVaporRestKitTest {
-    func testCreateWithValidData() throws {
+    func testCreateWithValidDataAndDelete() throws {
         try routes()
 
         try app.test(.GET, "v1/star_tags/1") { res in

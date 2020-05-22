@@ -10,7 +10,7 @@ import XCTVapor
 
 
 final class CreateChildTests: BaseVaporRestKitTest {
-    func testCreateWithValidData() throws {
+    func testCreateWithValidDataAndDelete() throws {
         try routes()
 
         try app.test(.GET, "v1/galaxies/1") { res in
