@@ -51,6 +51,14 @@ final class CreateChildTests: BaseVaporRestKitTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
+        }.test(.GET, "v1/stars/1/belongs/galaxies/1") { res in
+            XCTAssertEqual(res.status, .ok)
+
+            XCTAssertContent(Galaxy.Output.self, res) {
+                XCTAssertNotNil($0.id)
+                XCTAssertEqual($0.id, 1)
+                XCTAssertEqual($0.title, "Milky Way")
+            }
         }
     }
 
