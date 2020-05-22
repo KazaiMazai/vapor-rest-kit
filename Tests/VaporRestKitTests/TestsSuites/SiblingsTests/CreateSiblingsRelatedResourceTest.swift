@@ -56,6 +56,16 @@ final class CreateSiblingsResourceTests: BaseVaporRestKitTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
+        }.test(.DELETE, "v1/star_tags/1/related/stars/1") { res in
+            XCTAssertEqual(res.status, .ok)
+
+            XCTAssertContent(Star.Output.self, res) {
+                XCTAssertNotNil($0.id)
+                XCTAssertEqual($0.id, 1)
+                XCTAssertEqual($0.title, "Sun")
+            }
+        }.test(.GET, "v1/star_tags/1/related/stars/1") { res in
+            XCTAssertEqual(res.status, .notFound)
         }
     }
 
