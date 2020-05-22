@@ -5,11 +5,8 @@
 //  Created by Sergey Kazakov on 21.05.2020.
 //
 
-import Foundation
-
 @testable import VaporRestKit
 import XCTVapor
-
 
 final class ChildRelationsTests: BaseVaporRestKitTest {
     func testCreateAndDeleteRelation() throws {
@@ -80,7 +77,7 @@ final class ChildRelationsTests: BaseVaporRestKitTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
-        }.test(.GET, "v1/galaxies/1/contains/stars/1/relation") { res in
+        }.test(.GET, "v1/galaxies/1/contains/stars/1") { res in
             XCTAssertEqual(res.status, .notFound)
 
         }
