@@ -9,7 +9,7 @@
 import XCTVapor
 
 
-final class PaginationTests: BaseVaporRestKitStarsTest {
+final class PaginationTests: BaseVaporRestKitTest {
     func testCursorPaginationWithDefaultIdSort() throws {
         try routes()
         try seed()

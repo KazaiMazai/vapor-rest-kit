@@ -14,8 +14,7 @@ protocol DeletableRelationController: ItemResourceControllerProtocol {
     func delete(_ req: Request) throws -> EventLoopFuture<Output>
 }
 
-extension DeletableRelationController
-where Self: ChildrenResourceRelationProvider {
+extension DeletableRelationController where Self: ChildrenResourceRelationProvider {
 
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         return req.db.tryTransaction { db in
