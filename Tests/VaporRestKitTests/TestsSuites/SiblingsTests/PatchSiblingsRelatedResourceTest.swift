@@ -4,12 +4,12 @@
 //
 //  Created by Sergey Kazakov on 22.05.2020.
 //
- 
+
 @testable import VaporRestKit
 import XCTVapor
 
-final class UpdateSiblingsResourceTests: BaseVaporRestKitTest {
-    func testUpdateWithValidData() throws {
+final class PatchSiblingsResourceTests: BaseVaporRestKitTest {
+    func testPatchWithValidData() throws {
         try routes()
 
         try app.test(.GET, "v1/star_tags/1") { res in
@@ -67,7 +67,7 @@ final class UpdateSiblingsResourceTests: BaseVaporRestKitTest {
         }
     }
 
-    func testUpdateWithEmptyData() throws {
+    func testPatchWithEmptyData() throws {
         struct Empty: Content {}
 
         try routes()
@@ -122,9 +122,7 @@ final class UpdateSiblingsResourceTests: BaseVaporRestKitTest {
         }
     }
 
-    func testUpdateWithInvaliadData() throws {
-        struct Empty: Content {}
-
+    func testPatchWithInvalidData() throws {
         try routes()
 
         try app.test(.GET, "v1/star_tags/1") { res in
@@ -163,8 +161,14 @@ final class UpdateSiblingsResourceTests: BaseVaporRestKitTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Small")
             }
-        }.test(.PUT, "v1/stars/1/related/star_tags/1", body: StarTag.Input(title: "S")) { res in
-            XCTAssertEqual(res.status, .badRequest)
+        }.test(.PATCH, "v1/stars/1/related/star_tags/1", body: StarTag.PatchInput(title: nil)) { res in
+            XCTAssertEqual(res.status, .ok)
+
+            XCTAssertContent(StarTag.Output.self, res) {
+                XCTAssertNotNil($0.id)
+                XCTAssertEqual($0.id, 1)
+                XCTAssertEqual($0.title, "Small")
+            }
 
         }.test(.GET, "v1/stars/1/related/star_tags/1") { res in
             XCTAssertEqual(res.status, .ok)
@@ -175,5 +179,5 @@ final class UpdateSiblingsResourceTests: BaseVaporRestKitTest {
                 XCTAssertEqual($0.title, "Small")
             }
         }
-    }   
+    }
 }
