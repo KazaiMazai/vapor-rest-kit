@@ -67,11 +67,9 @@ class BaseVaporRestKitTest: XCTestCase {
             StarTagControllers.StarTagForStarNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
             StarTagControllers.StarTagForStarRelationNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
 
-
             TodoControllers.TodoController().setupAPIMethods(on: versiondGroup, for: "todos", with: version)
             UserControllers.UsersController().setupAPIMethods(on: versiondGroup, for: "users", with: version)
             TagControllers.TagController().setupAPIMethods(on: versiondGroup, for: "tags", with: version)
-
 
             let todosGroup = versiondGroup.grouped("todos")
             UserControllers.UsersForTodoController().setupAPIMethods(on: todosGroup, for: "users", with: version)
