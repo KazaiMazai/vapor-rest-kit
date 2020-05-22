@@ -68,7 +68,7 @@ extension Model {
         case .required(_):
             throw FluentError.idRequired
         case .optional(let optionalKeyPath):
-            child[keyPath: optionalKeyPath].id = self.id
+            child[keyPath: optionalKeyPath].id = nil
         }
         return self
     }
