@@ -632,6 +632,7 @@ RestKit provides a way to implement delete logic on controller's layer via Delet
 1. Define delete handler:
 
 ```swift
+
 let deleter = DeleteHandler<Todo>(handler: { (todo, forceDelete, req, database) -> EventLoopFuture<Todo> in
                 //that's the default implementation:
                 return todo.delete(force: forceDelete, on: database)
