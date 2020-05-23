@@ -79,6 +79,9 @@ class BaseVaporRestKitTest: XCTestCase {
             GalaxyControllers.GalaxyForStarsNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)
             GalaxyControllers.GalaxyForStarsRelationNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)
 
+            GalaxyControllers.ExtendableGalaxyForStarsNestedController().setupAPIMethods(on: starGroup, for: "ext_galaxies", with: version)
+
+
             StarTagControllers.StarTagForStarNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
             StarTagControllers.StarTagForStarRelationNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
 
