@@ -9,7 +9,7 @@
 import XCTVapor
 
 final class ParentRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
-    func testEagerLoaderWithStaticAndDynamicKeys() throws {
+    func testEagerLoaderWithDynamicKeys() throws {
         try routes()
         try seed()
 
