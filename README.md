@@ -632,16 +632,12 @@ RestKit provides a way to implement delete logic on controller's layer via Delet
 1. Define delete handler:
 
 ```swift
-let deleter1 = DeleteHandler<Todo>(handler: { (todo, forceDelete, req, database) -> EventLoopFuture<Todo> in
+
+let deleter = DeleteHandler<Todo>(handler: { (todo, forceDelete, req, database) -> EventLoopFuture<Todo> in
                 //that's the default implementation:
                 return todo.delete(force: forceDelete, on: database)
  }, useForcedDelete: false)
  
- //or
- 
-let deleter2 = DeleteHandler<Todo>(useForcedDelete: true)
- 
-let deleter 
 ```
 
 2. Provide custom deleter to delete controller builder:
@@ -650,7 +646,7 @@ let deleter
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .read()
-                    .delete(with: customDeleter)
+                    .delete(with: deleter)
 
 ```
 
@@ -734,12 +730,12 @@ extension Todo {
     struct OutputV1: ResourceOutputModel {
         let id: UUID?
         let name: String
-        let description: String 
+        let oldNotes: String 
  
         init(_ model: Todo) {
             self.id = model.id
             self.name = model.title
-            self.description = model.notes
+            self.oldNotes = model.notes
         }
     }
     
