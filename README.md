@@ -903,12 +903,18 @@ let controller = Star.Output
 #### Definitions
 
 
+
+The following func defines default filtering, applied to the collection.
 ```swift
 func defaultFiltering() 
 ```
-This func defines default filtering, applied to the collection.
 - If filtering enitity conforms to **StaticFiltering** default filtering is always applied. 
 - If filtering enitity conforms to **DynamicFiltering** default filtering is applied if no filter keys provided.
+
+
+
+The following Keys enum defines supported dynamic keys 
+
 
 ```swift 
  enum Keys: String, FilteringKey {
@@ -919,9 +925,10 @@ This func defines default filtering, applied to the collection.
         case size
 }
 ```
-Keys enum defines supported dynamic keys and provides mapping current key to a filtered queryBuilder via 
+ 
+The following func provides mapping current key to a filtered queryBuilder via
 
-```
+```swift
 func filterFor(queryBuilder: QueryBuilder<Star>,
                            method: DatabaseQuery.Filter.Method,
                            value: String) -> QueryBuilder<Star> 
@@ -964,7 +971,9 @@ RestKit uses JSON format to parse filter query string. Query key is **filter**, 
 ```
 So the overall request query will look like:
 
-https:/api.yourservice.com?filter={"value":  {"value": "X", "method": "eq", "key": "title"}}
+```
+https://api.yourservice.com?filter={"value":  {"value": "X", "method": "eq", "key": "title"}}
+```
 
 *All values should be passed as string even if it's numerical values.*
 
@@ -1008,7 +1017,7 @@ Element of array of nested filters can be also a complex nested filter:
 ]}
 ```
 
-The complexity is only limited by supported DynamicFiltering's Key type.
+The complexity of nested filters is not limited.
 
 
 ## Sorting
@@ -1093,18 +1102,18 @@ let controller = Star.Output
 ```
 
 #### Definitions
-
+This func that defines default sorting, applied to the collection:
 
 ```swift
 func defaultSorting() 
 ```
-This func defines default sorting, applied to the collection.
+
 - If sorting enitity conforms to **StaticSorting** default sorting is always applied. 
 - If sorting enitity conforms to **DynamicSorting** default StaticSorting is applied if no sorting keys provided.
 
 ### Important
 
-**RestKit always appends sorting by ID with ascending order. This is necessary firsst of all for valid cursor pagination and just to keep all the things in order.**
+**RestKit always appends sorting by ID with ascending order. This is necessary for valid cursor pagination.**
 
 #### How to use dynamic sort query
 
@@ -1112,14 +1121,17 @@ RestKit uses the following format to parse sort query string. Query key is **sor
 where direction is **asc** or **desc**.
 
 The result request will look like:
-https://api.yourservice.com?sort=ticker:asc
+```
+https://api.yourservice.com?sort=title:asc
+```
 
 #### How to use dynamic sort query with multiple keys
 
 It's also possible to use several sort keys, separated by comma:
 
+```
 https://api.yourservice.com?sort=title:asc,subtitle:desc
-
+```
 
 ## Eager Loading
 
