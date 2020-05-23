@@ -75,7 +75,8 @@ extension Model {
 
     @discardableResult
     func attached<To, Through>(to child: To,
-                               with childrenKeyPath: SiblingKeyPath<Self, To, Through>, on database: Database,
+                               with childrenKeyPath: SiblingKeyPath<Self, To, Through>,
+                               on database: Database,
                                method: SiblingsProperty<Self, To, Through>.AttachMethod = .ifNotExists,
                                edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
 

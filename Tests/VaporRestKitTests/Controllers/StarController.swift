@@ -32,6 +32,69 @@ struct StarControllers {
         }
     }
 
+     struct ExtendableStarForGalaxyNestedController: VersionableController {
+           var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                   .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
+                   .related(by: \Galaxy.$stars, relationName: "contains")
+                   .create(using: Star.Input.self)
+                   .read()
+                   .update(using: Star.Input.self)
+                   .patch(using: Star.PatchInput.self)
+                   .delete()
+                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+           }
+
+           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+               switch version {
+               case .v1:
+                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
+               }
+           }
+    }
+
+    struct FullStarForGalaxyNestedController: VersionableController {
+           var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                   .controller(eagerLoading: StarTagControllers.FullStarEagerLoading.self)
+                   .related(by: \Galaxy.$stars, relationName: "contains")
+                   .create(using: Star.Input.self)
+                   .read()
+                   .update(using: Star.Input.self)
+                   .patch(using: Star.PatchInput.self)
+                   .delete()
+                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+           }
+
+           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+               switch version {
+               case .v1:
+                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
+               }
+           }
+    }
+
+    struct DynamicStarForGalaxyNestedController: VersionableController {
+           var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                   .controller(eagerLoading: StarTagControllers.DynamicStarEagerLoading.self)
+                   .related(by: \Galaxy.$stars, relationName: "contains")
+                   .create(using: Star.Input.self)
+                   .read()
+                   .update(using: Star.Input.self)
+                   .patch(using: Star.PatchInput.self)
+                   .delete()
+                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+           }
+
+           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+               switch version {
+               case .v1:
+                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
+               }
+           }
+    }
+
 
     struct StarForGalaxyNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
@@ -185,6 +248,67 @@ extension StarTagControllers {
                     return queryBuilder
                 }
             }
+        }
+    }
+
+    struct ExtendableStarEagerLoading: DynamicEagerLoading {
+        typealias Model = Star
+        typealias Key = Keys
+
+        func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+            return queryBuilder.with(\.$galaxy)
+        }
+
+        enum Keys: String, EagerLoadingKey {
+            typealias Model = Star
+
+            case galaxy
+            case tags
+
+            func eagerLoadFor(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+                switch self {
+                case .galaxy:
+                    return queryBuilder.with(\.$galaxy)
+                case .tags:
+                    return queryBuilder.with(\.$starTags)
+                }
+            }
+
+        }
+    }
+
+    struct DynamicStarEagerLoading: DynamicEagerLoading {
+        typealias Model = Star
+        typealias Key = Keys
+
+        func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+            return queryBuilder
+        }
+
+        enum Keys: String, EagerLoadingKey {
+            typealias Model = Star
+
+            case galaxy
+            case tags
+
+            func eagerLoadFor(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+                switch self {
+                case .galaxy:
+                    return queryBuilder.with(\.$galaxy)
+                case .tags:
+                    return queryBuilder.with(\.$starTags)
+                }
+            }
+
+        }
+    }
+
+    struct FullStarEagerLoading: StaticEagerLoading {
+        typealias Key = EmptyEagerLoadKey<Model>
+        typealias Model = Star
+
+        func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+            return queryBuilder.with(\.$galaxy).with(\.$starTags)
         }
     }
 }

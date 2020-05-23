@@ -90,6 +90,34 @@ extension Star {
         }
     }
 
+    struct ExtendedOutput<GalaxyOutput, TagsOutput>: ResourceOutputModel
+        where
+        GalaxyOutput: ResourceOutputModel,
+        GalaxyOutput.Model == Galaxy,
+        TagsOutput: ResourceOutputModel,
+        TagsOutput.Model == StarTag  {
+
+        let id: Int?
+        let title: String
+        let subtitle: String?
+        let size: Int
+
+        let galaxy: GalaxyOutput?
+        let tags: [TagsOutput]?
+
+        init(_ model: Star, req: Request) {
+            id = model.id
+            title = model.title
+            subtitle = model.subtitle
+            size = model.size
+            galaxy = model.$galaxy.value.map { GalaxyOutput($0, req: req) }
+            tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
+
+        }
+    }
+
+    
+
     struct Input: ResourceUpdateModel {
         let title: String
 
@@ -149,9 +177,18 @@ extension Star {
     ]
 
     static func seed(on database: Database) throws {
+        let galaxy = Galaxy(title: "Milky Way")
+        try galaxy.save(on: database).wait()
+
+        let starTag = StarTag(title: "Small")
+        try starTag.save(on: database).wait()
+
         try seedTitles.enumerated().forEach  {
             let size = $0.offset * 10
-            try Star(title: $0.element.title, subtitle: $0.element.subtitle, size: size).save(on: database).wait()
+            let star = Star(title: $0.element.title, subtitle: $0.element.subtitle, size: size)
+            star.$galaxy.id = galaxy.id
+            try star.save(on: database).wait()
+            try star.$starTags.attach(starTag, on: database).wait()
         }
     }
 }

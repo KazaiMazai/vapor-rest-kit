@@ -22,6 +22,10 @@ public extension QueryBuilder {
                                   .map { EagerLoading.Key(rawValue: $0) }
                                   .compactMap { $0 }
 
+        guard keys.count > 0 else {
+            return eagerLoadProvider.defaultEagerLoading(self)
+        }
+
         return eagerLoadProvider.eagerLoadFor(builder: self, includeKeys: keys)
     }
 }
