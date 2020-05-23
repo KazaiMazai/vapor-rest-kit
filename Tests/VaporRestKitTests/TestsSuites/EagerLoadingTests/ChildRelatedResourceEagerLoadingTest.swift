@@ -5,7 +5,6 @@
 //  Created by Sergey Kazakov on 23.05.2020.
 //
 
-
 @testable import VaporRestKit
 import XCTVapor
 
@@ -180,7 +179,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
         }
     }
 
-    func testEagerLoaderWithOnlyDynamicKeys() throws {
+    func testEagerLoaderWithDynamicKeys() throws {
         try routes()
         try seed()
 
