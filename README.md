@@ -235,10 +235,10 @@ extension Todo {
 ```swift
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .create(input: Todo.CreateInput.self)
+                    .create(using: Todo.CreateInput.self)
                     .read()
-                    .update(input: Todo.UpdateInput.self)
-                    .patch(input: Todo.PatchInput.self)
+                    .update(using: Todo.UpdateInput.self)
+                    .patch(using: Todo.PatchInput.self)
                     .delete()
                     .collection(sorting: DefaultSorting.self,
                                 filtering: DefaultFiltering.self)
@@ -300,10 +300,10 @@ let controller =  SuccessOutput<Todo>
 let controller = Tag.Output
         .controller(eagerLoading: EagerLoadingUnsupported.self)
         .related(with: \Todo.$tags, relationName: "mentioned")
-        .create(input: Tag.CreateInput.self)
+        .create(using: Tag.CreateInput.self)
         .read()
-        .update(input: Tag.UpdateInput.self)
-        .patch(input: Tag.PatchInput.self)
+        .update(using: Tag.UpdateInput.self)
+        .patch(using: Tag.PatchInput.self)
         .collection(sorting: DefaultSorting.self,
                     filtering: DefaultFiltering.self)
 
@@ -354,10 +354,10 @@ We can create:
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(with: \Tag.$relatedTodos, relationName: "related")
-                .create(input: Todo.Input.self)
+                .create(using: Todo.Input.self)
                 .read()
-                .update(input: Todo.Input.self)
-                .patch(input: Todo.PatchInput.self)
+                .update(using: Todo.Input.self)
+                .patch(using: Todo.PatchInput.self)
                 .read()
                 .delete()
                 .collection(sorting: DefaultSorting.self,
@@ -389,10 +389,10 @@ Will result in:
 let controller = Todo.Output
                     .controller(eagerLoading: EagerLoadingUnsupported.self)
                     .related(with: \User.$todos, relationName: "managed")
-                    .create(input: Todo.Input.self)
+                    .create(using: Todo.Input.self)
                     .read()
-                    .update(input: Todo.Input.self)
-                    .patch(input: Todo.PatchInput.self)
+                    .update(using: Todo.Input.self)
+                    .patch(using: Todo.PatchInput.self)
                     .read()
                     .delete()
                     .collection(sorting: DefaultSorting.self,
@@ -609,9 +609,9 @@ let middleware = RelatedResourceControllerMiddleware<Todo, User>() { todo, user,
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(with: \User.$todos, relationName: nil)
-                .create(with: Todo.Input.self,
+                .create(using: Todo.Input.self,
                         middleware: middleware)
-                .patch(with: Todo.PatchInput.self, middleware: anotherMiddleware)
+                .patch(using: Todo.PatchInput.self, middleware: anotherMiddleware)
 
 ```
 3. Pofit!
