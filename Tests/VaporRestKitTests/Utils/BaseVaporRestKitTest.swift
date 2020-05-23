@@ -69,6 +69,11 @@ class BaseVaporRestKitTest: XCTestCase {
             StarControllers.StarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "stars", with: version)
             StarControllers.StarForTagsRelationNestedController().setupAPIMethods(on: starTagGroup, for: "stars", with: version)
 
+
+            StarControllers.ExtendableStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "ext_stars", with: version)
+            StarControllers.FullStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "full_stars", with: version)
+            StarControllers.DynamicStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "d_stars", with: version)
+
             let starGroup = versiondGroup.grouped("stars")
 
             GalaxyControllers.GalaxyForStarsNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)

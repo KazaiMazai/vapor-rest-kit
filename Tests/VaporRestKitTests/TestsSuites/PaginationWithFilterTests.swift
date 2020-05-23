@@ -86,7 +86,7 @@ final class PaginationWithFilterTests: BaseVaporRestKitTest {
         let filterJSONData = try JSONEncoder().encode(filterDict)
         let filterString = String(bytes: filterJSONData, encoding: .utf8) ?? ""
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&filter=\(filterString)") { res in
+        try app.test(.GET, "v1/stars?limit=\(limit)&filter=\(filterString)") { res in
             XCTAssertEqual(res.status, .badRequest)
         }
     }

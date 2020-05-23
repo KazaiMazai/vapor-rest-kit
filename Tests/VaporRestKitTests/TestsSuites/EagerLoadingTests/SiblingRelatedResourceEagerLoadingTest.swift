@@ -8,12 +8,12 @@
 @testable import VaporRestKit
 import XCTVapor
 
-final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
+final class SiblingsRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
     func testEagerLoaderWithStaticAndDynamicKeys() throws {
         try routes()
         try seed()
 
-        try app.test(.GET, "v1/galaxies/1/contains/ext_stars/1") { res in
+        try app.test(.GET, "v1/star_tags/1/related/ext_stars/1") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -27,7 +27,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
 
                 XCTAssertNil($0.tags)
             }
-        }.test(.GET, "v1/galaxies/1/contains/ext_stars/1?include=non_existing_key") { res in
+        }.test(.GET, "v1/star_tags/1/related/ext_stars/1?include=non_existing_key") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -42,7 +42,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertNil($0.tags)
 
             }
-        }.test(.GET, "v1/galaxies/1/contains/ext_stars/1?include=galaxy") { res in
+        }.test(.GET, "v1/star_tags/1/related/ext_stars/1?include=galaxy") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -56,7 +56,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
 
                 XCTAssertNil($0.tags)
             }
-        }.test(.GET, "v1/galaxies/1/contains/ext_stars/1?include=galaxy,tags") { res in
+        }.test(.GET, "v1/star_tags/1/related/ext_stars/1?include=galaxy,tags") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -71,7 +71,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertEqual($0.tags?.first?.id, 1)
                 XCTAssertEqual($0.tags?.first?.title, "Small")
             }
-        }.test(.GET, "v1/galaxies/1/contains/ext_stars/1?include=tags") { res in
+        }.test(.GET, "v1/star_tags/1/related/ext_stars/1?include=tags") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -92,7 +92,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
         try routes()
         try seed()
 
-        try app.test(.GET, "v1/galaxies/1/contains/full_stars/1") { res in
+        try app.test(.GET, "v1/star_tags/1/related/full_stars/1") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -109,7 +109,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertEqual($0.tags?.first?.title, "Small")
 
             }
-        }.test(.GET, "v1/galaxies/1/contains/full_stars/1?include=non_existing_key") { res in
+        }.test(.GET, "v1/star_tags/1/related/full_stars/1?include=non_existing_key") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -126,7 +126,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertEqual($0.tags?.first?.title, "Small")
 
             }
-        }.test(.GET, "v1/galaxies/1/contains/full_stars/1?include=galaxy") { res in
+        }.test(.GET, "v1/star_tags/1/related/full_stars/1?include=galaxy") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -143,7 +143,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertEqual($0.tags?.first?.id, 1)
                 XCTAssertEqual($0.tags?.first?.title, "Small")
             }
-        }.test(.GET, "v1/galaxies/1/contains/full_stars/1?include=galaxy,tags") { res in
+        }.test(.GET, "v1/star_tags/1/related/full_stars/1?include=galaxy,tags") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -159,7 +159,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertEqual($0.tags?.first?.id, 1)
                 XCTAssertEqual($0.tags?.first?.title, "Small")
             }
-        }.test(.GET, "v1/galaxies/1/contains/full_stars/1?include=tags") { res in
+        }.test(.GET, "v1/star_tags/1/related/full_stars/1?include=tags") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -183,7 +183,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
         try routes()
         try seed()
 
-        try app.test(.GET, "v1/galaxies/1/contains/d_stars/1") { res in
+        try app.test(.GET, "v1/star_tags/1/related/d_stars/1") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -195,7 +195,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertNil($0.tags)
 
             }
-        }.test(.GET, "v1/galaxies/1/contains/d_stars/1?include=non_existing_key") { res in
+        }.test(.GET, "v1/star_tags/1/related/d_stars/1?include=non_existing_key") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -207,7 +207,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertNil($0.tags)
 
             }
-        }.test(.GET, "v1/galaxies/1/contains/d_stars/1?include=galaxy") { res in
+        }.test(.GET, "v1/star_tags/1/related/d_stars/1?include=galaxy") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -222,7 +222,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertNil($0.tags)
 
             }
-        }.test(.GET, "v1/galaxies/1/contains/d_stars/1?include=galaxy,tags") { res in
+        }.test(.GET, "v1/star_tags/1/related/d_stars/1?include=galaxy,tags") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
@@ -239,7 +239,7 @@ final class ChildRelatedResourceEagerLoadingTest: BaseVaporRestKitTest {
                 XCTAssertEqual($0.tags?.first?.id, 1)
                 XCTAssertEqual($0.tags?.first?.title, "Small")
             }
-        }.test(.GET, "v1/galaxies/1/contains/d_stars/1?include=tags") { res in
+        }.test(.GET, "v1/star_tags/1/related/d_stars/1?include=tags") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Star.ExtendedOutput<Galaxy.Output, StarTag.Output>.self, res) {
