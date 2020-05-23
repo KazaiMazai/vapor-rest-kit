@@ -17,12 +17,6 @@ public struct RelatedResourceControllerMiddleware<Model: Fluent.Model, RelatedMo
         self.handler = handler
     }
 
-    func handleRelated(_ model: Model,
-                         relatedModel: RelatedModel,
-                         req: Request,
-                         database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
-        return handler(model, relatedModel, req, database)
-    }
 
     public static var defaultMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> {
         return RelatedResourceControllerMiddleware(handler: empty)
@@ -30,5 +24,12 @@ public struct RelatedResourceControllerMiddleware<Model: Fluent.Model, RelatedMo
 
     public static var empty: Handler {
         return { model, relatedModel, req, _ in req.eventLoop.makeSucceededFuture((model, relatedModel)) }
+    }
+
+    func handleRelated(_ model: Model,
+                         relatedModel: RelatedModel,
+                         req: Request,
+                         database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
+        return handler(model, relatedModel, req, database)
     }
 }
