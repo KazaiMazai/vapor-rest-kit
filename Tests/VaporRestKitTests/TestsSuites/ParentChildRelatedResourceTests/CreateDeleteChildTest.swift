@@ -9,8 +9,8 @@
 import XCTVapor
 
 
-final class CreateChildTests: BaseVaporRestKitStarsTest {
-    func testCreateWithValidData() throws {
+final class CreateChildTests: BaseVaporRestKitTest {
+    func testCreateWithValidDataAndDelete() throws {
         try routes()
 
         try app.test(.GET, "v1/galaxies/1") { res in
@@ -51,6 +51,24 @@ final class CreateChildTests: BaseVaporRestKitStarsTest {
                 XCTAssertEqual($0.id, 1)
                 XCTAssertEqual($0.title, "Sun")
             }
+        }.test(.GET, "v1/stars/1/belongs/galaxies/1") { res in
+            XCTAssertEqual(res.status, .ok)
+
+            XCTAssertContent(Galaxy.Output.self, res) {
+                XCTAssertNotNil($0.id)
+                XCTAssertEqual($0.id, 1)
+                XCTAssertEqual($0.title, "Milky Way")
+            }
+        }.test(.DELETE, "v1/galaxies/1/contains/stars/1") { res in
+            XCTAssertEqual(res.status, .ok)
+
+            XCTAssertContent(Star.Output.self, res) {
+                XCTAssertNotNil($0.id)
+                XCTAssertEqual($0.id, 1)
+                XCTAssertEqual($0.title, "Sun")
+            }
+        }.test(.GET, "v1/galaxies/1/contains/stars/1") { res in
+            XCTAssertEqual(res.status, .notFound)
         }
     }
 

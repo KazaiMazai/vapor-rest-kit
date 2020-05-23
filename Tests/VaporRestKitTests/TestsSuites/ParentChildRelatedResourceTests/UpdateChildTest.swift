@@ -9,7 +9,7 @@
 import XCTVapor
 
 
-final class UpdateChildTests: BaseVaporRestKitStarsTest {
+final class UpdateChildTests: BaseVaporRestKitTest {
     func testUpdateWithValidData() throws {
         try routes()
 

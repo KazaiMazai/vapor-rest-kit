@@ -8,7 +8,6 @@
 import Vapor
 import Fluent
 
-
 public protocol ResourcePatchModel: Content, Validatable {
     associatedtype Model: Fields
 

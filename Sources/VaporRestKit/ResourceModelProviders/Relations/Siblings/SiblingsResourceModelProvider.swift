@@ -10,9 +10,9 @@ import Vapor
 
 protocol SiblingsResourceModelProvider: ResourceModelProvider
     where Model.IDValue: LosslessStringConvertible,
-        RelatedModel: Fluent.Model,
-        Through: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+    RelatedModel: Fluent.Model,
+    Through: Fluent.Model,
+RelatedModel.IDValue: LosslessStringConvertible {
 
     associatedtype Model
     associatedtype RelatedModel
@@ -38,7 +38,7 @@ extension SiblingsResourceModelProvider {
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.rootIdComponentKey)") }
 
     var relationPathComponent: PathComponent? { return self.relationNamePath.map { PathComponent(stringLiteral: "\($0)") } }
- 
+
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         return [rootIdPathComponent, relationPathComponent, endpointPath].compactMap { $0 }
@@ -62,8 +62,8 @@ extension SiblingsResourceModelProvider {
 
 extension SiblingsResourceModelProvider {
     func findRelated(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel> {
-      return try RelatedModel.query(on: database)
-                            .findBy(rootIdComponentKey, from: req)
+        return try RelatedModel.query(on: database)
+            .findBy(rootIdComponentKey, from: req)
     }
 }
 
@@ -80,17 +80,18 @@ extension SiblingsResourceModelProvider {
     }
 
     fileprivate func findWithRelatedOn(_ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-                                      req: Request,
-                                      database: Database) throws -> EventLoopFuture<(resource: Model, relatedResoure: RelatedModel)> {
+                                       req: Request,
+                                       database: Database) throws -> EventLoopFuture<(resource: Model, relatedResoure: RelatedModel)> {
 
-        return try findRelated(req, database: database).flatMapThrowing { relatedResoure in
-                                     return try relatedResoure.queryRelated(keyPath: siblingKeyPath, on: database)
-                                                    .with(self.eagerLoadHandler, for: req)
-                                                    .sort(self.sortingHandler, for: req)
-                                                    .filter(self.filteringHandler, for: req)
-                                                    .findBy(self.idKey, from: req)
-                                                    .map { ($0, relatedResoure) }}
-                                   .flatMap { $0 }
+        return try findRelated(req, database: database)
+            .flatMapThrowing { relatedResoure in
+                try relatedResoure.queryRelated(keyPath: siblingKeyPath, on: database)
+                    .with(self.eagerLoadHandler, for: req)
+                    .sort(self.sortingHandler, for: req)
+                    .filter(self.filteringHandler, for: req)
+                    .findBy(self.idKey, from: req)
+                    .map { ($0, relatedResoure) }}
+            .flatMap { $0 }
     }
 }
 

@@ -68,14 +68,15 @@ extension Model {
         case .required(_):
             throw FluentError.idRequired
         case .optional(let optionalKeyPath):
-            child[keyPath: optionalKeyPath].id = self.id
+            child[keyPath: optionalKeyPath].id = nil
         }
         return self
     }
 
     @discardableResult
     func attached<To, Through>(to child: To,
-                               with childrenKeyPath: SiblingKeyPath<Self, To, Through>, on database: Database,
+                               with childrenKeyPath: SiblingKeyPath<Self, To, Through>,
+                               on database: Database,
                                method: SiblingsProperty<Self, To, Through>.AttachMethod = .ifNotExists,
                                edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
 
@@ -117,7 +118,7 @@ extension Model {
     }
 
     func query<From>(keyPath childrenKeyPath: ChildrenKeyPath<From, Self>,
-                              on database: Database) -> QueryBuilder<From>
+                              on database: Database) throws -> QueryBuilder<From>
         where From: Fluent.Model {
 
         let parentKey = getParentKey(with: childrenKeyPath)
@@ -126,6 +127,9 @@ extension Model {
         case .required(let requiredKeyPath):
             return self[keyPath: requiredKeyPath].query(on: database)
         case .optional(let optionalKeyPath):
+            guard let _ = self[keyPath: optionalKeyPath].id else {
+                throw Abort(.notFound)
+            }
             return self[keyPath: optionalKeyPath].query(on: database)
         }
     }

@@ -80,7 +80,6 @@ extension UpdateableResourceController
     }
 }
 
-
 extension UpdateableResourceController
     where
     Self: SiblingsResourceModelProvider,
@@ -95,7 +94,8 @@ extension UpdateableResourceController
             try self.findWithRelated(req, database: db)
                 .flatMap { inputModel.update($0.resource, req: req, database: db).and(value: $0.relatedResoure) }
                 .flatMap { self.relatedResourceMiddleware.handleRelated($0.0, relatedModel: $0.1, req: req, database: db) }
-                .flatMap { $0.0.attached(to: $0.1, with: self.siblingKeyPath, on: db) }
+                .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
+                .flatMap { (model, related) in model.attached(to: related, with: self.siblingKeyPath, on: db) }
                 .map { Output($0, req: req) }
         }
     }

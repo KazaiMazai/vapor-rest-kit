@@ -9,7 +9,7 @@
 import XCTVapor
 
 
-final class PaginationTests: BaseVaporRestKitStarsTest {
+final class PaginationWithSortTests: BaseVaporRestKitTest {
     func testCursorPaginationWithDefaultIdSort() throws {
         try routes()
         try seed()
@@ -43,7 +43,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -96,7 +96,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -149,7 +149,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -202,7 +202,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -254,7 +254,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -307,7 +307,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc,subtitle:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -360,7 +360,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc,subtitle:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -413,7 +413,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc,subtitle:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -466,7 +466,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc,subtitle:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -519,7 +519,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc,title:desc,") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -572,7 +572,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc,title:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -625,7 +625,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc,title:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
@@ -680,7 +680,7 @@ final class PaginationTests: BaseVaporRestKitStarsTest {
             }
         }
 
-        for itemIndex in stride(from: lastItemIndex, through: Star.seedTitles.count, by: limit) {
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
             appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc,title:asc") { res in
                 XCTAssertEqual(res.status, .ok)
                 XCTAssertNotEqual(res.status, .notFound)

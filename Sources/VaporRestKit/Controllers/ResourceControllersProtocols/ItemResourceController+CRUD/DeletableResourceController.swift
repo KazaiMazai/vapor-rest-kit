@@ -22,7 +22,7 @@ extension DeletableResourceController where Self: ResourceModelProvider {
     }
 }
 
-extension DeletableResourceController where Self: ChildrenResourceRelationProvider {
+extension DeletableResourceController where Self: ChildrenResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
@@ -35,7 +35,7 @@ extension DeletableResourceController where Self: ChildrenResourceRelationProvid
     }
 }
 
-extension DeletableResourceController where Self: ParentResourceRelationProvider {
+extension DeletableResourceController where Self: ParentResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
@@ -43,12 +43,16 @@ extension DeletableResourceController where Self: ParentResourceRelationProvider
                                                                         relatedModel: $0.relatedResource,
                                                                         req: req,
                                                                         database: db) }
-                .flatMap { self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+                .flatMapThrowing { (resource, related) in
+                    try resource.detached(from: related, with: self.inversedChildrenKeyPath)
+                    return related.save(on: db).transform(to: resource) }
+                .flatMap { $0 }
+                .flatMap { self.deleter.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
         }
     }
 }
 
-extension DeletableResourceController where Self: SiblingsResourceRelationProvider {
+extension DeletableResourceController where Self: SiblingsResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
@@ -56,7 +60,8 @@ extension DeletableResourceController where Self: SiblingsResourceRelationProvid
                                                                         relatedModel: $0.relatedResoure,
                                                                         req: req,
                                                                         database: db) }
-                .flatMap { self.deleter.performDelete($0.0, req: req, database: db).transform(to: Output($0.0, req: req)) }
+                .flatMap { (resource, related) in resource.detached(from: related, with: self.siblingKeyPath, on: db) }
+                .flatMap { self.deleter.performDelete($0, req: req, database: db).transform(to: Output($0, req: req)) }
         }
     }
 }

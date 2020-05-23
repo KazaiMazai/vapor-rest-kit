@@ -60,6 +60,22 @@ extension Galaxy {
         }
     }
 
+    struct ExtendedOutput<StarOutput>: ResourceOutputModel
+        where
+        StarOutput: ResourceOutputModel,
+        StarOutput.Model == Star {
+
+        let id: Int?
+        let title: String
+        let stars: [StarOutput]?
+
+        init(_ model: Galaxy, req: Request) {
+            id = model.id
+            title = model.title
+            stars = model.$stars.value?.map { StarOutput($0, req: req) }
+        }
+    }
+
     struct Input: ResourceUpdateModel {
         typealias Model = Galaxy
 
