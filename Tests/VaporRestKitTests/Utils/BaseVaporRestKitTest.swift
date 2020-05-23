@@ -46,12 +46,22 @@ class BaseVaporRestKitTest: XCTestCase {
             let versiondGroup = app.grouped(version.path)
 
             StarTagControllers.StarTagController().setupAPIMethods(on: versiondGroup, for: "star_tags", with: version)
+
             StarControllers.StarController().setupAPIMethods(on: versiondGroup, for: "stars", with: version)
+            StarControllers.ExtendableStarController().setupAPIMethods(on: versiondGroup, for: "ext_stars", with: version)
+            StarControllers.FullStarController().setupAPIMethods(on: versiondGroup, for: "full_stars", with: version)
+            StarControllers.DynamicStarController().setupAPIMethods(on: versiondGroup, for: "d_stars", with: version)
+
             GalaxyControllers.GalaxyController().setupAPIMethods(on: versiondGroup, for: "galaxies", with: version)
 
             let galaxyGroup = versiondGroup.grouped("galaxies")
 
             StarControllers.StarForGalaxyNestedController().setupAPIMethods(on: galaxyGroup, for: "stars", with: version)
+            StarControllers.ExtendableStarForGalaxyNestedController().setupAPIMethods(on: galaxyGroup, for: "ext_stars", with: version)
+            StarControllers.FullStarForGalaxyNestedController().setupAPIMethods(on: galaxyGroup, for: "full_stars", with: version)
+            StarControllers.DynamicStarForGalaxyNestedController().setupAPIMethods(on: galaxyGroup, for: "d_stars", with: version)
+
+
             StarControllers.StarForGalaxyRelationNestedController().setupAPIMethods(on: galaxyGroup, for: "stars", with: version)
 
             let starTagGroup = versiondGroup.grouped("star_tags")
@@ -59,10 +69,18 @@ class BaseVaporRestKitTest: XCTestCase {
             StarControllers.StarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "stars", with: version)
             StarControllers.StarForTagsRelationNestedController().setupAPIMethods(on: starTagGroup, for: "stars", with: version)
 
+
+            StarControllers.ExtendableStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "ext_stars", with: version)
+            StarControllers.FullStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "full_stars", with: version)
+            StarControllers.DynamicStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "d_stars", with: version)
+
             let starGroup = versiondGroup.grouped("stars")
 
             GalaxyControllers.GalaxyForStarsNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)
             GalaxyControllers.GalaxyForStarsRelationNestedController().setupAPIMethods(on: starGroup, for: "galaxies", with: version)
+
+            GalaxyControllers.ExtendableGalaxyForStarsNestedController().setupAPIMethods(on: starGroup, for: "ext_galaxies", with: version)
+
 
             StarTagControllers.StarTagForStarNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
             StarTagControllers.StarTagForStarRelationNestedController().setupAPIMethods(on: starGroup, for: "star_tags", with: version)
