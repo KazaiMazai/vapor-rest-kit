@@ -15,10 +15,5 @@ public protocol ResourceOutputModel: Content {
 }
 
 
-struct SuccessOutput<Model: Fields>: ResourceOutputModel {
-    let success = true
-
-    init(_ model: Model, req: Request) {  }
-}
 
 
