@@ -11,6 +11,7 @@ import Fluent
 //MARK:- CreateParentResourceController
 
 struct CreateParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, ParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -31,6 +32,7 @@ struct CreateParentResourceController<Model, RelatedModel, Output, Input, EagerL
 //MARK:- CreateParentResourceController
 
 struct ReadParentResourceController<Model, RelatedModel, Output, EagerLoading>: ReadableResourceController, ParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -48,6 +50,7 @@ struct ReadParentResourceController<Model, RelatedModel, Output, EagerLoading>: 
 //MARK:- UpdateParentResourceController
 
 struct UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: UpdateableResourceController, ParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -68,6 +71,7 @@ struct UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerL
 //MARK:- PatchParentResourceController
 
 struct PatchParentResourceController<Model, RelatedModel, Output, Patch, EagerLoading>: PatchableResourceController, ParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Patch: ResourcePatchModel,
@@ -88,6 +92,7 @@ struct PatchParentResourceController<Model, RelatedModel, Output, Patch, EagerLo
 //MARK:- CreateParentResourceController
 
 struct DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>: DeletableResourceController, ParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -95,7 +100,7 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
@@ -108,6 +113,7 @@ EagerLoading.Model == Model {
 //MARK:- CollectionParentResourceController
 
 struct CollectionParentResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, ParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

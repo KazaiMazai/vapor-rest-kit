@@ -11,6 +11,7 @@ import Fluent
 //MARK:- CreateParentResourceController
 
 struct CreateParentRelationController<Model, RelatedModel, Output, EagerLoading>: CreatableRelationController, ParentResourceRelationProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -18,7 +19,7 @@ struct CreateParentRelationController<Model, RelatedModel, Output, EagerLoading>
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
@@ -30,6 +31,7 @@ EagerLoading.Model == Model {
 //MARK:- DeleteParentRelationController
 
 struct DeleteParentRelationController<Model, RelatedModel, Output, EagerLoading>: DeletableRelationController, ParentResourceRelationProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -38,7 +40,6 @@ struct DeleteParentRelationController<Model, RelatedModel, Output, EagerLoading>
     RelatedModel.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
-
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?

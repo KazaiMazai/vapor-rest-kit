@@ -11,6 +11,7 @@ import Fluent
 //MARK:- CreateResourceController
 
 struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableResourceController, ResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -25,6 +26,7 @@ struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableRe
 //MARK:- ReadResourceController
 
 struct ReadResourceController<Model, Output, EagerLoading>: ReadableResourceController, ResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -37,6 +39,7 @@ struct ReadResourceController<Model, Output, EagerLoading>: ReadableResourceCont
 //MARK:- CreateResourceController
 
 struct UpdateResourceController<Model, Output, Input, EagerLoading>: UpdateableResourceController, ResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,

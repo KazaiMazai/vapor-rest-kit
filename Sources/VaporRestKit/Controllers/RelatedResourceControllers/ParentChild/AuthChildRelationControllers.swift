@@ -12,14 +12,15 @@ import Fluent
 
 struct CreateAuthChildrenRelationController<Model, RelatedModel, Output, EagerLoading>: CreatableRelationController, AuthChildrenResourceRelationProvider
 
-    where Output: ResourceOutputModel,
-          Model == Output.Model,
-          RelatedModel: Fluent.Model,
-          Model.IDValue: LosslessStringConvertible,
-          RelatedModel.IDValue: LosslessStringConvertible,
-          RelatedModel: Authenticatable,
-          EagerLoading: EagerLoadProvider,
-          EagerLoading.Model == Model {
+    where
+    Output: ResourceOutputModel,
+    Model == Output.Model,
+    RelatedModel: Fluent.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    RelatedModel: Authenticatable,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
@@ -30,15 +31,16 @@ struct CreateAuthChildrenRelationController<Model, RelatedModel, Output, EagerLo
 
 struct DeleteAuthChildrenRelationController<Model, RelatedModel, Output, EagerLoading>:
     DeletableRelationController, AuthChildrenResourceRelationProvider
+    
     where
-        Output: ResourceOutputModel,
-        Model == Output.Model,
-        Model.IDValue: LosslessStringConvertible,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable,
-        EagerLoading: EagerLoadProvider,
-        EagerLoading.Model == Model {
+    Output: ResourceOutputModel,
+    Model == Output.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel: Fluent.Model,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    RelatedModel: Authenticatable,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?

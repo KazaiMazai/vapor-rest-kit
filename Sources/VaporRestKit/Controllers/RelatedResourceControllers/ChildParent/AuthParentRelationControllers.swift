@@ -11,6 +11,7 @@ import Fluent
 //MARK:- CreateAuthParentRelationController
 
 struct CreateAuthParentRelationController<Model, RelatedModel, Output, EagerLoading>: CreatableRelationController, AuthParentResourceRelationProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -31,6 +32,7 @@ struct CreateAuthParentRelationController<Model, RelatedModel, Output, EagerLoad
 //MARK:- DeleteAuthParentRelationController
 
 struct DeleteAuthParentRelationController<Model, RelatedModel, Output, EagerLoading>: DeletableRelationController, AuthParentResourceRelationProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

@@ -102,6 +102,7 @@ struct PatchRelatedAuthResourceController<Model, RelatedModel, Through, Output, 
 
 struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output, EagerLoading>:
     DeletableResourceController, AuthSiblingsResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

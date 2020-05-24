@@ -12,13 +12,14 @@ import Fluent
 
 struct CreateChildrenRelationController<Model, RelatedModel, Output, EagerLoading>: CreatableRelationController, ChildrenResourceRelationProvider
 
-    where Output: ResourceOutputModel,
-          Model == Output.Model,
-          RelatedModel: Fluent.Model,
-          Model.IDValue: LosslessStringConvertible,
-          RelatedModel.IDValue: LosslessStringConvertible,
-          EagerLoading: EagerLoadProvider,
-          EagerLoading.Model == Model {
+    where
+    Output: ResourceOutputModel,
+    Model == Output.Model,
+    RelatedModel: Fluent.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
@@ -29,14 +30,15 @@ struct CreateChildrenRelationController<Model, RelatedModel, Output, EagerLoadin
 
 struct DeleteChildrenRelationController<Model, RelatedModel, Output, EagerLoading>:
     DeletableRelationController, ChildrenResourceRelationProvider
+
     where
-        Output: ResourceOutputModel,
-        Model == Output.Model,
-        Model.IDValue: LosslessStringConvertible,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        EagerLoading: EagerLoadProvider,
-        EagerLoading.Model == Model {
+    Output: ResourceOutputModel,
+    Model == Output.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel: Fluent.Model,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?

@@ -107,7 +107,7 @@ struct DeleteAuthChildrenResourceController<Model, RelatedModel, Output, EagerLo
     RelatedModel.IDValue: LosslessStringConvertible,
     RelatedModel: Authenticatable,
     EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    EagerLoading.Model == Model {
 
 
     var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>

@@ -11,6 +11,7 @@ import Fluent
 //MARK:- CreateAuthParentResourceController
 
 struct CreateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, AuthParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -32,6 +33,7 @@ struct CreateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
 //MARK:- ReadAuthParentResourceController
 
 struct ReadAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: ReadableResourceController, AuthParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
@@ -50,6 +52,7 @@ struct ReadAuthParentResourceController<Model, RelatedModel, Output, EagerLoadin
 //MARK:- UpdateAuthParentResourceController
 
 struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, EagerLoading>: UpdateableResourceController, AuthParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Input: ResourceUpdateModel,
@@ -71,6 +74,7 @@ struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
 //MARK:- PatchAuthParentResourceController
 
 struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, EagerLoading>: PatchableResourceController, AuthParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Patch: ResourcePatchModel,
@@ -92,6 +96,7 @@ struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, Eag
 //MARK:- DeleteAuthParentResourceController
 
 struct DeleteAuthParentResourceController<Model, RelatedModel, Output, EagerLoading>: DeletableResourceController, AuthParentResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,
