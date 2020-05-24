@@ -1150,3 +1150,8 @@ https://api.yourservice.com?sort=title:asc,subtitle:desc
 ### Page
 
 ### Collection access without Pagination
+
+
+## Licensing
+
+The code in this project is licensed under MIT license.
