@@ -3,23 +3,30 @@
 This package is intended to speed up backend development using server side swift framework Vapor 4.
 
 ## Features
-- Fluent Model convenience extensions for models initial migrations
-- Fluent Model convenience extensions for Siblings relations
 - Generic-powered Declarative API 
 - CRUD for Resource Models 
 - CRUD for Related Resource Models 
 - Nested routes for Parent-Child, Siblings relations
-- Authenticatable Related Resource routes
-- Controller Middlewares for business logic
-- Compound Controller
-- API versioning
-- API versioning for Resource Models
+- Nested */me* routes for Authenticatable Related Resource
+- API versioning for controllers and Resource Models 
+- Resource Collections with pagination by Cursor, Page, or without 
 - Filtering 
 - Sorting
 - Eager loading
-- Dynamic queries for sorting, filtering and eager loading
-- Cursor Pagination  
+- Dynamic query keys for sorting, filtering and eager loading
+- Controller Middlewares for business logic
+- Compound Controllers
+- Fluent Model convenience extensions for models initial migrations
+- Fluent Model convenience extensions for Siblings relations
+____________
 
+## Installation
+
+```
+Coming soon...
+
+```
+____________
 ## Fluent Model Extensions
 ### FieldsProvidingModel
 #### How to stop suffering from string literals in Fluent Models' Fields
