@@ -5,7 +5,7 @@ This package is intended to speed up backend development using server side swift
 ## Features
 - Fluent Model convenience extensions for models initial migrations
 - Fluent Model convenience extensions for Siblings relations
-- Declarative API
+- Generic-powered Declarative API 
 - CRUD for Resource Models 
 - CRUD for Related Resource Models 
 - Nested routes for Parent-Child, Siblings relations
@@ -962,6 +962,7 @@ enum FilterOperations: String, Codable {
     case prefix = "prefix"
     case suffix = "suffix"
     case like = "like"
+}
 ```
 #### How to query Value Filter
 
@@ -1355,8 +1356,6 @@ let controller = Star.Output
         .collection(sorting: StarsSorting.self,
                     filtering: StarsFiltering.self,
                     config: .paginateWithCursor(cursorPaginationConfig))
-}
-
 ```
 
 ### By page
@@ -1369,8 +1368,6 @@ let controller = Star.Output
         .collection(sorting: StarsSorting.self,
                     filtering: StarsFiltering.self,
                     config: .paginateByPage)
-}
-
 ```
 
 That config will apply default Vapor Fluent per page pagination with the following parameters:
@@ -1399,8 +1396,6 @@ let controller = Star.Output
         .collection(sorting: StarsSorting.self,
                     filtering: StarsFiltering.self,
                     config: .fetchAll)
-}
-
 ```
 
 _______
