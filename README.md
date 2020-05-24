@@ -6,11 +6,11 @@ This package is intended to speed up backend development using server side swift
 - Fluent Model convenience extensions for models initial migrations
 - Fluent Model convenience extensions for Siblings relations
 - Declarative API
-- CRUD for Resource Models and Related Resource Models
-- CRUD for Relations
-- All kinds of relations
-- Authenticatable Resource routes
-- Controller Middlewares for custom logic
+- CRUD for Resource Models 
+- CRUD for Related Resource Models 
+- Nested routes for Parent-Child, Siblings relations
+- Authenticatable Related Resource routes
+- Controller Middlewares for business logic
 - Compound Controller
 - API versioning
 - API versioning for Resource Models
@@ -694,7 +694,7 @@ let controller: APIMethodsProviding = CompoundResourceController(with: [
                 CustomCreateUserController() ])
 ```
 
- #### Important
+ ### Important
 
  **It's up to developer to take care of http methods that are still available, otherwise Vapor will probably get sad due to attempt to use the same method several twice.**
  
@@ -972,7 +972,7 @@ RestKit uses JSON format to parse filter query string. Query key is **filter**, 
 So the overall request query will look like:
 
 ```
-https://api.yourservice.com?filter={"value":  {"value": "X", "method": "eq", "key": "title"}}
+https://api.yourservice.com?/v1/stars?filter={"value":  {"value": "X", "method": "eq", "key": "title"}}
 ```
 
 *All values should be passed as string even if it's numerical values.*
@@ -1122,7 +1122,7 @@ where direction is **asc** or **desc**.
 
 The result request will look like:
 ```
-https://api.yourservice.com?sort=title:asc
+https://api.yourservice.com/v1/stars?sort=title:asc
 ```
 
 #### How to use dynamic sort query with multiple keys
@@ -1130,7 +1130,7 @@ https://api.yourservice.com?sort=title:asc
 It's also possible to use several sort keys, separated by comma:
 
 ```
-https://api.yourservice.com?sort=title:asc,subtitle:desc
+https://api.yourservice.com/v1/stars?sort=title:asc,subtitle:desc
 ```
 
 ## Eager Loading
@@ -1138,20 +1138,273 @@ https://api.yourservice.com?sort=title:asc,subtitle:desc
 ### Static Eager Loading
 #### How to setup default eager loading of nested models for controller
 
+1. Define eager loading struct conforming to *StaticEagerLoading* protocol:
+
+```swift
+ struct StarStaticEagerLoading: StaticEagerLoading {
+    typealias Key = EmptyEagerLoadKey<Model>
+    typealias Model = Star
+
+    func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        return queryBuilder.with(\.$galaxy).with(\.$starTags)
+    }
+}
+```
+3. Add nested models to the output model:
+
+```swift 
+struct ExtendedOutput<GalaxyOutput, TagsOutput>: ResourceOutputModel
+
+    where
+    GalaxyOutput: ResourceOutputModel,
+    GalaxyOutput.Model == Galaxy,
+    TagsOutput: ResourceOutputModel,
+    TagsOutput.Model == StarTag  {
+
+    let id: Int?
+    let title: String
+    let subtitle: String?
+    let size: Int
+
+    let galaxy: GalaxyOutput?
+    let tags: [TagsOutput]?
+
+    init(_ model: Star, req: Request) {
+        id = model.id
+        title = model.title
+        subtitle = model.subtitle
+        size = model.size
+        galaxy = model.$galaxy.value.map { GalaxyOutput($0, req: req) }
+        tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
+
+    }
+}
+
+```
+ 
+
+2. When creating controller, use new output type and pass eager loading type to builder:
+```swift
+let controller = Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+           .controller(eagerLoading: StarStaticEagerLoading.self)
+           .create(using: Star.Input.self)
+           .read()
+           .update(using: Star.Input.self)
+           .patch(using: Star.PatchInput.self)
+           .delete()
+           .collection(sorting: StarTagControllers.StarsSorting.self, 
+                        filtering: StarTagControllers.StarsFiltering.self)
+```
+
+
 ### Dynamic Eager Loading
 #### How to setup dynamic eager loading for query keys
 
-#### How to version Output for Eager Loaded Resource Models
+1. Define eager loading struct conforming to *DynamicEagerLoading* protocol with EagerLoadingKeys:
+
+```swift 
+struct StarDynamicEagerLoading: DynamicEagerLoading {
+    typealias Model = Star
+    typealias Key = Keys
+
+    func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        return queryBuilder
+    }
+
+    enum Keys: String, EagerLoadingKey {
+        typealias Model = Star
+
+        case galaxy
+        case tags
+
+        func eagerLoadFor(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+            switch self {
+            case .galaxy:
+                return queryBuilder.with(\.$galaxy)
+            case .tags:
+                return queryBuilder.with(\.$starTags)
+            }
+        }
+
+    }
+}
+```
+
+
+#### Definitions
+The following func defines default eager loading for nested models. In other words, it simply joins your db tables.
+
+
+```swift
+func defaultEagerLoading(...) 
+```
+
+- If eager loading conforms to **StaticEagerLoading** default eager loading is always applied. 
+- If eager loading conforms to **DynamicEagerLoading** default eager loading is applied if no eager loading keys provided in the query.
+
+#### How to query nested models with dynamic eager loading key
+
+Query parameter key us *include*, value is comma-separated eagerLoading keys.
+
+The result request will look like:
+```
+https://api.yourservice.com/v1/stars/1?include=galaxy,tags
+```
+
+
+
+#### How to use versionable Output for Eager Loaded Resource Models
+
+Using versionable output models for nested entities is enforced by using generic output types:
+
+
+```swift 
+struct ExtendedOutput<GalaxyOutput, TagsOutput>: ResourceOutputModel
+
+    where
+    GalaxyOutput: ResourceOutputModel,
+    GalaxyOutput.Model == Galaxy,
+    TagsOutput: ResourceOutputModel,
+    TagsOutput.Model == StarTag  {
+
+    let id: Int?
+    let title: String
+    let subtitle: String?
+    let size: Int
+
+    let galaxy: GalaxyOutput?
+    let tags: [TagsOutput]?
+
+    init(_ model: Star, req: Request) {
+        id = model.id
+        title = model.title
+        subtitle = model.subtitle
+        size = model.size
+        galaxy = model.$galaxy.value.map { GalaxyOutput($0, req: req) }
+        tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
+
+    }
+}
+
+```
+
+In that case, when creating controller, nested output types are passed expicitly:
+
+```swift
+let controllerV1 = Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+           .controller(eagerLoading: StarStaticEagerLoading.self) 
+           .read()
+```
+and 
+
+```swift
+let controllerV2 = Star.ExtendedOutput<Galaxy.OutputV2, StarTag.OutputV2>
+           .controller(eagerLoading: StarStaticEagerLoading.self) 
+           .read()
+```
 
 ## Pagination
 
-### Cursor
+Reskit supports pagination for collection controller:
 
-### Page
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: EagerLoadingUnsupported.self) 
+        .collection(sorting: StarControllers.StarsSorting.self, 
+                    filtering: StarControllers.StarsFiltering.self)
+```
+
+### By cursor
+
+By default, cursor pagination is applied to collection controller.
+
+#### How to query cursor pagination
+
+When making initial request, client should provide only limit parameter, like this:
+
+```
+https://api.yourservice.com/v1/stars?limit=10
+```
+ 
+As a part of metadata, returned by server, there will be **next_cursor** parameter.
+In order to get the next portion of data, client should include cursor in the requers query:
+
+```
+https://api.yourservice.com/v1/stars?limit=10cursor=W3siZmllbGRLZXkiOiJhc3NldHNfW3RpY2tlcl0iLCJ2YWx1Z
+
+```
+
+Cursor is a base64 encoded string, containing data pointing to the last element of the returned portion of items. 
+It also contains sorting metadata alllowing to use cursor pagination along with static or dynamic sorting keys.
+
+#### How to configure cursor pagination
+
+1. Define config:
+
+```swift
+//defalut parameters are limitMax: 25, defaultLimit: 10
+
+let cursorPaginationConfig = CursorPaginationConfig(limitMax: 25, defaultLimit: 10)
+```
+
+2. Provide cursor config parameter to collection controller builder:
+
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: StarEagerLoading.self)
+        .collection(sorting: StarsSorting.self,
+                    filtering: StarsFiltering.self,
+                    config: .paginateWithCursor(cursorPaginationConfig))
+}
+
+```
+
+### By page
+
+#### How to use page pagination
+
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: StarEagerLoading.self)
+        .collection(sorting: StarsSorting.self,
+                    filtering: StarsFiltering.self,
+                    config: .paginateByPage)
+}
+
+```
+
+That config will apply default Vapor Fluent per page pagination with the following parameters:
+
+- **page**  - for page number
+- **per** - for number of items per page
+
+This will result in something like:
+
+```
+https://api.yourservice.com/v1/stars?page=2&per=15
+```
+ 
 
 ### Collection access without Pagination
 
+#### How to get all items 
 
-## Licensing
+Not recommended for large collections, but sometimes useful to provide api for the whole list of items.
+
+The controller should be set-up in the following way:
+
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: StarEagerLoading.self)
+        .collection(sorting: StarsSorting.self,
+                    filtering: StarsFiltering.self,
+                    config: .fetchAll)
+}
+
+```
+
+_______
+# Licensing
 
 The code in this project is licensed under MIT license.
+
