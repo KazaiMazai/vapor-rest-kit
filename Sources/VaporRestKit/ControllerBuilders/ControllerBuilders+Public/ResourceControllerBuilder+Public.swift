@@ -52,7 +52,7 @@ public extension ResourceControllerBuilder {
 }
 
 
-extension ResourceControllerBuilder {
+public extension ResourceControllerBuilder {
     func create<Input>(using: Input.Type) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
