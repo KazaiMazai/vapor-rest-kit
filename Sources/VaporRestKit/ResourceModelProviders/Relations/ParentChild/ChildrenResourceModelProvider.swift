@@ -10,8 +10,8 @@ import Vapor
 
 protocol ChildrenResourceModelProvider: ResourceModelProvider
     where Model.IDValue: LosslessStringConvertible,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+    RelatedModel: Fluent.Model,
+RelatedModel.IDValue: LosslessStringConvertible {
 
     associatedtype Model
     associatedtype RelatedModel
@@ -34,7 +34,7 @@ extension ChildrenResourceModelProvider {
     var idPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
     var rootIdComponentKey: String { RelatedModel.schema }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: ":\(self.rootIdComponentKey)") }
-     
+
     var relationPathComponent: PathComponent? {
         guard let path = self.relationNamePath else {
             return nil
@@ -42,7 +42,7 @@ extension ChildrenResourceModelProvider {
 
         return PathComponent(stringLiteral: "\(path)")
     }
- 
+
     func resourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         return [rootIdPathComponent, relationPathComponent, endpointPath].compactMap { $0 }
@@ -67,8 +67,8 @@ extension ChildrenResourceModelProvider {
 
 extension ChildrenResourceModelProvider {
     func findRelated(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel> {
-      return try RelatedModel.query(on: database)
-                            .findBy(rootIdComponentKey, from: req)
+        return try RelatedModel.query(on: database)
+            .findBy(rootIdComponentKey, from: req)
     }
 }
 
@@ -83,17 +83,18 @@ extension ChildrenResourceModelProvider {
     }
 
     fileprivate func findWithRelatedOn(_ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                                      req: Request,
-                                      database: Database) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)> {
+                                       req: Request,
+                                       database: Database) throws -> EventLoopFuture<(resource: Model, relatedResource: RelatedModel)> {
 
-        return try findRelated(req, database: database).flatMapThrowing { relatedResource in
-                                          return try relatedResource.query(keyPath: childrenKeyPath, on: database)
-                                                                    .with(self.eagerLoadHandler, for: req)
-                                                                    .sort(self.sortingHandler, for: req)
-                                                                    .filter(self.filteringHandler, for: req)
-                                                                    .findBy(self.idKey, from: req)
-                                                                    .map { ($0, relatedResource) }}
-                                   .flatMap { $0 }
+        return try findRelated(req, database: database)
+            .flatMapThrowing { relatedResource in
+                try relatedResource.query(keyPath: childrenKeyPath, on: database)
+                    .with(self.eagerLoadHandler, for: req)
+                    .sort(self.sortingHandler, for: req)
+                    .filter(self.filteringHandler, for: req)
+                    .findBy(self.idKey, from: req)
+                    .map { ($0, relatedResource) }}
+            .flatMap { $0 }
     }
 }
 

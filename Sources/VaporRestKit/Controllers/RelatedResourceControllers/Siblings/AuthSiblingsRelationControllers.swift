@@ -14,7 +14,6 @@ struct CreateAuthSiblingRelationController<Model, RelatedModel, Through, Output,
 
     where
     Output: ResourceOutputModel,
- 
     Model == Output.Model,
     RelatedModel: Fluent.Model,
     Model.IDValue: LosslessStringConvertible,

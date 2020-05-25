@@ -12,15 +12,16 @@ import Fluent
 
 struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, EagerLoading>: CreatableResourceController, ChildrenResourceModelProvider
 
-    where Output: ResourceOutputModel,
-          Input: ResourceUpdateModel,
-          Model == Input.Model,
-          Model == Output.Model,
-          RelatedModel: Fluent.Model,
-          Model.IDValue: LosslessStringConvertible,
-          RelatedModel.IDValue: LosslessStringConvertible,
-          EagerLoading: EagerLoadProvider,
-          EagerLoading.Model == Model {
+    where
+    Output: ResourceOutputModel,
+    Input: ResourceUpdateModel,
+    Model == Input.Model,
+    Model == Output.Model,
+    RelatedModel: Fluent.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
@@ -73,15 +74,15 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
     PatchableResourceController, ChildrenResourceModelProvider
 
     where
-        Output: ResourceOutputModel,
-        Patch: ResourcePatchModel,
-        Model == Output.Model,
-        Model == Patch.Model,
-        RelatedModel: Fluent.Model,
-        Model.IDValue: LosslessStringConvertible,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        EagerLoading: EagerLoadProvider,
-        EagerLoading.Model == Model {
+    Output: ResourceOutputModel,
+    Patch: ResourcePatchModel,
+    Model == Output.Model,
+    Model == Patch.Model,
+    RelatedModel: Fluent.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
@@ -94,14 +95,15 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
 
 struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoading>:
     DeletableResourceController, ChildrenResourceModelProvider
+
     where
-        Output: ResourceOutputModel,
-        Model == Output.Model,
-        Model.IDValue: LosslessStringConvertible,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        EagerLoading: EagerLoadProvider,
-EagerLoading.Model == Model {
+    Output: ResourceOutputModel,
+    Model == Output.Model,
+    Model.IDValue: LosslessStringConvertible,
+    RelatedModel: Fluent.Model,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    EagerLoading: EagerLoadProvider,
+    EagerLoading.Model == Model {
 
 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
@@ -114,6 +116,7 @@ EagerLoading.Model == Model {
 //MARK:- CollectionChildResourceController
 
 struct CollectionChildResourceController<Model, RelatedModel, Output, Sorting, EagerLoading, Filtering>: IterableResourceController, ChildrenResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

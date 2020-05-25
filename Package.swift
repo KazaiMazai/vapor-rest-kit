@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "VaporRestKit",
+    name: "vapor-rest-kit",
     platforms: [
           .macOS(.v10_15),
        ],

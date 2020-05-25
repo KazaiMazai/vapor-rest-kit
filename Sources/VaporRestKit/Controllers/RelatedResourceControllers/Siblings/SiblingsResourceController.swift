@@ -98,6 +98,7 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
 
 struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, EagerLoading>:
     DeletableResourceController, SiblingsResourceModelProvider
+
     where
     Output: ResourceOutputModel,
     Model == Output.Model,

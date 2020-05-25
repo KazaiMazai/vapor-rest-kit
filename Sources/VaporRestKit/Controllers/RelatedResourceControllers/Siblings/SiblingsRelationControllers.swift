@@ -14,7 +14,6 @@ struct CreateSiblingRelationController<Model, RelatedModel, Through, Output, Eag
 
     where
     Output: ResourceOutputModel,
- 
     Model == Output.Model,
     RelatedModel: Fluent.Model,
     Model.IDValue: LosslessStringConvertible,
