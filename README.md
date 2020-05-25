@@ -3,23 +3,30 @@
 This package is intended to speed up backend development using server side swift framework Vapor 4.
 
 ## Features
-- Fluent Model convenience extensions for models initial migrations
-- Fluent Model convenience extensions for Siblings relations
-- Declarative API
-- CRUD for Resource Models and Related Resource Models
-- CRUD for Relations
-- All kinds of relations
-- Authenticatable Resource routes
-- Controller Middlewares for custom logic
-- Compound Controller
-- API versioning
-- API versioning for Resource Models
+- Generic-powered Declarative API 
+- CRUD for Resource Models 
+- CRUD for Related Resource Models 
+- Nested routes for Parent-Child, Siblings relations
+- Nested */me* routes for Authenticatable Related Resource
+- API versioning for controllers and Resource Models 
+- Resource Collections with pagination by Cursor, Page, or without 
 - Filtering 
 - Sorting
 - Eager loading
-- Dynamic queries for sorting, filtering and eager loading
-- Cursor Pagination  
+- Dynamic query keys for sorting, filtering and eager loading
+- Controller Middlewares for business logic
+- Compound Controllers
+- Fluent Model convenience extensions for models initial migrations
+- Fluent Model convenience extensions for Siblings relations
+____________
 
+## Installation
+
+```
+Coming soon...
+
+```
+____________
 ## Fluent Model Extensions
 ### FieldsProvidingModel
 #### How to stop suffering from string literals in Fluent Models' Fields
@@ -694,7 +701,7 @@ let controller: APIMethodsProviding = CompoundResourceController(with: [
                 CustomCreateUserController() ])
 ```
 
- #### Important
+ ### Important
 
  **It's up to developer to take care of http methods that are still available, otherwise Vapor will probably get sad due to attempt to use the same method several twice.**
  
@@ -785,34 +792,621 @@ struct TodoController: VersionableController {
 ## Filtering
 
 ### Static Filtering
-#### How to setup filters for controller methods
+#### How to setup default filters for controller methods
+
+
+1. Define filter struct, conforming to StaticFiltering protocol:
+
+```swift
+struct StarsFiltering: StaticFiltering {
+    typealias Model = Star
+    typealias Key = EmptyFilteringKey
+
+    func defaultFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        //no filter will be applied:
+        return queryBuilder
+    }
+}
+
+```
+
+2. When defining controller, add filter type as collection controller builder parameter:
+
+```swift
+
+let controller = Star.Output
+        .controller(eagerLoading: EagerLoadingUnsupported.self)
+        .create(using: Star.Input.self)
+        .read()
+        .update(using: Star.Input.self)
+        .patch(using: Star.PatchInput.self)
+        .delete()
+        .collection(sorting: StarControllers.StarsSorting.self, 
+                    filtering: StarControllers.StarsFiltering.self)
+
+```
+
+Such filter will be always applied to the collection request
 
 ### Dynamic Filtering
+
+*Restkit allows to define acceptable filtering keys by dynamic filtering.
+
+Supported filter types: 
+- value filters
+- field filters allowing to filter against entity's other fields values*
+
+
 #### How to setup dynamic filters query
 
-## Sorting
+1. Define filter struct, conforming to DynamicFiltering protocol:
 
+```swift
+struct StarsFiltering: DynamicFiltering {
+    typealias Model = Star
+    typealias Key = Keys
+
+    func defaultFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        //no filter
+        return queryBuilder
+    }
+
+    enum Keys: String, FilteringKey {
+        typealias Model = Star
+
+        case title
+        case subtitle
+        case size
+
+        func filterFor(queryBuilder: QueryBuilder<Star>,
+                       method: DatabaseQuery.Filter.Method,
+                       value: String) -> QueryBuilder<Star> {
+
+            switch self {
+            case .title:
+                return queryBuilder.filter(\.$title, method, value)
+            case .subtitle:
+                return queryBuilder.filter(\.$subtitle, method, value)
+            case .size:
+                guard let intValue = Int(value) else {
+                    return queryBuilder
+                }
+                return queryBuilder.filter(\.$size, method, intValue)
+            }
+        }
+
+        static func filterFor(queryBuilder: QueryBuilder<Star>,
+                              lhs: Keys,
+                              method: DatabaseQuery.Filter.Method,
+                              rhs: Keys) -> QueryBuilder<Star> {
+            switch (lhs, rhs) {
+            case (.title, .subtitle):
+                return queryBuilder.filter(\.$title, method, \.$subtitle)
+            case (.subtitle, .title):
+                return queryBuilder.filter(\.$subtitle, method, \.$title)
+            default:
+                return queryBuilder
+            }
+        }
+    }
+}
+```
+
+2. When defining controller, add filter type as collection controller builder parameter:
+
+```swift
+
+let controller = Star.Output
+        .controller(eagerLoading: EagerLoadingUnsupported.self)
+        .create(using: Star.Input.self)
+        .read()
+        .update(using: Star.Input.self)
+        .patch(using: Star.PatchInput.self)
+        .delete()
+        .collection(sorting: StarControllers.StarsSorting.self, 
+                    filtering: StarControllers.StarsFiltering.self)
+
+```
+#### Definitions
+
+
+
+The following func defines default filtering, applied to the collection.
+```swift
+func defaultFiltering() 
+```
+- If filtering enitity conforms to **StaticFiltering** default filtering is always applied. 
+- If filtering enitity conforms to **DynamicFiltering** default filtering is applied if no filter keys provided.
+
+
+
+The following Keys enum defines supported dynamic keys 
+
+
+```swift 
+ enum Keys: String, FilteringKey {
+        typealias Model = Star
+
+        case title
+        case subtitle
+        case size
+}
+```
+ 
+The following func provides mapping current key to a filtered queryBuilder via
+
+```swift
+func filterFor(queryBuilder: QueryBuilder<Star>,
+                           method: DatabaseQuery.Filter.Method,
+                           value: String) -> QueryBuilder<Star> 
+
+```
+
+The following func defines supported field filter if needed. 
+It provides mapping of filter keys and method to a filtered queryBuilder:
+
+```swift
+static func filterFor(queryBuilder: QueryBuilder<Star>,
+                                  lhs: Keys,
+                                  method: DatabaseQuery.Filter.Method,
+                                  rhs: Keys) -> QueryBuilder<Star> 
+```
+
+#### How to use dynamic filters query
+
+##### Filters methods
+The following filter methods are supported for querying:
+
+```swift
+enum FilterOperations: String, Codable {
+    case less = "lt"
+    case greater = "gt"
+    case lessOrEqual = "lte"
+    case greaterOrEqual = "gte"
+    case equal = "eq"
+    case notEqual = "ne"
+
+    case prefix = "prefix"
+    case suffix = "suffix"
+    case like = "like"
+}
+```
+#### How to query Value Filter
+
+RestKit uses JSON format to parse filter query string. Query key is **filter**, value is valid JSON string:
+```JSON
+{"value":  {"value": "X", "method": "eq", "key": "title"}}
+```
+So the overall request query will look like:
+
+```
+https://api.yourservice.com?/v1/stars?filter={"value":  {"value": "X", "method": "eq", "key": "title"}}
+```
+
+*All values should be passed as string even if it's numerical values.*
+
+#### How to query Field Filter
+For field filters, RestKit uses JSON of the following format to parse filter query string. 
+Query key is **filter**, value is valid JSON string:
+```json
+{"field":  {"lhs": "title", "method": "eq", "rhs": "subtitle"}}
+ ```
+#### How to query Complex filters
+
+Restkit supports complex nested filters with Value and/or Field filters:
+- **OR** predicate:
+```json
+{"or": [
+    {"value":  {"value": "AAPL", "method": "eq", "key": "ticker"} },
+    {"field":  {"lhs": "title", "method": "eq", "rhs": "subtitle"}}
+]}
+
+```
+- **AND** predicate:
+```json
+{"and": [
+    {"value":  {"value": "AAPL", "method": "eq", "key": "ticker"} },
+    {"value":  {"value": "F", "method": "like", "key": "ticker"} }
+]}
+
+```
+ 
+#### How to query Complex nested fitlers
+
+Element of array of nested filters can be also a complex nested filter:
+```json
+{"or": [
+    {"value":  {"value": "Hello", "method": "eq", "key": "subtitle"} },
+    {"and": [
+        {"value":  {"value": "h", "method": "like", "key": "title"} },
+        {"value":  {"value": "f", "method": "like", "key": "title"} },
+        {"value":  {"value": "a", "method": "like", "key": "title"} }
+    ]}
+]}
+```
+
+The complexity of nested filters is not limited.
+
+
+## Sorting
 
 ### Static Sorting
 #### How to setup default sorting for controller methods
 
+1. Define Sorting struct, conforming to StaticSorting protocol:
+
+```swift
+struct StaticStarsSorting: StaticSorting {
+    typealias Key = EmptySortingKey<Star>
+    typealias Model = Star
+
+    func defaultSorting(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        return queryBuilder
+    }
+}
+```
+
+2. When defining controller, add sorting type as collection controller builder parameter:
+
+```swift 
+
+let controller = Star.Output
+            .controller(eagerLoading: EagerLoadingUnsupported.self)
+            .create(using: Star.Input.self)
+            .read()
+            .update(using: Star.Input.self)
+            .patch(using: Star.PatchInput.self)
+            .delete()
+            .collection(sorting: StarControllers.StaticStarsSorting.self, 
+                        filtering: StarControllers.StarsFiltering.self)
+```
+
 ### Dynamic Sorting
 #### How to setup dynamic sorting query keys
+
+1. Define Sorting struct, conforming to DynamicSorting protocol:
+```swift 
+
+struct StarsSorting: DynamicSorting {
+    typealias Model = Star
+    typealias Key = Keys
+    
+    func defaultSorting(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        return queryBuilder
+    }
+    
+    enum Keys: String, SortingKey {
+        typealias Model = Star
+
+        case title
+        case subtitle
+
+        func sortFor(_ queryBuilder: QueryBuilder<Star>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Star> {
+            switch self {
+            case .title:
+                return queryBuilder.sort(\Star.$title, direction)
+            case .subtitle:
+                return queryBuilder.sort(\Star.$subtitle, direction)
+            }
+        }
+    }
+}
+
+```
+
+2. When defining controller, add sorting type as collection controller builder parameter:
+
+```swift 
+
+let controller = Star.Output
+            .controller(eagerLoading: EagerLoadingUnsupported.self)
+            .create(using: Star.Input.self)
+            .read()
+            .update(using: Star.Input.self)
+            .patch(using: Star.PatchInput.self)
+            .delete()
+            .collection(sorting: StarControllers.StarsSorting.self, 
+                        filtering: StarControllers.StarsFiltering.self)
+```
+
+#### Definitions
+This func that defines default sorting, applied to the collection:
+
+```swift
+func defaultSorting() 
+```
+
+- If sorting enitity conforms to **StaticSorting** default sorting is always applied. 
+- If sorting enitity conforms to **DynamicSorting** default StaticSorting is applied if no sorting keys provided.
+
+### Important
+
+**RestKit always appends sorting by ID with ascending order. This is necessary for valid cursor pagination.**
+
+#### How to use dynamic sort query
+
+RestKit uses the following format to parse sort query string. Query key is **sort**, value is **key:direction**
+where direction is **asc** or **desc**.
+
+The result request will look like:
+```
+https://api.yourservice.com/v1/stars?sort=title:asc
+```
+
+#### How to use dynamic sort query with multiple keys
+
+It's also possible to use several sort keys, separated by comma:
+
+```
+https://api.yourservice.com/v1/stars?sort=title:asc,subtitle:desc
+```
 
 ## Eager Loading
 
 ### Static Eager Loading
 #### How to setup default eager loading of nested models for controller
 
+1. Define eager loading struct conforming to *StaticEagerLoading* protocol:
+
+```swift
+ struct StarStaticEagerLoading: StaticEagerLoading {
+    typealias Key = EmptyEagerLoadKey<Model>
+    typealias Model = Star
+
+    func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        return queryBuilder.with(\.$galaxy).with(\.$starTags)
+    }
+}
+```
+3. Add nested models to the output model:
+
+```swift 
+struct ExtendedOutput<GalaxyOutput, TagsOutput>: ResourceOutputModel
+
+    where
+    GalaxyOutput: ResourceOutputModel,
+    GalaxyOutput.Model == Galaxy,
+    TagsOutput: ResourceOutputModel,
+    TagsOutput.Model == StarTag  {
+
+    let id: Int?
+    let title: String
+    let subtitle: String?
+    let size: Int
+
+    let galaxy: GalaxyOutput?
+    let tags: [TagsOutput]?
+
+    init(_ model: Star, req: Request) {
+        id = model.id
+        title = model.title
+        subtitle = model.subtitle
+        size = model.size
+        galaxy = model.$galaxy.value.map { GalaxyOutput($0, req: req) }
+        tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
+
+    }
+}
+
+```
+ 
+
+2. When creating controller, use new output type and pass eager loading type to builder:
+```swift
+let controller = Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+           .controller(eagerLoading: StarStaticEagerLoading.self)
+           .create(using: Star.Input.self)
+           .read()
+           .update(using: Star.Input.self)
+           .patch(using: Star.PatchInput.self)
+           .delete()
+           .collection(sorting: StarTagControllers.StarsSorting.self, 
+                        filtering: StarTagControllers.StarsFiltering.self)
+```
+
+
 ### Dynamic Eager Loading
 #### How to setup dynamic eager loading for query keys
 
-#### How to version Output for Eager Loaded Resource Models
+1. Define eager loading struct conforming to *DynamicEagerLoading* protocol with EagerLoadingKeys:
+
+```swift 
+struct StarDynamicEagerLoading: DynamicEagerLoading {
+    typealias Model = Star
+    typealias Key = Keys
+
+    func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        return queryBuilder
+    }
+
+    enum Keys: String, EagerLoadingKey {
+        typealias Model = Star
+
+        case galaxy
+        case tags
+
+        func eagerLoadFor(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+            switch self {
+            case .galaxy:
+                return queryBuilder.with(\.$galaxy)
+            case .tags:
+                return queryBuilder.with(\.$starTags)
+            }
+        }
+
+    }
+}
+```
+
+
+#### Definitions
+The following func defines default eager loading for nested models. In other words, it simply joins your db tables.
+
+
+```swift
+func defaultEagerLoading(...) 
+```
+
+- If eager loading conforms to **StaticEagerLoading** default eager loading is always applied. 
+- If eager loading conforms to **DynamicEagerLoading** default eager loading is applied if no eager loading keys provided in the query.
+
+#### How to query nested models with dynamic eager loading key
+
+Query parameter key us *include*, value is comma-separated eagerLoading keys.
+
+The result request will look like:
+```
+https://api.yourservice.com/v1/stars/1?include=galaxy,tags
+```
+
+
+
+#### How to use versionable Output for Eager Loaded Resource Models
+
+Using versionable output models for nested entities is enforced by using generic output types:
+
+
+```swift 
+struct ExtendedOutput<GalaxyOutput, TagsOutput>: ResourceOutputModel
+
+    where
+    GalaxyOutput: ResourceOutputModel,
+    GalaxyOutput.Model == Galaxy,
+    TagsOutput: ResourceOutputModel,
+    TagsOutput.Model == StarTag  {
+
+    let id: Int?
+    let title: String
+    let subtitle: String?
+    let size: Int
+
+    let galaxy: GalaxyOutput?
+    let tags: [TagsOutput]?
+
+    init(_ model: Star, req: Request) {
+        id = model.id
+        title = model.title
+        subtitle = model.subtitle
+        size = model.size
+        galaxy = model.$galaxy.value.map { GalaxyOutput($0, req: req) }
+        tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
+
+    }
+}
+
+```
+
+In that case, when creating controller, nested output types are passed expicitly:
+
+```swift
+let controllerV1 = Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+           .controller(eagerLoading: StarStaticEagerLoading.self) 
+           .read()
+```
+and 
+
+```swift
+let controllerV2 = Star.ExtendedOutput<Galaxy.OutputV2, StarTag.OutputV2>
+           .controller(eagerLoading: StarStaticEagerLoading.self) 
+           .read()
+```
 
 ## Pagination
 
-### Cursor
+Reskit supports pagination for collection controller:
 
-### Page
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: EagerLoadingUnsupported.self) 
+        .collection(sorting: StarControllers.StarsSorting.self, 
+                    filtering: StarControllers.StarsFiltering.self)
+```
+
+### By cursor
+
+By default, cursor pagination is applied to collection controller.
+
+#### How to query cursor pagination
+
+When making initial request, client should provide only limit parameter, like this:
+
+```
+https://api.yourservice.com/v1/stars?limit=10
+```
+ 
+As a part of metadata, returned by server, there will be **next_cursor** parameter.
+In order to get the next portion of data, client should include cursor in the requers query:
+
+```
+https://api.yourservice.com/v1/stars?limit=10cursor=W3siZmllbGRLZXkiOiJhc3NldHNfW3RpY2tlcl0iLCJ2YWx1Z
+
+```
+
+Cursor is a base64 encoded string, containing data pointing to the last element of the returned portion of items. 
+It also contains sorting metadata alllowing to use cursor pagination along with static or dynamic sorting keys.
+
+#### How to configure cursor pagination
+
+1. Define config:
+
+```swift
+//defalut parameters are limitMax: 25, defaultLimit: 10
+
+let cursorPaginationConfig = CursorPaginationConfig(limitMax: 25, defaultLimit: 10)
+```
+
+2. Provide cursor config parameter to collection controller builder:
+
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: StarEagerLoading.self)
+        .collection(sorting: StarsSorting.self,
+                    filtering: StarsFiltering.self,
+                    config: .paginateWithCursor(cursorPaginationConfig))
+```
+
+### By page
+
+#### How to use page pagination
+
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: StarEagerLoading.self)
+        .collection(sorting: StarsSorting.self,
+                    filtering: StarsFiltering.self,
+                    config: .paginateByPage)
+```
+
+That config will apply default Vapor Fluent per page pagination with the following parameters:
+
+- **page**  - for page number
+- **per** - for number of items per page
+
+This will result in something like:
+
+```
+https://api.yourservice.com/v1/stars?page=2&per=15
+```
+ 
 
 ### Collection access without Pagination
+
+#### How to get all items 
+
+Not recommended for large collections, but sometimes useful to provide api for the whole list of items.
+
+The controller should be set-up in the following way:
+
+```swift
+let controller = Star.Output
+        .controller(eagerLoading: StarEagerLoading.self)
+        .collection(sorting: StarsSorting.self,
+                    filtering: StarsFiltering.self,
+                    config: .fetchAll)
+```
+
+_______
+# Licensing
+
+The code in this project is licensed under MIT license.
+
