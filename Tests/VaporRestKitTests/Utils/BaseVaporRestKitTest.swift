@@ -99,7 +99,9 @@ class BaseVaporRestKitTest: XCTestCase {
             TodoControllers.TodosForUserController().setupAPIMethods(on: usersGroup, for: "todos", with: version)
 
             let authUsersGroup = usersGroup.grouped(MockAuthenticator<User>(userId: 1), User.guardMiddleware())
+
             TodoControllers.MyTodosController().setupAPIMethods(on: authUsersGroup, for: "todos", with: version)
+            TodoControllers.MyTodosRelationController().setupAPIMethods(on: authUsersGroup, for: "todos", with: version)
 
             let tagsGroup = versiondGroup.grouped("tags")
             TodoControllers.TodosForTagsController().setupAPIMethods(on: tagsGroup, for: "todos", with: version)

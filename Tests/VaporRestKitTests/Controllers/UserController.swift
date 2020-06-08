@@ -15,6 +15,7 @@ struct UserControllers {
         var apiv1: APIMethodsProviding {
             return User.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .create(using: User.Input.self)
                 .read()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)

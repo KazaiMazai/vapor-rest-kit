@@ -16,7 +16,7 @@ extension AuthParentResourceRelationProvider {
     var rootIdComponentKey: String { "me" }
     var rootIdPathComponent: PathComponent { return PathComponent(stringLiteral: "\(self.rootIdComponentKey)") }
 
-    func findRelated(_ req: Request) throws -> EventLoopFuture<RelatedModel> {
+    func findRelated(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel> {
         let related = try req.auth.require(RelatedModel.self)
         return req.eventLoop.makeSucceededFuture(related)
     }
