@@ -43,8 +43,8 @@ final class Todo: Model, Content {
     @Field(key: Fields.title.key)
     var title: String
 
-    @Parent(key: Fields.userId.key)
-    var user: User
+    @OptionalParent(key: Fields.userId.key)
+    var user: User?
 
     @Siblings(through: Todo.Relations.MarkedTags.through, from: \.$from, to: \.$to)
     var tags: [Tag]
