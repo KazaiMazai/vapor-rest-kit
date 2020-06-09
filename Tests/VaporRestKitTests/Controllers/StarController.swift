@@ -334,72 +334,7 @@ extension StarTagControllers {
     }
 }
 
-
 extension StarControllers  {
-    struct ExtendableStarForPlanetNestedController: VersionableController {
-        var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
-                .related(by: \Star.$planets, relationName: "refers")
-                .create(using: Star.Input.self)
-                .read()
-                .update(using: Star.Input.self)
-                .patch(using: Star.PatchInput.self)
-                .delete()
-                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-        }
-
-        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-            switch version {
-            case .v1:
-                apiV1.addMethodsTo(routeBuilder, on: endpoint)
-            }
-        }
-    }
-
-    struct FullStarForPlanetNestedController: VersionableController {
-        var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                .controller(eagerLoading: StarTagControllers.FullStarEagerLoading.self)
-                .related(by: \Star.$planets, relationName: "refers")
-                .create(using: Star.Input.self)
-                .read()
-                .update(using: Star.Input.self)
-                .patch(using: Star.PatchInput.self)
-                .delete()
-                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-        }
-
-        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-            switch version {
-            case .v1:
-                apiV1.addMethodsTo(routeBuilder, on: endpoint)
-            }
-        }
-    }
-
-    struct DynamicStarForPlanetNestedController: VersionableController {
-        var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                .controller(eagerLoading: StarTagControllers.DynamicStarEagerLoading.self)
-                .related(by: \Star.$planets, relationName: "refers")
-                .create(using: Star.Input.self)
-                .read()
-                .update(using: Star.Input.self)
-                .patch(using: Star.PatchInput.self)
-                .delete()
-                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-        }
-
-        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-            switch version {
-            case .v1:
-                apiV1.addMethodsTo(routeBuilder, on: endpoint)
-            }
-        }
-    }
-
-
     struct StarForPlanetNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
             return Star.Output
