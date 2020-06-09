@@ -9,7 +9,6 @@ import Fluent
 import Vapor
 import VaporRestKit
 
-
 extension Star: FieldsProvidingModel {
     enum Fields: String, FieldKeyRepresentable {
         case title
@@ -48,6 +47,9 @@ final class Star: Model, Content {
 
     @OptionalParent(key: Fields.galaxyId.key)
     var galaxy: Galaxy?
+
+    @Children(for: \Planet.$star)
+    var planets: [Planet]
 
     @Siblings(through: Star.Relations.MarkedTags.through, from: \.$from, to: \.$to)
     var starTags: [StarTag]
@@ -183,11 +185,19 @@ extension Star {
         let starTag = StarTag(title: "Small")
         try starTag.save(on: database).wait()
 
+        let planet = Planet(title: "Earth")
+        
+
         try seedTitles.enumerated().forEach  {
             let size = $0.offset * 10
             let star = Star(title: $0.element.title, subtitle: $0.element.subtitle, size: size)
             star.$galaxy.id = galaxy.id
             try star.save(on: database).wait()
+            if star.title == "Sun" {
+                planet.$star.id = star.id
+                try planet.save(on: database).wait()
+            }
+
             try star.$starTags.attach(starTag, on: database).wait()
         }
     }

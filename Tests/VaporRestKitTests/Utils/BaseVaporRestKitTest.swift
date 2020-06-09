@@ -24,6 +24,7 @@ class BaseVaporRestKitTest: XCTestCase {
         app.migrations.add(Galaxy.createInitialMigration())
         app.migrations.add(Star.createInitialMigration())
         app.migrations.add(Star.Relations.MarkedTags.Through.createInitialMigration())
+        app.migrations.add(Planet.createInitialMigration())
 
         app.migrations.add(ReferralCode.createInitialMigration())
         app.migrations.add(User.createInitialMigration())
@@ -74,6 +75,10 @@ class BaseVaporRestKitTest: XCTestCase {
             StarControllers.ExtendableStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "ext_stars", with: version)
             StarControllers.FullStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "full_stars", with: version)
             StarControllers.DynamicStarForTagsNestedController().setupAPIMethods(on: starTagGroup, for: "d_stars", with: version)
+
+            let planetGroup = versiondGroup.grouped("planets")
+
+            StarControllers.StarForPlanetNestedController().setupAPIMethods(on: planetGroup, for: "stars", with: version)
 
             let starGroup = versiondGroup.grouped("stars")
 
