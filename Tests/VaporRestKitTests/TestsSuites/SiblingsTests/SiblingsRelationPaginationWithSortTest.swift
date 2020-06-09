@@ -17,7 +17,6 @@ final class SiblingsRelationsPaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-
         let tag = try StarTag.query(on: app.db)
             .filter(\.$id, .equal, 1)
             .first()
@@ -728,7 +727,7 @@ final class SiblingsRelationsPaginationWithSortTests: BaseVaporRestKitTest {
             .filter(\.$id, .equal, 1)
             .first()
             .wait()!
-        
+
         let titles = try tag.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
