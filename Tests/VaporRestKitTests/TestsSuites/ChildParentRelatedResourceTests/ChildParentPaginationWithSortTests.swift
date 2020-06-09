@@ -2,13 +2,13 @@
 //  File.swift
 //  
 //
-//  Created by Sergey Kazakov on 21.05.2020.
+//  Created by Sergey Kazakov on 09.06.2020.
 //
 
 @testable import VaporRestKit
 import XCTVapor
 
-final class PaginationWithSortTests: BaseVaporRestKitTest {
+final class ChildParentPaginationWithSortTests: BaseVaporRestKitTest {
     func testCursorPaginationWithDefaultIdSort() throws {
         try routes()
         try seed()
@@ -17,13 +17,19 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$id, .ascending)
             .all()
             .wait()
             .map { $0.title }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -43,7 +49,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -70,14 +76,20 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
 
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$id, .ascending)
             .all()
             .wait()
             .map { $0.title }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=title:asc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=title:asc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -96,7 +108,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -123,14 +135,20 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
 
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$title, .descending)
             .sort(\Star.$id, .ascending)
             .all()
             .wait()
             .map { $0.title }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=title:desc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=title:desc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -149,7 +167,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -176,14 +194,20 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
 
         var lastItemIndex: Int = 0
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$id, .ascending)
             .all()
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=subtitle:asc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=subtitle:asc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -202,7 +226,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -228,14 +252,20 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$id, .ascending)
             .all()
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=subtitle:desc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=subtitle:desc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -254,7 +284,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -280,7 +310,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$title, .descending)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$id, .ascending)
@@ -288,7 +324,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=title:desc,subtitle:desc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=title:desc,subtitle:desc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -307,7 +343,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc,subtitle:desc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc,subtitle:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -333,7 +369,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$title, .descending)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$id, .ascending)
@@ -341,7 +383,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=title:desc,subtitle:asc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=title:desc,subtitle:asc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -360,7 +402,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc,subtitle:asc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=title:desc,subtitle:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -386,7 +428,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$id, .ascending)
@@ -394,7 +442,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=title:asc,subtitle:asc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=title:asc,subtitle:asc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -413,7 +461,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc,subtitle:asc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc,subtitle:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -439,7 +487,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+       let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$id, .ascending)
@@ -447,7 +501,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=title:asc,subtitle:desc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=title:asc,subtitle:desc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -466,7 +520,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc,subtitle:desc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=title:asc,subtitle:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -492,7 +546,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$title, .descending)
             .sort(\Star.$id, .ascending)
@@ -500,7 +560,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=subtitle:desc,title:desc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=subtitle:desc,title:desc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -519,7 +579,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc,title:desc,") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc,title:desc,") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -545,7 +605,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+        let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$title, .descending)
             .sort(\Star.$id, .ascending)
@@ -553,7 +619,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=subtitle:asc,title:desc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=subtitle:asc,title:desc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -572,7 +638,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc,title:desc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc,title:desc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -598,7 +664,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+       let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$id, .ascending)
@@ -606,7 +678,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=subtitle:asc,title:asc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=subtitle:asc,title:asc") { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -625,7 +697,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc,title:asc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:asc,title:asc") { res in
                 XCTAssertEqual(res.status, .ok)
 
                 XCTAssertContent(CursorPage<Star.Output>.self, res) {
@@ -651,7 +723,13 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
-        let titles = try Star.query(on: app.db)
+       let planet = try Planet.query(on: app.db)
+            .filter(\.$id, .equal, 1)
+            .first()
+            .wait()!
+
+        let titles = try planet.$star
+            .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$title, .ascending)
 
@@ -660,7 +738,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
             .wait()
             .map { $0.subtitle }
 
-        var appTester = try app.test(.GET, "v1/stars?limit=\(limit)&sort=subtitle:desc,title:asc") { res in
+        var appTester = try app.test(.GET, "v1/planets/1/refers/stars?limit=\(limit)&sort=subtitle:desc,title:asc") { res in
             XCTAssertEqual(res.status, .ok)
             XCTAssertNotEqual(res.status, .notFound)
 
@@ -680,7 +758,7 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         }
 
         for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
-            appTester = try appTester.test(.GET, "v1/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc,title:asc") { res in
+            appTester = try appTester.test(.GET, "v1/planets/1/refers/stars?cursor=\(cursor)&limit=\(limit)&sort=subtitle:desc,title:asc") { res in
                 XCTAssertEqual(res.status, .ok)
                 XCTAssertNotEqual(res.status, .notFound)
 

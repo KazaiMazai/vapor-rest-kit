@@ -33,134 +33,9 @@ struct StarControllers {
     }
 
     struct ExtendableStarController: VersionableController {
-           var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                   .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
-                   .create(using: Star.Input.self)
-                   .read()
-                   .update(using: Star.Input.self)
-                   .patch(using: Star.PatchInput.self)
-                   .delete()
-                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-           }
-
-           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-               switch version {
-               case .v1:
-                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
-               }
-           }
-    }
-
-    struct FullStarController: VersionableController {
-           var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                   .controller(eagerLoading: StarTagControllers.FullStarEagerLoading.self)
-                   .create(using: Star.Input.self)
-                   .read()
-                   .update(using: Star.Input.self)
-                   .patch(using: Star.PatchInput.self)
-                   .delete()
-                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-           }
-
-           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-               switch version {
-               case .v1:
-                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
-               }
-           }
-    }
-
-    struct DynamicStarController: VersionableController {
-           var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                   .controller(eagerLoading: StarTagControllers.DynamicStarEagerLoading.self)
-                   .create(using: Star.Input.self)
-                   .read()
-                   .update(using: Star.Input.self)
-                   .patch(using: Star.PatchInput.self)
-                   .delete()
-                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-           }
-
-           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-               switch version {
-               case .v1:
-                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
-               }
-           }
-    }
-
-     struct ExtendableStarForGalaxyNestedController: VersionableController {
-           var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                   .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
-                   .related(by: \Galaxy.$stars, relationName: "contains")
-                   .create(using: Star.Input.self)
-                   .read()
-                   .update(using: Star.Input.self)
-                   .patch(using: Star.PatchInput.self)
-                   .delete()
-                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-           }
-
-           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-               switch version {
-               case .v1:
-                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
-               }
-           }
-    }
-
-    struct FullStarForGalaxyNestedController: VersionableController {
-           var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                   .controller(eagerLoading: StarTagControllers.FullStarEagerLoading.self)
-                   .related(by: \Galaxy.$stars, relationName: "contains")
-                   .create(using: Star.Input.self)
-                   .read()
-                   .update(using: Star.Input.self)
-                   .patch(using: Star.PatchInput.self)
-                   .delete()
-                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-           }
-
-           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-               switch version {
-               case .v1:
-                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
-               }
-           }
-    }
-
-    struct DynamicStarForGalaxyNestedController: VersionableController {
-           var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                   .controller(eagerLoading: StarTagControllers.DynamicStarEagerLoading.self)
-                   .related(by: \Galaxy.$stars, relationName: "contains")
-                   .create(using: Star.Input.self)
-                   .read()
-                   .update(using: Star.Input.self)
-                   .patch(using: Star.PatchInput.self)
-                   .delete()
-                   .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-           }
-
-           func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-               switch version {
-               case .v1:
-                   apiV1.addMethodsTo(routeBuilder, on: endpoint)
-               }
-           }
-    }
-
-
-    struct StarForGalaxyNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
-            return Star.Output
-                .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(by: \Galaxy.$stars, relationName: "contains")
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
                 .create(using: Star.Input.self)
                 .read()
                 .update(using: Star.Input.self)
@@ -177,14 +52,16 @@ struct StarControllers {
         }
     }
 
-    struct StarForGalaxyRelationNestedController: VersionableController {
+    struct FullStarController: VersionableController {
         var apiV1: APIMethodsProviding {
-            return Star.Output
-                .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(by: \Galaxy.$stars, relationName: "contains")
-                .relation
-                .create()
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                .controller(eagerLoading: StarTagControllers.FullStarEagerLoading.self)
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
                 .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
         }
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
@@ -194,6 +71,27 @@ struct StarControllers {
             }
         }
     }
+
+    struct DynamicStarController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                .controller(eagerLoading: StarTagControllers.DynamicStarEagerLoading.self)
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
+                .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
 
     struct StarForTagsNestedController: VersionableController {
         var apiV1: APIMethodsProviding {
@@ -432,6 +330,134 @@ extension StarTagControllers {
 
         func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
             return queryBuilder.with(\.$galaxy).with(\.$starTags)
+        }
+    }
+}
+
+extension StarControllers  {
+    struct StarForPlanetNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(by: \Star.$planets, relationName: "refers")
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
+                .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+}
+
+extension StarControllers {
+    struct ExtendableStarForGalaxyNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
+                .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct FullStarForGalaxyNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                .controller(eagerLoading: StarTagControllers.FullStarEagerLoading.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
+                .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct DynamicStarForGalaxyNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
+                .controller(eagerLoading: StarTagControllers.DynamicStarEagerLoading.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
+                .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+
+    struct StarForGalaxyNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .create(using: Star.Input.self)
+                .read()
+                .update(using: Star.Input.self)
+                .patch(using: Star.PatchInput.self)
+                .delete()
+                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct StarForGalaxyRelationNestedController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Star.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(by: \Galaxy.$stars, relationName: "contains")
+                .relation
+                .create()
+                .delete()
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
         }
     }
 }
