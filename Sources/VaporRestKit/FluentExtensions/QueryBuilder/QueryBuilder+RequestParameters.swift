@@ -21,7 +21,7 @@ extension QueryBuilder where Model.IDValue: LosslessStringConvertible {
 
     func findBy(_ idKey: String, from req: Request) throws -> EventLoopFuture<Model> {
         let id = try getIdBy(idKey, from: req)
-
+    
         return self.filter(\._$id == id)
                    .first()
                    .unwrap(or: Abort(.notFound))

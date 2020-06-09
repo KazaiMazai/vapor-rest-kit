@@ -270,7 +270,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                                   childrenKeyPath: relationKeyPath))
 
             case .inversedChildren(let relationKeyPath):
-                return adding(PatchParentResourceController<Model,
+                return adding(PatchAuthParentResourceController<Model,
                     RelatedModel,
                     Output, Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,

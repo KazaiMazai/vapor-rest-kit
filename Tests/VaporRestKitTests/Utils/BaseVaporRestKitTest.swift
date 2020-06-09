@@ -25,6 +25,7 @@ class BaseVaporRestKitTest: XCTestCase {
         app.migrations.add(Star.createInitialMigration())
         app.migrations.add(Star.Relations.MarkedTags.Through.createInitialMigration())
 
+        app.migrations.add(ReferralCode.createInitialMigration())
         app.migrations.add(User.createInitialMigration())
         app.migrations.add(Todo.createInitialMigration())
         app.migrations.add(Tag.createInitialMigration())
@@ -88,18 +89,31 @@ class BaseVaporRestKitTest: XCTestCase {
             TodoControllers.TodoController().setupAPIMethods(on: versiondGroup, for: "todos", with: version)
             UserControllers.UsersController().setupAPIMethods(on: versiondGroup, for: "users", with: version)
             TagControllers.TagController().setupAPIMethods(on: versiondGroup, for: "tags", with: version)
+            ReferralCodeControllers.ReferralCodeController().setupAPIMethods(on: versiondGroup, for: "referral_codes", with: version)
 
             let todosGroup = versiondGroup.grouped("todos")
+            let authTodosGroup = todosGroup.grouped(MockAuthenticator<User>(userId: 1), User.guardMiddleware())
             UserControllers.UsersForTodoController().setupAPIMethods(on: todosGroup, for: "users", with: version)
-            UserControllers.TodoAssigneesRelationController().setupAPIMethods(on: todosGroup, for: "users", with: version)
+            UserControllers.TodoAssigneesRelationController().setupAPIMethods(on: authTodosGroup, for: "users", with: version)
             TagControllers.TagsForTodoController().setupAPIMethods(on: todosGroup, for: "tags", with: version)
 
             let usersGroup = versiondGroup.grouped("users")
             TodoControllers.AssignedTodosForUserController().setupAPIMethods(on: usersGroup, for: "todos", with: version)
+
+
+
             TodoControllers.TodosForUserController().setupAPIMethods(on: usersGroup, for: "todos", with: version)
 
             let authUsersGroup = usersGroup.grouped(MockAuthenticator<User>(userId: 1), User.guardMiddleware())
+
             TodoControllers.MyTodosController().setupAPIMethods(on: authUsersGroup, for: "todos", with: version)
+            TodoControllers.MyTodosRelationController().setupAPIMethods(on: authUsersGroup, for: "todos", with: version)
+            TodoControllers.MyAssignedTodosForUserController().setupAPIMethods(on: authUsersGroup, for: "todos", with: version)
+            TodoControllers.MyAssignedTodosForUserRelationController().setupAPIMethods(on: authUsersGroup, for: "todos", with: version)
+            ReferralCodeControllers.ReferralCodeForUserController().setupAPIMethods(on: authUsersGroup, for: "referral_codes", with: version)
+            ReferralCodeControllers.ReferralCodeForUserRelationController().setupAPIMethods(on: authUsersGroup, for: "referral_codes", with: version)
+
+
 
             let tagsGroup = versiondGroup.grouped("tags")
             TodoControllers.TodosForTagsController().setupAPIMethods(on: tagsGroup, for: "todos", with: version)

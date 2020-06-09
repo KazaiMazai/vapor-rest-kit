@@ -13,6 +13,7 @@ extension User: FieldsProvidingModel {
     enum Fields: String, FieldKeyRepresentable {
         case username
         case age
+        case referralCodeId
     }
 }
 
@@ -34,6 +35,9 @@ final class User: Model, Content {
     @Children(for: \.$user)
     var todos: [Todo]
 
+    @OptionalParent(key: Fields.referralCodeId.key)
+    var refrerralCode: ReferralCode?
+
     @Siblings(through: Todo.Relations.Assignees.through, from: \.$to, to: \.$from)
     var assignedTodos: [Todo]
 
@@ -52,6 +56,7 @@ extension User: InitMigratableSchema {
             .field(.id, .int, .identifier(auto: true))
             .field(Fields.username.key, .string, .required)
             .field(Fields.age.key, .int, .required)
+            .field(Fields.referralCodeId.key, .int, .references(ReferralCode.schema, .id))
             .create()
     }
 }

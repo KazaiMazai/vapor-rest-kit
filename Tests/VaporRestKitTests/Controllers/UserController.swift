@@ -15,6 +15,7 @@ struct UserControllers {
         var apiv1: APIMethodsProviding {
             return User.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .create(using: User.Input.self)
                 .read()
                 .collection(sorting: SortingUnsupported.self,
                             filtering: FilteringUnsupported.self)
@@ -50,7 +51,7 @@ struct UserControllers {
         let todoOwnerGuardMiddleware = RelatedResourceControllerMiddleware<User, Todo>(handler: { (user, todo, req, db) in
             db.eventLoop
                 .tryFuture { try req.auth.require(User.self) }
-                .guard( { $0.id == todo.user.id}, else: Abort(.unauthorized))
+                .guard( { $0.id == todo.$user.id}, else: Abort(.unauthorized))
                 .transform(to: (user, todo))
         })
 
