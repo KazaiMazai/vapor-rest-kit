@@ -143,6 +143,42 @@ struct TodoControllers {
             }
         }
     }
+
+    struct MyAssignedTodosForUserController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(by: \User.$assignedTodos, relationName: "assigned")
+                .read(authenticatable: User.self)
+                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
+    struct MyAssignedTodosForUserRelationController: VersionableController {
+        var apiV1: APIMethodsProviding {
+            return Todo.Output
+                .controller(eagerLoading: EagerLoadingUnsupported.self)
+                .related(by: \User.$assignedTodos, relationName: "assigned")
+                .relation
+                .create(authenticatable: User.self)
+                .delete(authenticatable: User.self) 
+        }
+
+        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
+            switch version {
+            case .v1:
+                apiV1.addMethodsTo(routeBuilder, on: endpoint)
+            }
+        }
+    }
+
 }
 
 

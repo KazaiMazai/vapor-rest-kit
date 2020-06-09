@@ -2,14 +2,15 @@
 //  File.swift
 //  
 //
-//  Created by Sergey Kazakov on 08.06.2020.
+//  Created by Sergey Kazakov on 09.06.2020.
 //
+
 
 @testable import VaporRestKit
 import XCTVapor
 
-final class AuthParentCreateDeleteChildTests: BaseVaporRestKitTest {
-    func testCreateWithValidDataAndDelete() throws {
+final class AuthParentChildUpdateResourceTests: BaseVaporRestKitTest {
+    func testUpdateWithValidData() throws {
         try routes()
 
         try app.test(.GET, "v1/users/1") { res in
@@ -69,19 +70,22 @@ final class AuthParentCreateDeleteChildTests: BaseVaporRestKitTest {
                 XCTAssertEqual($0.title, "Clean Up")
             }
 
-        }.test(.DELETE, "v1/users/me/owns/todos/1") { res in
+        }.test(.PUT, "v1/users/me/owns/todos/1", body: Todo.Input(title: "Clean Up 2")) { res in
             XCTAssertEqual(res.status, .ok)
 
             XCTAssertContent(Todo.Output.self, res) {
                 XCTAssertNotNil($0.id)
                 XCTAssertEqual($0.id, 1)
-                XCTAssertEqual($0.title, "Clean Up")
+                XCTAssertEqual($0.title, "Clean Up 2")
             }
         }.test(.GET, "v1/users/me/owns/todos/1") { res in
-            XCTAssertEqual(res.status, .notFound)
+            XCTAssertEqual(res.status, .ok)
 
-        }.test(.GET, "v1/users/1/owns/todos/1") { res in
-            XCTAssertEqual(res.status, .notFound)
+            XCTAssertContent(Todo.Output.self, res) {
+                XCTAssertNotNil($0.id)
+                XCTAssertEqual($0.id, 1)
+                XCTAssertEqual($0.title, "Clean Up 2")
+            }
 
         }
     }
