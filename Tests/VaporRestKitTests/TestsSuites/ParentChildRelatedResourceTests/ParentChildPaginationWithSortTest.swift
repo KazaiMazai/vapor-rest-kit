@@ -22,7 +22,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$id, .ascending)
             .all()
@@ -81,7 +81,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$id, .ascending)
@@ -140,7 +140,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$title, .descending)
             .sort(\Star.$id, .ascending)
@@ -199,7 +199,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$id, .ascending)
@@ -257,7 +257,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$id, .ascending)
@@ -315,7 +315,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$title, .descending)
             .sort(\Star.$subtitle, .descending)
@@ -374,7 +374,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$title, .descending)
             .sort(\Star.$subtitle, .ascending)
@@ -433,7 +433,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$subtitle, .ascending)
@@ -492,7 +492,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$title, .ascending)
             .sort(\Star.$subtitle, .descending)
@@ -551,7 +551,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$title, .descending)
@@ -610,7 +610,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$title, .descending)
@@ -669,7 +669,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .ascending)
             .sort(\Star.$title, .ascending)
@@ -728,7 +728,7 @@ final class ParentChildPaginationWithSortTests: BaseVaporRestKitTest {
             .first()
             .wait()!
 
-        let titles =  try galaxy.$stars
+        let titles = try galaxy.$stars
             .query(on: app.db)
             .sort(\Star.$subtitle, .descending)
             .sort(\Star.$title, .ascending)
