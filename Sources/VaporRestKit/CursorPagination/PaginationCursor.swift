@@ -59,7 +59,10 @@ struct CursorValue: Codable {
 extension Fluent.Model {
     fileprivate func getPropertyValuesFor(fields: [DatabaseQuery.Field]) throws -> [CursorValue] {
         var propsDict = [[FieldKey]: AnyProperty]()
-        self.properties.forEach { propsDict[$0.path] = $0 }
+
+        properties.compactMap {
+            $0 as? AnyQueryableProperty
+        }.forEach { propsDict[$0.path] = $0 }
 
         return try fields.map {
             let key = try $0.codingKey()

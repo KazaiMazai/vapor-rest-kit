@@ -112,9 +112,8 @@ extension Star {
             title = model.title
             subtitle = model.subtitle
             size = model.size
-            galaxy = model.$galaxy.value.map { GalaxyOutput($0, req: req) }
+            galaxy = model.$galaxy.wrappedValue.map { GalaxyOutput($0, req: req) } 
             tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
-
         }
     }
 
