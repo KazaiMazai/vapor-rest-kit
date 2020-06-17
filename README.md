@@ -50,46 +50,43 @@ ____________
 
 ```swift
 let controller = Tag.Output
-        .controller(eagerLoading: EagerLoadingUnsupported.self)
+        .controller(eagerLoading: TagsEagerLoading.self)
         .related(with: \Todo.$tags, relationName: "mentioned")
         .create(using: Tag.CreateInput.self)
         .read()
         .update(using: Tag.UpdateInput.self)
         .patch(using: Tag.PatchInput.self)
-        .collection(sorting: DefaultSorting.self,
-                    filtering: DefaultFiltering.self)
+        .collection(sorting: TagsSortingKeys.self,
+                    filtering: TagsFilteringKeys.self)
 
 ```
-
-____________
-
+ 
 ## Check Docs for more details:
 
-[Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
+- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
 
-[Basics](Docs/Basics.md)
+- [Basics](Docs/Basics.md)
 
-[CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
+- [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
 
-[CRUD for Related Resource Models](Docs/CRUD-for-Related-Resource-Models.md)
+- [CRUD for Related Resource Models](Docs/CRUD-for-Related-Resource-Models.md)
 
-[CRUD for Relations](Docs/CRUD-for-Relations.md)
+- [CRUD for Relations](Docs/CRUD-for-Relations.md)
 
-[Controller Middlewares](Docs/Controller-Middlewares.md)
+- [Controller Middlewares](Docs/Controller-Middlewares.md)
 
-[Combine Controllers](Docs/Combine-Controllers.md)
+- [Combine Controllers](Docs/Combine-Controllers.md)
 
-[API Versioning](Docs/API-Versioning.md)
+- [API Versioning](Docs/API-Versioning.md)
 
-[Filtering](Docs/Filtering.md)
+- [Filtering](Docs/Filtering.md)
 
-[Sorting](Docs/Sorting.md)
+- [Sorting](Docs/Sorting.md)
 
-[Eager Loading](Docs/Eager-Loading.md)
+- [Eager Loading](Docs/Eager-Loading.md)
 
-[Pagination](Docs/Pagination.md)
-
-_______
+- [Pagination](Docs/Pagination.md)
+ 
 # Licensing
 
 Vapor RestKit is licensed under MIT license.
