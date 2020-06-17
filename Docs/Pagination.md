@@ -15,7 +15,7 @@ By default, cursor pagination is applied to collection controller.
 
 #### How to query cursor pagination
 
-When making initial request, client should provide only limit parameter, like this:
+When making initial request, client may provide only limit parameter, like this:
 
 ```
 https://api.yourservice.com/v1/stars?limit=10
