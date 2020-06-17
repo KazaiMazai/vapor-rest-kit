@@ -1,3 +1,5 @@
+## Pagination
+
 Reskit supports pagination for collection controller:
 
 ```swift
