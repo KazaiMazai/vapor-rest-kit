@@ -45,9 +45,9 @@ import VaporRestKit
 ____________
 
 
-1. Define Input, Output structs for your Model
+1. Define Input, Output structs for your Model, conforming to ```ResourceUpdateModel, ResourcePatchModel, ResourceOutputModel``` protocols
 
-2. Define controller with RestKit Declarative API:
+2. Create controller with RestKit Declarative API:
 
 ```swift
 let controller = Todo.Output
@@ -87,7 +87,7 @@ controller.addMethodsTo(tags, on: "todos")
 
 ___________
  
-## Check Docs for more details:
+## Check out the Docs for more details:
 
 - [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
 
