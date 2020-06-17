@@ -45,7 +45,8 @@ import VaporRestKit
 ____________
 
 
-1. Define Inputs, Outputs structs for your Model
+1. Define Input, Output structs for your Model
+
 2. Define controller with RestKit Declarative API:
 
 ```swift
@@ -70,6 +71,7 @@ let controller = Todo.Output
 let tags = routeBuilder.grouped("tags")
 controller.addMethodsTo(tags, on: "todos")
 ```
+
 4. Get result:
  
 
@@ -82,6 +84,8 @@ controller.addMethodsTo(tags, on: "todos")
 |DELETE     | /tags/:tagId/related/todos/:todoId  | Delete 
 |GET        | /tags/:tagId/related/todos          | Show list
 
+
+___________
  
 ## Check Docs for more details:
 
