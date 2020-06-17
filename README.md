@@ -56,8 +56,8 @@ let controller = Tag.Output
         .read()
         .update(using: Tag.UpdateInput.self)
         .patch(using: Tag.PatchInput.self)
-        .collection(sorting: TagsSortingKeys.self,
-                    filtering: TagsFilteringKeys.self)
+        .collection(sorting: TagSortKeys.self,
+                    filtering: TagFilterKeys.self)
 
 ```
  
