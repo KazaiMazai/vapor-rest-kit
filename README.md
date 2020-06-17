@@ -49,17 +49,39 @@ ____________
 2. Define controller with RestKit Declarative API:
 
 ```swift
-let controller = Tag.Output
-        .controller(eagerLoading: TagsEagerLoading.self)
-        .related(with: \Todo.$tags, relationName: "mentioned")
-        .create(using: Tag.CreateInput.self)
-        .read()
-        .update(using: Tag.UpdateInput.self)
-        .patch(using: Tag.PatchInput.self)
-        .collection(sorting: TagSortKeys.self,
-                    filtering: TagFilterKeys.self)
+let controller = Todo.Output
+                .controller(eagerLoading: TodoEagerLoading.self)
+                .related(with: \Tag.$relatedTodos, relationName: "related")
+                .create(using: Todo.Input.self)
+                .read()
+                .update(using: Todo.Input.self)
+                .patch(using: Todo.PatchInput.self)
+                .read()
+                .delete()
+                .collection(sorting: TodoSortKeys.self,
+                            filtering: TodoFilterKeys.self)
+
 
 ```
+
+3. Add methods to route builder:
+
+```swift
+let tags = routeBuilder.grouped("tags")
+controller.addMethodsTo(tags, on: "todos")
+```
+4. Get result:
+ 
+
+| HTTP Method                 | Route               | Result
+| --------------------------- |:--------------------| :---------------|
+|POST       | /tags/:tagId/related/todos          | Create new
+|GET        | /tags/:tagId/related/todos/:todoId  | Show existing
+|PUT        | /tags/:tagId/related/todos/:todoId  | Update existing (Replace)
+|PATCH      | /tags/:tagId/related/todos/:todoId  | Patch exsiting (Partial update)
+|DELETE     | /tags/:tagId/related/todos/:todoId  | Delete 
+|GET        | /tags/:tagId/related/todos          | Show list
+
  
 ## Check Docs for more details:
 
