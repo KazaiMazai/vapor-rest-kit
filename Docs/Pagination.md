@@ -20,9 +20,10 @@ When making initial request, client may provide only limit parameter, like this:
 ```
 https://api.yourservice.com/v1/stars?limit=10
 ```
+Limit parameter is optional, defaults to pagination config.
  
 As a part of metadata, returned by server, there will be **next_cursor** parameter.
-In order to get the next portion of data, client should include cursor in the requers query:
+In order to get the next portion of data, client should include cursor in the request query:
 
 ```
 https://api.yourservice.com/v1/stars?limit=10cursor=W3siZmllbGRLZXkiOiJhc3NldHNfW3RpY2tlcl0iLCJ2YWx1Z
