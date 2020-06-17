@@ -47,7 +47,9 @@ ____________
 
 1. Define Input, Output structs for your Model, conforming to ```ResourceUpdateModel, ResourcePatchModel, ResourceOutputModel``` protocols
 
-2. Create controller with RestKit Declarative API:
+2. Define TodoEagerLoading, TodoSortKeys, TodoFilterKeys if needed
+
+3. Create controller with RestKit Declarative API:
 
 ```swift
 let controller = Todo.Output
@@ -65,14 +67,14 @@ let controller = Todo.Output
 
 ```
 
-3. Add methods to route builder:
+4. Add methods to route builder:
 
 ```swift
 let tags = routeBuilder.grouped("tags")
 controller.addMethodsTo(tags, on: "todos")
 ```
 
-4. Get result:
+5. Get result:
  
 
 | HTTP Method                 | Route               | Result
