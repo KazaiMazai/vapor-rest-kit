@@ -69,7 +69,7 @@ let controller = Tag.Output
 
 - [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
 
-- [CRUD for Related Resource Models](Docs/CRUD-for-Related-Resource-Models.md)
+- [CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
 
 - [CRUD for Relations](Docs/CRUD-for-Relations.md)
 
