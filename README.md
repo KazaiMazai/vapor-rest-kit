@@ -35,6 +35,13 @@ targets: [
 ]
 
 ```
+
+Import in your code
+
+```swift
+import VaporRestKit
+```
+
 ____________
 ## Fluent Model Extensions
 ### FieldsProvidingModel
@@ -102,52 +109,52 @@ func configureDatabaseInitialMigrations(_ app: Application) {
 3. PROFIT!
 
 
-### SiblingRepresentable
-#### How to stop suffering from Siblings pivot models boiler plate
+    ### SiblingRepresentable
+    #### How to stop suffering from Siblings pivot models boiler plate
 
-Short-cut for creating many-to-many relations.
+    Short-cut for creating many-to-many relations.
 
-1. Define whatever as SiblingRepresentable (enum for example)
+    1. Define whatever as SiblingRepresentable (enum for example)
 
-```swift
-extension Todo {
-    enum Relations {
-        enum RelatedTags: SiblingRepresentable {
-            typealias From = Todo
-            typealias To = Tag
-            typealias Through = SiblingModel<Todo, Tag, Self>
+    ```swift
+    extension Todo {
+        enum Relations {
+            enum RelatedTags: SiblingRepresentable {
+                typealias From = Todo
+                typealias To = Tag
+                typealias Through = SiblingModel<Todo, Tag, Self>
+            }
         }
     }
-}
 
-```
+    ```
 
-2. Add corresponding property with @Siblings property wrapper
+    2. Add corresponding property with @Siblings property wrapper
 
-```swift
-final class User: Model, Content {
-    static let schema = "users"
+    ```swift
+    final class User: Model, Content {
+        static let schema = "users"
 
-    @ID(key: .id)
-    var id: UUID?
+        @ID(key: .id)
+        var id: UUID?
 
-    @Siblings(through: Relations.RelatedTags.through, from: \.$from, to: \.$to)
-    var relatedTags: [Tag]
-}
-```
+        @Siblings(through: Relations.RelatedTags.through, from: \.$from, to: \.$to)
+        var relatedTags: [Tag]
+    }
+    ```
 
-3. Add initial migration for pivot Fluent model representing the sibling after related models:
+    3. Add initial migration for pivot Fluent model representing the sibling after related models:
 
-```swift
-private func configureDatabaseInitialMigrations(_ app: Application) {
-    app.migrations.add(Todo.createInitialMigration())
-    app.migrations.add(Tag.createInitialMigration()) 
-    app.migrations.add(Todo.Relations.RelatedTags.Through.createInitialMigration())
-}
+    ```swift
+    private func configureDatabaseInitialMigrations(_ app: Application) {
+        app.migrations.add(Todo.createInitialMigration())
+        app.migrations.add(Tag.createInitialMigration()) 
+        app.migrations.add(Todo.Relations.RelatedTags.Through.createInitialMigration())
+    }
 
-```
+    ```
 
-4. Profit! No need to feel pain from pivot models manual creation any more.
+    4. Profit! No need to feel pain from pivot models manual creation any more.
 
 ## Basics
  
@@ -627,10 +634,10 @@ let controller = Todo.Output
                 .related(with: \User.$todos, relationName: nil)
                 .create(using: Todo.Input.self,
                         middleware: middleware)
-                .patch(using: Todo.PatchInput.self, middleware: anotherMiddleware)
+                .patch(using: Todo.PatchInput.self, middleware: middleware)
 
 ```
-3. Pofit!
+3. Profit!
 
 For middlewares restrictions are the same:
 - **All database requests should be performed with provided database instance**
@@ -712,7 +719,7 @@ let controller: APIMethodsProviding = CompoundResourceController(with: [
 
  ### Important
 
- **It's up to developer to take care of http methods that are still available, otherwise Vapor will probably get sad due to attempt to use the same method several twice.**
+ **It's up to developer to take care of http methods that are still available, otherwise Vapor will probably get sad due to attempt to use the same method several times.**
  
 
 
@@ -737,9 +744,9 @@ open protocol VersionableController {
 
 Resource Inputs and Outputs as well as all necessary dependencies needed for Controllers and ModelProviders are required to be provided explicitly as associated types.  
 
-Protocols contraints applied on associated types would make sure, that we haven't missed anything. Complier just won't let.
+Protocols constraints applied on associated types would make sure, that we haven't missed anything. Complier just won't let.
 
-This allows to create managable versioned Resource Models as follows:
+This allows to create manageable versioned Resource Models as follows:
 
 ```swift
 extension Todo {
@@ -839,7 +846,7 @@ Such filter will be always applied to the collection request
 
 ### Dynamic Filtering
 
-*Restkit allows to define acceptable filtering keys by dynamic filtering.
+*Restkit allows to define acceptable filtering keys for dynamic filtering.
 
 Supported filter types: 
 - value filters
@@ -942,7 +949,7 @@ The following Keys enum defines supported dynamic keys
 }
 ```
  
-The following func provides mapping current key to a filtered queryBuilder via
+The following func provides mapping current of keys to a filtered queryBuilder via
 
 ```swift
 func filterFor(queryBuilder: QueryBuilder<Star>,
@@ -1020,7 +1027,7 @@ Restkit supports complex nested filters with Value and/or Field filters:
 
 ```
  
-#### How to query Complex nested fitlers
+#### How to query Complex nested filters
 
 Element of array of nested filters can be also a complex nested filter:
 ```json
@@ -1352,7 +1359,7 @@ https://api.yourservice.com/v1/stars?limit=10cursor=W3siZmllbGRLZXkiOiJhc3NldHNf
 ```
 
 Cursor is a base64 encoded string, containing data pointing to the last element of the returned portion of items. 
-It also contains sorting metadata alllowing to use cursor pagination along with static or dynamic sorting keys.
+It also contains sorting metadata allowing to use cursor pagination along with static or dynamic sorting keys.
 
 #### How to configure cursor pagination
 
@@ -1398,7 +1405,7 @@ https://api.yourservice.com/v1/stars?page=2&per=15
 ```
  
 
-### Collection access without Pagination
+### Collection response without Pagination
 
 #### How to get all items 
 
