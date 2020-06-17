@@ -96,9 +96,9 @@ ___________
  
 ## Check out the Docs for more details:
 
-- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
-
 - [Basics](Docs/Basics.md)
+
+- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
 
 - [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
 
