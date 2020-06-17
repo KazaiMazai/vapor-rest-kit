@@ -47,7 +47,7 @@ ____________
 
 1. Define Input, Output structs for your Model, conforming to ```ResourceUpdateModel, ResourcePatchModel, ResourceOutputModel``` protocols
 
-2. Define TodoEagerLoading, TodoSortKeys, TodoFilterKeys if needed
+2. Define ```TodoEagerLoading, TodoSortKeys, TodoFilterKeys``` if needed
 
 3. Create controller with RestKit Declarative API:
 
