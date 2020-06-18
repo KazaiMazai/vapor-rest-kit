@@ -50,7 +50,29 @@ import VaporRestKit
 ____________
 
 
-1. Define Input, Output structs for your Model, conforming to ```ResourceUpdateModel, ResourcePatchModel, ResourceOutputModel``` protocols
+1. Define Input, Output structs for your Model, conforming to ```ResourceUpdateModel, ResourcePatchModel, ResourceOutputModel``` protocols:
+
+```swift
+protocol ResourceUpdateModel: Content, Validatable {
+    associatedtype Model: Fields
+
+    func update(_: Model) -> Model
+}
+
+protocol ResourcePatchModel: Content, Validatable {
+    associatedtype Model: Fields
+
+    func patch(_: Model) -> Model
+}
+
+protocol ResourceOutputModel: Content {
+    associatedtype Model: Fields
+
+    init(_: Model)
+}
+
+```
+
 
 2. Define ```TodoEagerLoading, TodoSortKeys, TodoFilterKeys``` if needed
 
