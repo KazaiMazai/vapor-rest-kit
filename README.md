@@ -14,7 +14,7 @@ This package is intended to speed up backend development using server side swift
 - Nested routes for Parent-Child, Siblings relations
 - Nested */me* routes for Authenticatable Related Resource
 - API versioning for controllers and Resource Models 
-- Pagination for Resource Collections by Cursor, Page 
+- Pagination for Resource Collections by Cursor or Page 
 - Filtering 
 - Sorting
 - Eager loading
