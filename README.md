@@ -1,6 +1,11 @@
-# Vapor RestKit
 
-This package is intended to speed up backend development using server side swift framework Vapor 4.
+<p align="center">
+  <img src="Logo.png?raw=true" alt="Sublime's custom image"/>
+</p>
+
+This package is intended to speed up backend development using server side swift framework [Vapor](https://github.com/vapor/vapor) 4.
+
+
 
 ## Features
 - Generic-powered Declarative API 
@@ -91,9 +96,9 @@ ___________
  
 ## Check out the Docs for more details:
 
-- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
-
 - [Basics](Docs/Basics.md)
+
+- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
 
 - [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
 
