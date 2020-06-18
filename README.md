@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="Logo.png?raw=true" alt="Sublime's custom image"/>
+  <img src="Logo.svg?raw=true" alt="Sublime's custom image"/>
 </p>
 
 This package is intended to speed up backend development using server side swift framework [Vapor](https://github.com/vapor/vapor) 4.
