@@ -118,29 +118,29 @@ ___________
  
 ## Check out the Docs for more details:
 
-- [Basics](Docs/Basics.md)
+[Basics](Docs/Basics.md)
 
-- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
+[Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
 
-- [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
+[CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
 
-- [CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
+[CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
 
-- [CRUD for Relations](Docs/CRUD-for-Relations.md)
+[CRUD for Relations](Docs/CRUD-for-Relations.md)
 
-- [Controller Middlewares](Docs/Controller-Middlewares.md)
+[Controller Middlewares](Docs/Controller-Middlewares.md)
 
-- [Combine Controllers](Docs/Combine-Controllers.md)
+[Combine Controllers](Docs/Combine-Controllers.md)
 
-- [API Versioning](Docs/API-Versioning.md)
+[API Versioning](Docs/API-Versioning.md)
 
-- [Filtering](Docs/Filtering.md)
+[Filtering](Docs/Filtering.md)
 
-- [Sorting](Docs/Sorting.md)
+[Sorting](Docs/Sorting.md)
 
-- [Eager Loading](Docs/Eager-Loading.md)
+[Eager Loading](Docs/Eager-Loading.md)
 
-- [Pagination](Docs/Pagination.md)
+[Pagination](Docs/Pagination.md)
  
 # Licensing
 
