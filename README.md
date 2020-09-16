@@ -1,9 +1,9 @@
 
 <p align="center">
-  <img src="Logo.png?raw=true" alt="Sublime's custom image"/>
+  <img src="Logo.svg?raw=true" alt="Sublime's custom image"/>
 </p>
 
-This package is intended to speed up backend development using server side swift framework [Vapor](https://github.com/vapor/vapor) 4.
+This package is intended to speed up backend development using server side swift framework [Vapor](https://github.com/vapor/vapor)
 
 
 
@@ -14,7 +14,7 @@ This package is intended to speed up backend development using server side swift
 - Nested routes for Parent-Child, Siblings relations
 - Nested */me* routes for Authenticatable Related Resource
 - API versioning for controllers and Resource Models 
-- Resource Collections with pagination by Cursor, Page, or without 
+- Pagination for Resource Collections by Cursor or Page 
 - Filtering 
 - Sorting
 - Eager loading
@@ -31,7 +31,7 @@ Add this package to your Package.swift as dependency and to your target.
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/KazaiMazai/vapor-rest-kit",  from: "1.0.0-beta.1.5")
+    .package(url: "https://github.com/KazaiMazai/vapor-rest-kit",  from: "1.0.0-beta.1.6")
 ],
 targets: [
     .target(name: "App", dependencies: [
@@ -118,29 +118,29 @@ ___________
  
 ## Check out the Docs for more details:
 
-- [Basics](Docs/Basics.md)
+[Basics](Docs/Basics.md)
 
-- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
+[Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
 
-- [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
+[CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
 
-- [CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
+[CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
 
-- [CRUD for Relations](Docs/CRUD-for-Relations.md)
+[CRUD for Relations](Docs/CRUD-for-Relations.md)
 
-- [Controller Middlewares](Docs/Controller-Middlewares.md)
+[Controller Middlewares](Docs/Controller-Middlewares.md)
 
-- [Combine Controllers](Docs/Combine-Controllers.md)
+[Combine Controllers](Docs/Combine-Controllers.md)
 
-- [API Versioning](Docs/API-Versioning.md)
+[API Versioning](Docs/API-Versioning.md)
 
-- [Filtering](Docs/Filtering.md)
+[Filtering](Docs/Filtering.md)
 
-- [Sorting](Docs/Sorting.md)
+[Sorting](Docs/Sorting.md)
 
-- [Eager Loading](Docs/Eager-Loading.md)
+[Eager Loading](Docs/Eager-Loading.md)
 
-- [Pagination](Docs/Pagination.md)
+[Pagination](Docs/Pagination.md)
  
 # Licensing
 
