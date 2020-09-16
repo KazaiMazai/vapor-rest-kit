@@ -231,7 +231,6 @@ extension StarTagControllers {
             return queryBuilder
         }
 
-
         enum Keys: String, FilteringKey {
             typealias Model = Star
 
