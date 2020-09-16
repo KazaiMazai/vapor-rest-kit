@@ -28,7 +28,15 @@ public protocol FilterProvider where Key: FilteringKey, Key.Model == Model {
 
     func defaultFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
 
+    func baseFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+
     init()
+}
+
+public extension FilterProvider {
+    func baseFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        return queryBuilder
+    }
 }
 
 extension FilterProvider {
@@ -45,6 +53,10 @@ public protocol StaticFiltering: FilterProvider { }
 
 public extension StaticFiltering {
     var supportsDynamicFilterKeys: Bool { return false }
+
+    func defaultFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        baseFiltering(queryBuilder)
+    }
 }
 
 //MARK: DynamicFiltering Protocol
@@ -53,6 +65,10 @@ public protocol DynamicFiltering: FilterProvider { }
 
 public extension DynamicFiltering {
     var supportsDynamicFilterKeys: Bool { return true }
+
+    func baseFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        return queryBuilder
+    }
 }
 
 //MARK:- EmptyFilteringKey

@@ -13,18 +13,18 @@ import Fluent
 public extension QueryBuilder {
     func filter<Filtering: FilterProvider>(_ filterProvider: Filtering, for req: Request) throws -> QueryBuilder<Model> where Filtering.Model == Model {
 
-        let baseFiltered = filterProvider.defaultFiltering(self)
-
         guard filterProvider.supportsDynamicFilterKeys else {
-            return baseFiltered
+            return filterProvider.baseFiltering(self)
         }
+
+        let baseFiltered = filterProvider.baseFiltering(self)
 
         let filter = try req.query.decode(FilterQueryRequest<FilteringCodingKeys, Filtering.Key>.self)
         guard let filterNode = filter.filterNode else {
-            return baseFiltered
+            return filterProvider.defaultFiltering(baseFiltered)
         }
 
-        return filterNode.filterFor(queryBuilder: self)
+        return filterNode.filterFor(queryBuilder: baseFiltered)
     }
 }
 
