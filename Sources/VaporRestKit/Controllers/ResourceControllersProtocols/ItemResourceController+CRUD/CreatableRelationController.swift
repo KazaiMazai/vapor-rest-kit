@@ -27,7 +27,7 @@ extension CreatableRelationController where Self: ChildrenResourceRelationProvid
                 .flatMapThrowing { (resource, related) in
                     try resource.attached(to: related, with: self.childrenKeyPath) }
                 .flatMap { $0.save(on: db).transform(to: $0) }
-                .map { Output($0, req: req) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -46,7 +46,7 @@ extension CreatableRelationController where Self: ParentResourceRelationProvider
                     try resource.attached(to: related, with: self.inversedChildrenKeyPath)
                     return related.save(on: db).transform(to: resource) }
                 .flatMap { $0 }
-                .map { Output($0, req: req) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -63,7 +63,7 @@ extension CreatableRelationController where Self: SiblingsResourceRelationProvid
                                                                         database: db) }
                 .flatMap { (resource, related) in
                     resource.attached(to: related, with: self.siblingKeyPath, on: db) }
-                .map { Output($0, req: req)}
+                .flatMapThrowing { try Output($0, req: req)}
         }
     }
 }

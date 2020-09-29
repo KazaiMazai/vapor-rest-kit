@@ -26,7 +26,8 @@ extension PatchableResourceController
 
             try self.find(req, database: db)
                 .flatMap { patchModel.patch($0, req: req, database: db) }
-                .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
+                .flatMap { $0.update(on: db).transform(to: $0) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -47,7 +48,8 @@ extension PatchableResourceController
                                                                         relatedModel: $0.1,
                                                                         req: req,
                                                                         database: db).map { $0.0 } }
-                .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
+                .flatMap { $0.update(on: db).transform(to: $0) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -68,7 +70,8 @@ extension PatchableResourceController
                                                                         relatedModel: $0.1,
                                                                         req: req,
                                                                         database: db).map { $0.0 } }
-                .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
+                .flatMap { $0.update(on: db).transform(to: $0) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -89,7 +92,8 @@ extension PatchableResourceController
                                                                         relatedModel: $0.1,
                                                                         req: req,
                                                                         database: db).map { $0.0 } }
-                .flatMap { $0.update(on: db).transform(to: Output($0, req: req)) }
+                .flatMap { $0.update(on: db).transform(to: $0) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }

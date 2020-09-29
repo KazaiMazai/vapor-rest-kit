@@ -26,7 +26,8 @@ extension DeletableRelationController where Self: ChildrenResourceRelationProvid
                                                                         database: db) }
                 .flatMapThrowing { try $0.0.detached(from: $0.1, with: self.childrenKeyPath) }
                 .flatMap { resource in return resource.save(on: db)
-                                                      .transform(to: Output(resource, req: req)) }
+                                                      .transform(to: resource) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -44,7 +45,8 @@ extension DeletableRelationController where Self: ParentResourceRelationProvider
                     try resource.detached(from: related, with: self.inversedChildrenKeyPath)
                     return related.save(on: db).transform(to: resource) }
                 .flatMap { $0 }
-                .map { Output($0, req: req) }
+                .flatMapThrowing { try Output($0, req: req) }
+
         }
     }
 }
@@ -59,7 +61,7 @@ extension DeletableRelationController where Self: SiblingsResourceRelationProvid
                                                                         req: req,
                                                                         database: db) }
                 .flatMap {(resource, related) in resource.detached(from: related, with: self.siblingKeyPath, on: db) }
-                .map { Output($0, req: req)}
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
