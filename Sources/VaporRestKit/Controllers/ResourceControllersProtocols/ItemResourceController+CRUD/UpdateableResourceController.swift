@@ -28,7 +28,7 @@ extension UpdateableResourceController
             try self.find(req, database: db)
                 .flatMap { inputModel.update($0, req: req, database: db) }
                 .flatMap { model in return model.save(on: db)
-                    .map { Output(model, req: req) }}
+                .flatMapThrowing { try Output(model, req: req) }}
         }
     }
 }
@@ -50,7 +50,7 @@ extension UpdateableResourceController
                 .flatMap { self.relatedResourceMiddleware.handleRelated($0.0, relatedModel: $0.1, req: req, database: db) }
                 .flatMapThrowing { try $0.0.attached(to: $0.1, with: keyPath) }
                 .flatMap { $0.save(on: db).transform(to: $0) }
-                .map { Output($0, req: req) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -75,7 +75,7 @@ extension UpdateableResourceController
                     [$0.0.save(on: db),$0.1.save(on: db)]
                         .flatten(on: db.context.eventLoop)
                         .transform(to: $0.0) }
-                .map { Output($0, req: req) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }
@@ -96,7 +96,7 @@ extension UpdateableResourceController
                 .flatMap { self.relatedResourceMiddleware.handleRelated($0.0, relatedModel: $0.1, req: req, database: db) }
                 .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
                 .flatMap { (model, related) in model.attached(to: related, with: self.siblingKeyPath, on: db) }
-                .map { Output($0, req: req) }
+                .flatMapThrowing { try Output($0, req: req) }
         }
     }
 }

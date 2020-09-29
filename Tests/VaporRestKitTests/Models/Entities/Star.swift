@@ -107,13 +107,13 @@ extension Star {
         let galaxy: GalaxyOutput?
         let tags: [TagsOutput]?
 
-        init(_ model: Star, req: Request) {
+        init(_ model: Star, req: Request) throws {
             id = model.id
             title = model.title
             subtitle = model.subtitle
             size = model.size
-            galaxy = model.$galaxy.wrappedValue.map { GalaxyOutput($0, req: req) } 
-            tags = model.$starTags.value?.map { TagsOutput($0, req: req) }
+            galaxy = try model.$galaxy.value?.map { try GalaxyOutput($0, req: req) }
+            tags = try model.$starTags.value?.map { try TagsOutput($0, req: req) }
         }
     }
 

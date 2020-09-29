@@ -69,10 +69,10 @@ extension Galaxy {
         let title: String
         let stars: [StarOutput]?
 
-        init(_ model: Galaxy, req: Request) {
+        init(_ model: Galaxy, req: Request) throws {
             id = model.id
             title = model.title
-            stars = model.$stars.value?.map { StarOutput($0, req: req) }
+            stars = try model.$stars.value?.map { try StarOutput($0, req: req) }
         }
     }
 

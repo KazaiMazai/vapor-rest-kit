@@ -11,7 +11,7 @@ import Fluent
 public protocol ResourceOutputModel: Content {
     associatedtype Model: Fields
 
-    init(_: Model, req: Request)
+    init(_: Model, req: Request) throws
 }
 
 
