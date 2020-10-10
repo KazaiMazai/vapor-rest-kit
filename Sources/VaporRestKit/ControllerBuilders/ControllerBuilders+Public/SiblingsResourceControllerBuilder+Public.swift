@@ -200,7 +200,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
         Filtering: FilterProvider,
         Filtering.Model == Model {
 
-            return adding(CollectionRelatedResourceController<Model,
+            return adding(CollectionRelatedAuthResourceController<Model,
                 RelatedModel,
                 Through,
                 Output,
