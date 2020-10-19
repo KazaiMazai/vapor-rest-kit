@@ -9,16 +9,18 @@ CompoundResourceController allows to combine several controllers into one.
 1. Create your custom CustomTodoController and make it conform to *APIMethodsProviding* protocol:
 
 ```swift
-struct CustomCreateUserController:  APIMethodsProviding {
-
+struct CustomUserController:  APIMethodsProviding { 
     func someMethod(_ req: Request) -> EventLoopFuture<SomeResponse> {
        //Some stuff here
     }
     
+    func anotherMethod(_ req: Request) -> EventLoopFuture<SomeResponse> {
+       //Some stuff here
+    }
     
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
-        let path = resourcePathFor(endpoint: endpoint)
-        routeBuilder.on(.POST, path, body: .collect, use: self.someMethod)
+        routeBuilder.on(.POST, "users", body: .collect, use: self.someMethod)
+        routeBuilder.on(.PUT, "users", body: .collect, use: self.anotherMethod)
     }
 }
 
