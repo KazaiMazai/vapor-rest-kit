@@ -20,7 +20,7 @@ extension PatchableResourceController
     Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Patch.validate(req)
+        try Patch.validate(content: req)
         let patchModel = try req.content.decode(Patch.self)
         return req.db.tryTransaction { db in
 
@@ -39,7 +39,7 @@ extension PatchableResourceController
     Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Patch.validate(req)
+        try Patch.validate(content: req)
         let patchModel = try req.content.decode(Patch.self)
         return req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
@@ -61,7 +61,7 @@ extension PatchableResourceController
     Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Patch.validate(req)
+        try Patch.validate(content: req)
         let patchModel = try req.content.decode(Patch.self)
         return req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
@@ -83,7 +83,7 @@ extension PatchableResourceController
     Model == Patch.Model {
 
     func patch(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Patch.validate(req)
+        try Patch.validate(content: req)
         let patchModel = try req.content.decode(Patch.self)
         return req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
