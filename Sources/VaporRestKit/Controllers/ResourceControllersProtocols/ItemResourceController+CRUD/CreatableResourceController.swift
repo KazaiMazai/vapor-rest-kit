@@ -19,7 +19,7 @@ extension CreatableResourceController where Self: ResourceModelProvider,
                                             Model == Input.Model  {
 
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Input.validate(req)
+        try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
 
         return req.db.tryTransaction { db in
@@ -36,7 +36,7 @@ extension CreatableResourceController where Self: ChildrenResourceModelProvider,
     Model == Input.Model {
 
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Input.validate(req)
+        try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
 
@@ -55,7 +55,7 @@ extension CreatableResourceController where Self: ParentResourceModelProvider,
     Model == Input.Model  {
 
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Input.validate(req)
+        try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         let keyPath = inversedChildrenKeyPath
         return req.db.tryTransaction { db in
@@ -78,7 +78,7 @@ extension CreatableResourceController where Self: SiblingsResourceModelProvider,
     Model == Input.Model {
 
     func create(_ req: Request) throws -> EventLoopFuture<Output> {
-        try Input.validate(req)
+        try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
 
