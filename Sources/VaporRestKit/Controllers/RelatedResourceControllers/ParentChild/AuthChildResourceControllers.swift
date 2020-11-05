@@ -27,6 +27,7 @@ struct CreateAuthChildrenResourceController<Model, RelatedModel, Output, Input, 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 
@@ -68,7 +69,7 @@ struct UpdateAuthChildrenResourceController<Model, RelatedModel, Output, Input, 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- PatchAuthChildrenResourceController
@@ -91,7 +92,7 @@ struct PatchAuthChildrenResourceController<Model, RelatedModel, Output, Patch, E
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- DeleteAuthChildrenResourceController

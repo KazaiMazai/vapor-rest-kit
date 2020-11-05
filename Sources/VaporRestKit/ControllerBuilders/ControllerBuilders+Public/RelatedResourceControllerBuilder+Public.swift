@@ -23,7 +23,8 @@ public extension RelatedResourceControllerBuilder {
 
 public extension RelatedResourceControllerBuilder {
     func create<Input>(using: Input.Type,
-                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -36,7 +37,8 @@ public extension RelatedResourceControllerBuilder {
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  childrenKeyPath: relationKeyPath))
+                                  childrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
 
             case .inversedChildren(let relationKeyPath):
                 return adding(CreateParentResourceController<Model,
@@ -45,7 +47,8 @@ public extension RelatedResourceControllerBuilder {
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  inversedChildrenKeyPath: relationKeyPath))
+                                  inversedChildrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             }
     }
 
@@ -68,7 +71,8 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func update<Input>(using: Input.Type,
-                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -81,7 +85,8 @@ public extension RelatedResourceControllerBuilder {
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  childrenKeyPath: relationKeyPath))
+                                  childrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             case .inversedChildren(let relationKeyPath):
                 return adding(UpdateParentResourceController<Model,
                     RelatedModel,
@@ -89,12 +94,14 @@ public extension RelatedResourceControllerBuilder {
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  inversedChildrenKeyPath: relationKeyPath))
+                                  inversedChildrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             }
     }
 
     func patch<Input>(using: Input.Type,
-                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelatedResourceControllerBuilder
+                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -107,7 +114,8 @@ public extension RelatedResourceControllerBuilder {
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  childrenKeyPath: relationKeyPath))
+                                  childrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
 
             case .inversedChildren(let relationKeyPath):
                 return adding(PatchParentResourceController<Model,
@@ -116,7 +124,8 @@ public extension RelatedResourceControllerBuilder {
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  inversedChildrenKeyPath: relationKeyPath))
+                                  inversedChildrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             }
     }
 
@@ -180,7 +189,8 @@ public extension RelatedResourceControllerBuilder {
 public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
     func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+                       authenticatable: RelatedModel.Type,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -193,7 +203,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  childrenKeyPath: relationKeyPath))
+                                  childrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
 
             case .inversedChildren(let relationKeyPath):
                 return adding(CreateAuthParentResourceController<Model,
@@ -202,7 +213,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  inversedChildrenKeyPath: relationKeyPath))
+                                  inversedChildrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             }
     }
 
@@ -226,7 +238,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
 
     func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-                       authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+                       authenticatable: RelatedModel.Type,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model  {
@@ -239,7 +252,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  childrenKeyPath: relationKeyPath))
+                                  childrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
 
             case .inversedChildren(let relationKeyPath):
                 return adding(UpdateAuthParentResourceController<Model,
@@ -248,13 +262,15 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  inversedChildrenKeyPath: relationKeyPath))
+                                  inversedChildrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             }
     }
 
     func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-                      authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder
+                      authenticatable: RelatedModel.Type,
+                      bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model  {
@@ -267,7 +283,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  childrenKeyPath: relationKeyPath))
+                                  childrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
 
             case .inversedChildren(let relationKeyPath):
                 return adding(PatchAuthParentResourceController<Model,
@@ -275,7 +292,8 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
                     Output, Input,
                     EagerLoading>(relatedResourceMiddleware: middleware,
                                   relationNamePath: relationName,
-                                  inversedChildrenKeyPath: relationKeyPath))
+                                  inversedChildrenKeyPath: relationKeyPath,
+                                  bodyStreamingStrategy: bodyStreamingStrategy))
             }
     }
 

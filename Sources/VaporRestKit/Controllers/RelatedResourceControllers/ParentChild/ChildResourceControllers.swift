@@ -26,6 +26,7 @@ struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 
@@ -65,7 +66,7 @@ struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- PatchChildrenResourceController
@@ -88,7 +89,7 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- DeleteChildrenResourceController

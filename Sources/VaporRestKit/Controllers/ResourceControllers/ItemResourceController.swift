@@ -20,7 +20,8 @@ struct CreateResourceController<Model, Output, Input, EagerLoading>: CreatableRe
     Model.IDValue: LosslessStringConvertible,
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model  {
- 
+
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- ReadResourceController
@@ -49,7 +50,7 @@ struct UpdateResourceController<Model, Output, Input, EagerLoading>: UpdateableR
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- PatchResourceController
@@ -65,6 +66,7 @@ struct PatchResourceController<Model, Output, Patch, EagerLoading>: PatchableRes
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- DeleteResourceController

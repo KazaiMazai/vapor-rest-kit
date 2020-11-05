@@ -11,7 +11,7 @@ import Fluent
 extension CreatableResourceController where Self: ResourceModelProvider {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
         let path = resourcePathFor(endpoint: endpoint)
-        routeBuilder.on(.POST, path, body: .collect, use: self.create)
+        routeBuilder.on(.POST, path, body: self.bodyStreamingStrategy, use: self.create)
     }
 }
 
@@ -56,7 +56,7 @@ extension IterableResourceController where Self: ResourceModelProvider {
 extension PatchableResourceController where Self: ResourceModelProvider {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
         let path = idResourcePathFor(endpoint: endpoint)
-        routeBuilder.on(.PATCH, path, body: .collect, use: self.patch)
+        routeBuilder.on(.PATCH, path, body: self.bodyStreamingStrategy, use: self.patch)
     }
 }
 
@@ -70,6 +70,6 @@ extension ReadableResourceController where Self: ResourceModelProvider {
 extension UpdateableResourceController where Self: ResourceModelProvider {
     func addMethodsTo(_ routeBuilder: RoutesBuilder, on endpoint: String) {
         let path = idResourcePathFor(endpoint: endpoint)
-        routeBuilder.on(.PUT, path, body: .collect, use: self.update)
+        routeBuilder.on(.PUT, path, body: self.bodyStreamingStrategy , use: self.update)
     }
 }

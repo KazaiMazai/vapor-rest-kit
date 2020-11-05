@@ -27,6 +27,7 @@ struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 
@@ -68,7 +69,7 @@ struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- PatchRelatedResourceController
@@ -91,7 +92,7 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- DeleteRelatedResourceController

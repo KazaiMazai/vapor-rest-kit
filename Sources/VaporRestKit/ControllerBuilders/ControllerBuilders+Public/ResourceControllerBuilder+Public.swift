@@ -53,7 +53,8 @@ public extension ResourceControllerBuilder {
 
 
 public extension ResourceControllerBuilder {
-    func create<Input>(using: Input.Type) -> ResourceControllerBuilder
+    func create<Input>(using: Input.Type,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -61,7 +62,7 @@ public extension ResourceControllerBuilder {
             return adding(CreateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>())
+                EagerLoading>(bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
 
@@ -72,7 +73,8 @@ public extension ResourceControllerBuilder {
     }
 
 
-    func update<Input>(using: Input.Type) -> ResourceControllerBuilder
+    func update<Input>(using: Input.Type,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> ResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -80,10 +82,11 @@ public extension ResourceControllerBuilder {
             return adding(UpdateResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>())
+                EagerLoading>(bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
-    func patch<Input>(using: Input.Type) -> ResourceControllerBuilder
+    func patch<Input>(using: Input.Type,
+                      bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> ResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -91,7 +94,7 @@ public extension ResourceControllerBuilder {
             return adding(PatchResourceController<Model,
                 Output,
                 Input,
-                EagerLoading>())
+                EagerLoading>(bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
 

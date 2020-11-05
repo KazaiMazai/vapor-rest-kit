@@ -12,6 +12,8 @@ protocol CreatableResourceController: ItemResourceControllerProtocol {
     associatedtype Input
 
     func create(_ req: Request) throws -> EventLoopFuture<Output>
+
+    var bodyStreamingStrategy: HTTPBodyStreamStrategy { get }
 }
 
 extension CreatableResourceController where Self: ResourceModelProvider,
