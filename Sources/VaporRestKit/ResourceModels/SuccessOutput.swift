@@ -9,7 +9,9 @@ import Vapor
 import Fluent
 
 struct SuccessOutput<Model: Fields>: ResourceOutputModel {
-    let success = true
+    let success: Bool
 
-    init(_ model: Model, req: Request) {  }
+    init(_ model: Model, req: Request) {
+        self.success = true
+    }
 }

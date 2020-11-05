@@ -27,7 +27,8 @@ public extension SiblingsResourceControllerBuilder {
 
 public extension SiblingsResourceControllerBuilder {
     func create<Input>(using: Input.Type,
-                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -39,7 +40,8 @@ public extension SiblingsResourceControllerBuilder {
                 Input,
                 EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+                              siblingKeyPath: relationKeyPath,
+                              bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
     func read() -> SiblingsResourceControllerBuilder {
@@ -54,7 +56,8 @@ public extension SiblingsResourceControllerBuilder {
 
 
     func update<Input>(using: Input.Type,
-                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
+                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -66,11 +69,13 @@ public extension SiblingsResourceControllerBuilder {
                 Input,
                 EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+                              siblingKeyPath: relationKeyPath,
+                              bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
     func patch<Input>(using: Input.Type,
-                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder
+                      middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -82,7 +87,8 @@ public extension SiblingsResourceControllerBuilder {
                 Input,
                 EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+                              siblingKeyPath: relationKeyPath,
+                              bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
     func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
@@ -118,7 +124,8 @@ public extension SiblingsResourceControllerBuilder {
 public extension SiblingsResourceControllerBuilder where RelatedModel: Authenticatable {
     func create<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
+                       authenticatable: RelatedModel.Type,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -130,7 +137,8 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Input,
                 EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+                              siblingKeyPath: relationKeyPath,
+                              bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
     func read(authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
@@ -144,7 +152,8 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
 
     func update<Input>(using: Input.Type,
                        middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-                       authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
+                       authenticatable: RelatedModel.Type,
+                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
         Model == Input.Model {
@@ -156,12 +165,14 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Input,
                 EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+                              siblingKeyPath: relationKeyPath,
+                              bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
     func patch<Input>(using: Input.Type,
                       middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-                      authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder
+                      authenticatable: RelatedModel.Type,
+                      bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
         Model == Input.Model {
@@ -173,7 +184,8 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                 Input,
                 EagerLoading>(relatedResourceMiddleware: middleware,
                               relationNamePath: relationName,
-                              siblingKeyPath: relationKeyPath))
+                              siblingKeyPath: relationKeyPath,
+                              bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
     func delete(with handler: DeleteHandler<Model> = .defaultDeleter,

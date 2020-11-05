@@ -11,6 +11,8 @@ import Fluent
 protocol PatchableResourceController: ItemResourceControllerProtocol {
     associatedtype Patch
     func patch(_: Request) throws -> EventLoopFuture<Output>
+
+    var bodyStreamingStrategy: HTTPBodyStreamStrategy { get }
 }
 
 extension PatchableResourceController

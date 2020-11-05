@@ -27,7 +27,7 @@ struct CreateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- ReadAuthParentResourceController
@@ -68,7 +68,7 @@ struct UpdateAuthParentResourceController<Model, RelatedModel, Output, Input, Ea
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- PatchAuthParentResourceController
@@ -90,6 +90,7 @@ struct PatchAuthParentResourceController<Model, RelatedModel, Output, Patch, Eag
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 
 }
 

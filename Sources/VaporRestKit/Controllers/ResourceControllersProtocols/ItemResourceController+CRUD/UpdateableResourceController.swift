@@ -11,6 +11,8 @@ import Fluent
 protocol UpdateableResourceController: ItemResourceControllerProtocol {
     associatedtype Input
 
+    var bodyStreamingStrategy: HTTPBodyStreamStrategy { get }
+
     func update(_: Request) throws -> EventLoopFuture<Output>
 }
 

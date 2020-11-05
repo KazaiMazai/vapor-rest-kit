@@ -28,6 +28,7 @@ struct CreateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 
@@ -71,6 +72,7 @@ struct UpdateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 
 }
 
@@ -95,7 +97,7 @@ struct PatchRelatedAuthResourceController<Model, RelatedModel, Through, Output, 
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- DeleteRelatedResourceController

@@ -26,6 +26,7 @@ struct CreateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 
 }
 
@@ -65,7 +66,7 @@ struct UpdateParentResourceController<Model, RelatedModel, Output, Input, EagerL
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
-
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 }
 
 //MARK:- PatchParentResourceController
@@ -86,6 +87,7 @@ struct PatchParentResourceController<Model, RelatedModel, Output, Patch, EagerLo
     let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
+    let bodyStreamingStrategy: HTTPBodyStreamStrategy
 
 }
 
