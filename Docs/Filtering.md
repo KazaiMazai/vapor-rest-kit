@@ -11,7 +11,7 @@ struct StarsFiltering: StaticFiltering {
     typealias Model = Star
     typealias Key = EmptyFilteringKey
 
-    func defaultFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+    func baseFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
         //no filter will be applied:
         return queryBuilder
     }
@@ -54,6 +54,11 @@ Supported filter types:
 struct StarsFiltering: DynamicFiltering {
     typealias Model = Star
     typealias Key = Keys
+    
+    func baseFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        //no filter will be applied:
+        return queryBuilder
+    }
 
     func defaultFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
         //no filter
@@ -124,8 +129,8 @@ The following func defines default filtering, applied to the collection.
 ```swift
 func defaultFiltering() 
 ```
-- If filtering enitity conforms to **StaticFiltering** default filtering is always applied. 
-- If filtering enitity conforms to **DynamicFiltering** default filtering is applied if no filter keys provided.
+- No matter If filtering enitity conforms to **StaticFiltering** or **DynamicFiltering** base filtering is always applied. 
+- If filtering enitity conforms to **DynamicFiltering** default filtering is applied only if no filter keys provided by client in request query
 
 
 
