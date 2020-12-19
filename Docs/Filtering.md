@@ -133,7 +133,7 @@ vs.
 
 func baseFiltering(...) -> QueryBuilder<Model> { ... } 
 ```
-- If filtering enitity conforms to **StaticFiltering** default filtering is always applied. 
+- If filtering enitity conforms to **StaticFiltering** base filtering is always applied. 
 - If filtering enitity conforms to **DynamicFiltering** default filtering is applied only if no filter keys provided by client in request query
 - If filtering enitity conforms to **DynamicFiltering** base filtering is always applied
 
