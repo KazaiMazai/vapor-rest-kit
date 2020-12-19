@@ -101,11 +101,16 @@ The following func defines default eager loading for nested models. In other wor
 
 
 ```swift
-func defaultEagerLoading(...) 
+func defaultEagerLoading(...) -> > QueryBuilder<Model> 
+
+vs
+
+func baseEagerLoading(...) -> > QueryBuilder<Model>
 ```
 
 - If eager loading conforms to **StaticEagerLoading** default eager loading is always applied. 
-- If eager loading conforms to **DynamicEagerLoading** default eager loading is applied if no eager loading keys provided in the query.
+- If eager loading conforms to **DynamicEagerLoading** default eager loading is applied if no eager loading keys provided in the request query by client.
+- If eager loading conforms to **DynamicEagerLoading** base eager loading is always applied
 
 #### How to query nested models with dynamic eager loading key
 
