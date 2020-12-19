@@ -14,8 +14,10 @@ public extension QueryBuilder {
     func with<EagerLoading: EagerLoadProvider>(_ eagerLoadProvider: EagerLoading, for req: Request) throws -> QueryBuilder<Model> where EagerLoading.Model == Model {
 
         guard eagerLoadProvider.supportsDynamicEagerLoadingKeys else {
-            return eagerLoadProvider.defaultEagerLoading(self)
+            return eagerLoadProvider.baseEagerLoading(self)
         }
+
+        let baseEagerLoaded = eagerLoadProvider.baseEagerLoading(self)
 
         let keys = try req.query.decode(ArrayQueryRequest<EagerLoadCodingKeys>.self)
                                   .values
@@ -23,10 +25,10 @@ public extension QueryBuilder {
                                   .compactMap { $0 }
 
         guard keys.count > 0 else {
-            return eagerLoadProvider.defaultEagerLoading(self)
+            return eagerLoadProvider.defaultEagerLoading(baseEagerLoaded)
         }
 
-        return eagerLoadProvider.eagerLoadFor(builder: self, includeKeys: keys)
+        return eagerLoadProvider.eagerLoadFor(builder: baseEagerLoaded, includeKeys: keys)
     }
 }
 

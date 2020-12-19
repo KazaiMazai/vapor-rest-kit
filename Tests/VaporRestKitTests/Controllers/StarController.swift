@@ -327,7 +327,7 @@ extension StarTagControllers {
         typealias Key = EmptyEagerLoadKey<Model>
         typealias Model = Star
 
-        func defaultEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
+        func baseEagerLoading(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
             return queryBuilder.with(\.$galaxy).with(\.$starTags)
         }
     }

@@ -24,9 +24,18 @@ public protocol EagerLoadProvider where Key: EagerLoadingKey, Key.Model == Model
     associatedtype Key
 
     func defaultEagerLoading(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+
+    func baseEagerLoading(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+
     var supportsDynamicEagerLoadingKeys: Bool { get }
 
     init()
+}
+
+public extension EagerLoadProvider {
+    func baseEagerLoading(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        return queryBuilder
+    }
 }
 
 extension EagerLoadProvider where Key.RawValue == String {
@@ -46,6 +55,11 @@ public protocol StaticEagerLoading: EagerLoadProvider { }
 
 public extension StaticEagerLoading {
     var supportsDynamicEagerLoadingKeys: Bool { return false }
+
+    func defaultEagerLoading(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        baseEagerLoading(queryBuilder)
+    }
+
 }
 
 //MARK: DynamicEagerLoading Protocol
