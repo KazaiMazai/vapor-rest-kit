@@ -127,10 +127,15 @@ let controller = Star.Output
 
 The following func defines default filtering, applied to the collection.
 ```swift
-func defaultFiltering() 
+func defaultFiltering(...) -> QueryBuilder<Model> { ... } 
+
+vs.
+
+func baseFiltering(...) -> QueryBuilder<Model> { ... } 
 ```
-- No matter If filtering enitity conforms to **StaticFiltering** or **DynamicFiltering** base filtering is always applied. 
+- If filtering enitity conforms to **StaticFiltering** default filtering is always applied. 
 - If filtering enitity conforms to **DynamicFiltering** default filtering is applied only if no filter keys provided by client in request query
+- If filtering enitity conforms to **DynamicFiltering** base filtering is always applied
 
 
 
