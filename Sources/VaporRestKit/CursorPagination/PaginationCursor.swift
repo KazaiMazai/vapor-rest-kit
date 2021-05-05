@@ -11,6 +11,18 @@ import Vapor
 //MARK:- PaginationCursor
 
 struct PaginationCursor {
+    static let encoder: JSONEncoder = {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.dateEncodingStrategy = .secondsSince1970
+        return jsonEncoder
+    }()
+
+    static let decoder: JSONDecoder = {
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .secondsSince1970
+        return jsonDecoder
+    }()
+
     let cursorString: String
     let values: [CursorValue]
 
@@ -26,7 +38,7 @@ struct PaginationCursor {
         let fields = cursorFilters.map { $0.field }
         self.values = try model.getPropertyValuesFor(fields: fields)
 
-        let encoded = try JSONEncoder().encode(self.values)
+        let encoded = try Self.encoder.encode(self.values)
         cursorString = encoded.base64EncodedString()
     }
 
@@ -36,7 +48,7 @@ struct PaginationCursor {
         }
 
         cursorString = cursor
-        self.values = try JSONDecoder().decode([CursorValue].self, from: data)
+        self.values = try Self.decoder.decode([CursorValue].self, from: data)
     }
 }
 
