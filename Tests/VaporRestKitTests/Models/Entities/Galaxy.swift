@@ -13,6 +13,7 @@ import VaporRestKit
 extension Galaxy: FieldsProvidingModel {
     enum Fields: String, FieldKeyRepresentable {
         case title
+        case createdAt
     }
 }
 
@@ -27,6 +28,8 @@ final class Galaxy: Model, Content {
     @Field(key: Fields.title.key)
     var title: String
 
+    @Timestamp(key: Fields.createdAt.key, on: .create)
+    var createdAt: Date?
 
     @Children(for: \.$galaxy)
     var stars: [Star]
@@ -44,6 +47,7 @@ extension Galaxy: InitMigratableSchema {
         return schemaBuilder
             .field(.id, .int, .identifier(auto: true))
             .field(Fields.title.key, .string, .required)
+            .field(Fields.createdAt.key, .datetime)
             .unique(on: Fields.title.key)
             .create()
     }
@@ -105,4 +109,11 @@ extension Galaxy {
     }
 }
 
+extension Galaxy {
+    static func seed(on database: Database) throws {
+        let titles = ["Andromeda", "Magellanic Clouds", "Canis Major Dwarf", "Virgo A", "Cygnus A"]
+        let galaxies = titles.map { Galaxy(title:  $0) }
 
+        try galaxies.forEach { try $0.save(on: database).wait() }
+    }
+}

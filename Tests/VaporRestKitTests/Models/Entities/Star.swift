@@ -179,6 +179,8 @@ extension Star {
 
     static func seed(on database: Database) throws {
         let galaxy = Galaxy(title: "Milky Way")
+
+
         try galaxy.save(on: database).wait()
 
         let starTag = StarTag(title: "Small")

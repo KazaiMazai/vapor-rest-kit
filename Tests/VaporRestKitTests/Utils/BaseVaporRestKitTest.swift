@@ -41,6 +41,7 @@ class BaseVaporRestKitTest: XCTestCase {
 
     func seed() throws {
         try Star.seed(on: app.db)
+        try Galaxy.seed(on: app.db)
     }
 
     func routes() throws {

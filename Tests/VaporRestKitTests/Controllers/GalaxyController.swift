@@ -20,7 +20,7 @@ struct GalaxyControllers {
                 .update(using: Galaxy.Input.self)
                 .patch(using: Galaxy.PatchInput.self)
                 .delete()
-                .collection(sorting: SortingUnsupported.self, filtering: FilteringUnsupported.self)
+                .collection(sorting: GalaxySorting.self, filtering: FilteringUnsupported<Galaxy>.self)
         }
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
@@ -115,4 +115,28 @@ extension GalaxyControllers {
             }
         }
     }
+}
+
+extension GalaxyControllers {
+    struct GalaxySorting: DynamicSorting {
+        typealias Model = Galaxy
+        typealias Key = Keys
+
+        enum Keys: String, SortingKey {
+
+            case title
+
+            func sortFor(_ queryBuilder: QueryBuilder<Galaxy>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Galaxy> {
+                switch self {
+                case .title:
+                    return queryBuilder.sort(\Galaxy.$title, direction)
+                }
+            }
+        }
+
+        func defaultSorting(_ queryBuilder: QueryBuilder<Galaxy>) -> QueryBuilder<Galaxy> {
+            queryBuilder.sort(\Galaxy.$createdAt, .descending)
+        }
+    }
+
 }

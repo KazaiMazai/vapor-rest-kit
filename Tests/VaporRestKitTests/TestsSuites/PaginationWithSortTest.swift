@@ -9,7 +9,61 @@
 import XCTVapor
 
 final class PaginationWithSortTests: BaseVaporRestKitTest {
-    func testCursorPaginationWithDefaultIdSort() throws {
+    func testCursorPaginationWithDefaultCreatedAtSort() throws {
+        try routes()
+        try seed()
+
+        let limit = 2
+        var cursor: String = ""
+        var lastItemIndex: Int = 0
+
+        let titles = try Galaxy.query(on: app.db)
+            .sort(\Galaxy.$createdAt, .descending)
+
+            .all()
+            .wait()
+            .map { $0.title }
+
+        var appTester = try app.test(.GET, "v1/galaxies?limit=\(limit)") { res in
+            XCTAssertEqual(res.status, .ok)
+
+            XCTAssertContent(CursorPage<Galaxy.Output>.self, res) {
+                cursor = $0.metadata.nextCursor ?? ""
+                XCTAssertGreaterThan(cursor.count, 0)
+                XCTAssertLessThanOrEqual($0.items.count, limit)
+
+                let endIndex = min(lastItemIndex + limit, titles.count)
+                let expectedTitles = titles[lastItemIndex..<endIndex]
+                zip($0.items, expectedTitles).forEach {
+                    XCTAssertEqual($0.0.title, $0.1)
+                }
+
+
+                lastItemIndex += limit
+            }
+        }
+
+        for itemIndex in stride(from: lastItemIndex, through: titles.count, by: limit) {
+            print(cursor)
+            appTester = try appTester.test(.GET, "v1/galaxies?cursor=\(cursor)&limit=\(limit)") { res in
+                XCTAssertEqual(res.status, .ok)
+
+                XCTAssertContent(CursorPage<Galaxy.Output>.self, res) {
+                    cursor = $0.metadata.nextCursor ?? ""
+
+                    XCTAssertLessThanOrEqual($0.items.count, limit)
+                    let endIndex = min(itemIndex + limit, titles.count)
+                    let expectedTitles = titles[itemIndex..<endIndex]
+
+                    zip($0.items, expectedTitles).forEach {
+                        XCTAssertEqual($0.0.title, $0.1)
+                    }
+                }
+            }
+        }
+    }
+
+    func testCursorPaginationWithDefaultDefaultIdSort() throws {
         try routes()
         try seed()
 
