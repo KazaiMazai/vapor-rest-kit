@@ -13,13 +13,12 @@ final class PaginationWithSortTests: BaseVaporRestKitTest {
         try routes()
         try seed()
 
-        let limit = 2
+        let limit = 1
         var cursor: String = ""
         var lastItemIndex: Int = 0
 
         let titles = try Galaxy.query(on: app.db)
             .sort(\Galaxy.$createdAt, .descending)
-
             .all()
             .wait()
             .map { $0.title }
