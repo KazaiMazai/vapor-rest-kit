@@ -131,6 +131,8 @@ extension AnyEncodable: Equatable {
             return lhs == rhs
         case let (lhs as String, rhs as String):
             return lhs == rhs
+        case let (lhs as Date, rhs as Date):
+            return lhs == rhs
         case (let lhs as [String: AnyEncodable], let rhs as [String: AnyEncodable]):
             return lhs == rhs
         case (let lhs as [AnyEncodable], let rhs as [AnyEncodable]):
@@ -193,6 +195,10 @@ extension _AnyEncodable {
     }
     
     init(stringLiteral value: String) {
+        self.init(value)
+    }
+
+    init(dateLiteral value: Date) {
         self.init(value)
     }
 
