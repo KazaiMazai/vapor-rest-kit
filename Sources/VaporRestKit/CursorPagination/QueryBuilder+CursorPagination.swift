@@ -16,7 +16,9 @@ extension QueryBuilder {
 
         do {
             let page = try request.query.decode(CursorPageRequest.self)
-            return try self.paginateWithCursor(page.cursorType(with: config))
+            return try self.paginateWithCursor(page.cursorType(with: config),
+                                               decoder: config.coder,
+                                               encoder: config.coder)
         } catch {
             return request.eventLoop.makeFailedFuture(error)
         }
@@ -26,37 +28,42 @@ extension QueryBuilder {
 //MARK:- QueryBuilder private extensions
 
 extension QueryBuilder  {
-    fileprivate func paginateWithCursor(_ cursorType: CursorType) throws -> EventLoopFuture<CursorPage<Model>> {
+    fileprivate func paginateWithCursor(_ cursorType: CursorType,
+                                        decoder: PaginationCursorDecoder,
+                                        encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
         switch cursorType {
         case .initial(limit: let limit):
-            return try paginateWithInitCursor(limit)
+            return try paginateWithInitCursor(limit, encoder: encoder)
         case .next(cursor: let cursor, limit: let limit):
-            return try paginateWithCursor(cursor, limit: limit)
+            return try paginateWithCursor(cursor, limit: limit, decoder: decoder, encoder: encoder)
         }
     }
 
-    fileprivate func paginateWithInitCursor(_ limit: Int) throws -> EventLoopFuture<CursorPage<Model>> {
-        let filterBuilder = try CursorFilterBuilder(sorts: self.query.sorts)
+    fileprivate func paginateWithInitCursor(_ limit: Int, encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+        let filterBuilder = try CursorFilterBuilder(sorts: query.sorts)
         let items = self.copy().limit(limit).all()
 
         return items.flatMapThrowing { models in
-            let next = try PaginationCursor(models.last, cursorFilters: filterBuilder.filterDescriptors)?.cursorString
+            let next = try models.last.map { try encoder.encode($0, cursorFilters: filterBuilder.filterDescriptors) }
             let metadata = CursorPageMetadata(nextCursor: next)
             return CursorPage(items: models,
                               metadata: metadata)
         }
     }
 
-    fileprivate func paginateWithCursor(_ cursor: String, limit: Int) throws -> EventLoopFuture<CursorPage<Model>> {
-        let requestCursor = try PaginationCursor(cursor)
-        let filterBuilder = try CursorFilterBuilder(sorts: self.query.sorts)
-        let queryBulder = try filterBuilder.filter(self.copy(), with: requestCursor.values)
+    fileprivate func paginateWithCursor(_ cursor: String,
+                                        limit: Int,
+                                        decoder: PaginationCursorDecoder,
+                                        encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+        let requestCursorValues = try decoder.decode(cursor: cursor)
+        let filterBuilder = try CursorFilterBuilder(sorts: query.sorts)
+        let queryBulder = try filterBuilder.filter(copy(), with: requestCursorValues)
 
         let items = queryBulder.limit(limit).all()
 
         return items.flatMapThrowing { models in
-            let nextCursor = try PaginationCursor(models.last, cursorFilters: filterBuilder.filterDescriptors)
-            let metadata = CursorPageMetadata(nextCursor: nextCursor?.cursorString)
+            let next = try models.last.map { try encoder.encode($0, cursorFilters: filterBuilder.filterDescriptors) }
+            let metadata = CursorPageMetadata(nextCursor: next)
             return CursorPage(items: models,
                               metadata: metadata)
         }
@@ -102,10 +109,27 @@ enum CursorType {
 //MARK:- CursorPaginationConfig
 
 public struct CursorPaginationConfig {
-    static let defaultConfig = CursorPaginationConfig(limitMax: 25, defaultLimit: 10)
+    static let encoder: JSONEncoder = {
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.dateEncodingStrategy = .secondsSince1970
+        return jsonEncoder
+    }()
+
+    static let decoder: JSONDecoder = {
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.dateDecodingStrategy = .secondsSince1970
+        return jsonDecoder
+    }()
+    
+    static let defaultConfig = CursorPaginationConfig(
+        limitMax: 25,
+        defaultLimit: 10,
+        coder: PaginationCursorCoder(encoder: Self.encoder,
+                                     decoder: Self.decoder))
 
     let limitMax: Int
     let defaultLimit: Int
+    let coder: PaginationCursorDecoder & PaginationCursorEncoder
 }
 
 //MARK:- CursorPageRequest

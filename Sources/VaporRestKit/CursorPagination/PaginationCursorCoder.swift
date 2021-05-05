@@ -8,35 +8,40 @@
 import Fluent
 import Vapor
 
-//MARK:- PaginationCursor
+protocol PaginationCursorEncoder {
+    func encode<Model: Fluent.Model>(_ model: Model, cursorFilters: [FilterDescriptor]) throws -> String
+}
 
-struct PaginationCursor {
-    let cursorString: String
-    let values: [CursorValue]
+protocol PaginationCursorDecoder {
+    func decode(cursor: String) throws -> [CursorValue]
+}
 
-    init?<Model: Fluent.Model>(_ model: Model?, cursorFilters: [FilterDescriptor]) throws {
-        guard let model = model else {
-            return nil
-        }
+//MARK:- PaginationCursorCoder
 
+struct PaginationCursorCoder: PaginationCursorEncoder & PaginationCursorDecoder {
+    let encoder: JSONEncoder
+    let decoder: JSONDecoder
+
+    func encode<Model: Fluent.Model>(_ model: Model, cursorFilters: [FilterDescriptor]) throws -> String {
         guard !cursorFilters.isEmpty else {
             throw Abort(.badRequest, reason: "Cursor filters should be specified")
         }
 
         let fields = cursorFilters.map { $0.field }
-        self.values = try model.getPropertyValuesFor(fields: fields)
+        let values = try model.getPropertyValuesFor(fields: fields)
 
-        let encoded = try JSONEncoder().encode(self.values)
-        cursorString = encoded.base64EncodedString()
+        let encoded = try encoder.encode(values)
+        let cursorString = encoded.base64EncodedString()
+        return cursorString
     }
 
-    init(_ cursor: String) throws {
+    func decode(cursor: String) throws ->  [CursorValue] {
         guard let data = Data(base64Encoded: cursor) else {
             throw Abort(.badRequest, reason: "Cursor is malformed")
         }
 
-        cursorString = cursor
-        self.values = try JSONDecoder().decode([CursorValue].self, from: data)
+        let values = try decoder.decode([CursorValue].self, from: data)
+        return values
     }
 }
 

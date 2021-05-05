@@ -58,6 +58,8 @@ extension AnyCodable: Equatable {
             return lhs == rhs
         case let (lhs as String, rhs as String):
             return lhs == rhs
+        case let (lhs as Date, rhs as Date):
+            return lhs == rhs
         case (let lhs as [String: AnyCodable], let rhs as [String: AnyCodable]):
             return lhs == rhs
         case (let lhs as [AnyCodable], let rhs as [AnyCodable]):

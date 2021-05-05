@@ -53,8 +53,8 @@ extension CursorFilterBuilder {
         }
     }
 
-    fileprivate func applyCursorValueFilters<Model>(to queryBuilder: QueryBuilder<Model>, valueFilters: [CursorValueFilter]) -> QueryBuilder<Model> {
-
+    fileprivate func applyCursorValueFilters<Model>(to queryBuilder: QueryBuilder<Model>,
+                                                    valueFilters: [CursorValueFilter]) -> QueryBuilder<Model> {
         var filters = valueFilters
         let first = filters.removeFirst()
 
