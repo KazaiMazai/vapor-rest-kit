@@ -8,47 +8,40 @@
 import Fluent
 import Vapor
 
-//MARK:- PaginationCursor
+protocol PaginationCursorEncoder {
+    func encode<Model: Fluent.Model>(_ model: Model, cursorFilters: [FilterDescriptor]) throws -> String
+}
 
-struct PaginationCursor {
-    static let encoder: JSONEncoder = {
-        let jsonEncoder = JSONEncoder()
-        jsonEncoder.dateEncodingStrategy = .secondsSince1970
-        return jsonEncoder
-    }()
+protocol PaginationCursorDecoder {
+    func decode(cursor: String) throws -> [CursorValue]
+}
 
-    static let decoder: JSONDecoder = {
-        let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .secondsSince1970
-        return jsonDecoder
-    }()
+//MARK:- PaginationCursorCoder
 
-    let cursorString: String
-    let values: [CursorValue]
+struct PaginationCursorCoder: PaginationCursorEncoder & PaginationCursorDecoder {
+    let encoder: JSONEncoder
+    let decoder: JSONDecoder
 
-    init?<Model: Fluent.Model>(_ model: Model?, cursorFilters: [FilterDescriptor]) throws {
-        guard let model = model else {
-            return nil
-        }
-
+    func encode<Model: Fluent.Model>(_ model: Model, cursorFilters: [FilterDescriptor]) throws -> String {
         guard !cursorFilters.isEmpty else {
             throw Abort(.badRequest, reason: "Cursor filters should be specified")
         }
 
         let fields = cursorFilters.map { $0.field }
-        self.values = try model.getPropertyValuesFor(fields: fields)
+        let values = try model.getPropertyValuesFor(fields: fields)
 
-        let encoded = try Self.encoder.encode(self.values)
-        cursorString = encoded.base64EncodedString()
+        let encoded = try encoder.encode(values)
+        let cursorString = encoded.base64EncodedString()
+        return cursorString
     }
 
-    init(_ cursor: String) throws {
+    func decode(cursor: String) throws ->  [CursorValue] {
         guard let data = Data(base64Encoded: cursor) else {
             throw Abort(.badRequest, reason: "Cursor is malformed")
         }
 
-        cursorString = cursor
-        self.values = try Self.decoder.decode([CursorValue].self, from: data)
+        let values = try decoder.decode([CursorValue].self, from: data)
+        return values
     }
 }
 
