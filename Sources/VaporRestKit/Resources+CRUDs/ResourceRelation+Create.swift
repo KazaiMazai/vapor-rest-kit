@@ -27,7 +27,7 @@ extension Model where IDValue: LosslessStringConvertible {
 
         return req.db.tryTransaction { db in
 
-            try Self.findRelatedWithRootId(req, database: db)
+            try RelatedModel.findByIdKey(req, database: db)
                 .and(Self.findByIdKey(req, database: db))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,
@@ -58,7 +58,7 @@ extension Model where IDValue: LosslessStringConvertible {
 
         return req.db.tryTransaction { db in
 
-            try Self.findRelatedWithRootId(req, database: db)
+            try RelatedModel.findByIdKey(req, database: db)
                 .and(Self.findByIdKey(req, database: db))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,
@@ -92,7 +92,7 @@ extension Model where IDValue: LosslessStringConvertible {
 
         return req.db.tryTransaction { db in
 
-            try Self.findRelatedWithRootId(req, database: db)
+            try RelatedModel.findByIdKey(req, database: db)
                 .and(Self.findByIdKey(req, database: db))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,

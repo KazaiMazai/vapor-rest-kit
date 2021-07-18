@@ -9,20 +9,22 @@ import Vapor
 import Fluent
 
 extension Model where IDValue: LosslessStringConvertible {
+    static func findByIdKey(_ req: Request,
+                            database: Database) throws -> EventLoopFuture<Self> {
+        try findByIdKey(req, database: database, using: nil)
+    }
+
     
     static func findByIdKey(_ req: Request,
                             database: Database,
-                            using queryModifier: QueryModifier<Self>? = nil) throws -> EventLoopFuture<Self> {
+                            using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Self> {
         try Self.query(on: database)
                 .with(queryModifier, for: req)
                 .findBy(idKey, from: req)
     }
 }
 
-
-//Parent - Children
-
-extension Authenticatable where Self: Model {
+extension Model where Self: Authenticatable {
     static func findAsAuth(_ req: Request,
                            database: Database) throws -> EventLoopFuture<Self>  {
 
@@ -31,17 +33,20 @@ extension Authenticatable where Self: Model {
     }
 }
 
+//Parent - Children
+
+
 extension Model where IDValue: LosslessStringConvertible {
-    static func findRelatedWithRootId<RelatedModel>(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel>
-        where
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        return try RelatedModel
-            .query(on: database)
-            .findBy(RelatedModel.idKey, from: req)
-
-    }
+//    static func findRelatedWithRootId<RelatedModel>(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel>
+//        where
+//        RelatedModel: Fluent.Model,
+//        RelatedModel.IDValue: LosslessStringConvertible {
+//
+//        return try RelatedModel
+//            .query(on: database)
+//            .findBy(RelatedModel.idKey, from: req)
+//
+//    }
 
     static func findWithRelatedOn<RelatedModel>(
         _ req: Request,
@@ -66,14 +71,14 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
 
-    static func findAuthRelated<RelatedModel: Fluent.Model>(_ req: Request,
-                                                     database: Database) throws -> EventLoopFuture<RelatedModel> where RelatedModel: Authenticatable {
-
-
-
-        let related = try req.auth.require(RelatedModel.self)
-        return req.eventLoop.makeSucceededFuture(related)
-    }
+//    static func findAuthRelated<RelatedModel: Fluent.Model>(_ req: Request,
+//                                                     database: Database) throws -> EventLoopFuture<RelatedModel> where RelatedModel: Authenticatable {
+//
+//
+//
+//        let related = try req.auth.require(RelatedModel.self)
+//        return req.eventLoop.makeSucceededFuture(related)
+//    }
     
 
     static func findWitAuthRelatedOn<RelatedModel>(
