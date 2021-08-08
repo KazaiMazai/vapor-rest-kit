@@ -92,6 +92,8 @@ extension Todo {
     }
 
     struct Input: ResourceUpdateModel {
+        typealias Model = Todo
+
         let title: String
 
 
@@ -106,6 +108,8 @@ extension Todo {
     }
 
     struct PatchInput: ResourcePatchModel {
+        typealias Model = Todo
+
         let title: String?
 
         func patch(_ model: Todo) -> Todo {

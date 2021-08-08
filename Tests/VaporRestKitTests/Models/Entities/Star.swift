@@ -120,6 +120,8 @@ extension Star {
     
 
     struct Input: ResourceUpdateModel {
+        typealias Model = Star
+
         let title: String
 
         func update(_ model: Star) throws -> Star {
@@ -135,6 +137,8 @@ extension Star {
     }
 
     struct PatchInput: ResourcePatchModel {
+        typealias Model = Star
+
         let title: String?
         let subtitle: String?
 

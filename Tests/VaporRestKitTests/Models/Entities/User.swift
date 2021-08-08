@@ -104,6 +104,8 @@ extension User {
     }
 
     struct PatchInput: ResourcePatchModel {
+        typealias Model = User
+
         let username: String?
         let age: Int?
 
