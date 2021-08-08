@@ -12,6 +12,7 @@ extension Model where IDValue: LosslessStringConvertible {
     static func createRelation<Output, RelatedModel>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
     where
 
@@ -25,12 +26,14 @@ extension Model where IDValue: LosslessStringConvertible {
 
         try createRelation(findRelated: RelatedModel.findByIdKey,
                            req: req, relatedResourceMiddleware: relatedResourceMiddleware,
+                           queryModifier: queryModifier,
                            childrenKeyPath: childrenKeyPath)
     }
 
     static func createRelation<Output, RelatedModel>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
@@ -45,12 +48,14 @@ extension Model where IDValue: LosslessStringConvertible {
         try createRelation(findRelated: RelatedModel.findByIdKey,
                            req: req,
                            relatedResourceMiddleware: relatedResourceMiddleware,
+                           queryModifier: queryModifier,
                            childrenKeyPath: childrenKeyPath)
     }
 
     static func createRelation<Output, RelatedModel, Through>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
     where
 
@@ -66,6 +71,7 @@ extension Model where IDValue: LosslessStringConvertible {
         try createRelation(findRelated: RelatedModel.findByIdKey,
                            req: req,
                            relatedResourceMiddleware: relatedResourceMiddleware,
+                           queryModifier: queryModifier,
                            siblingKeyPath: siblingKeyPath)
     }
 }
@@ -75,6 +81,7 @@ extension Model where IDValue: LosslessStringConvertible {
     static func createAuthedRelation<Output, RelatedModel>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
     where
 
@@ -89,12 +96,14 @@ extension Model where IDValue: LosslessStringConvertible {
         try createRelation(findRelated: RelatedModel.findAsAuth,
                            req: req,
                            relatedResourceMiddleware: relatedResourceMiddleware,
+                           queryModifier: queryModifier,
                            childrenKeyPath: childrenKeyPath)
     }
 
     static func createAuthedRelation<Output, RelatedModel>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
@@ -110,12 +119,14 @@ extension Model where IDValue: LosslessStringConvertible {
         try createRelation(findRelated: RelatedModel.findAsAuth,
                            req: req,
                            relatedResourceMiddleware: relatedResourceMiddleware,
+                           queryModifier: queryModifier,
                            childrenKeyPath: childrenKeyPath)
     }
 
     static func createAuthedRelation<Output, RelatedModel, Through>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
     where
 
@@ -132,6 +143,7 @@ extension Model where IDValue: LosslessStringConvertible {
         try createRelation(findRelated: RelatedModel.findAsAuth,
                            req: req,
                            relatedResourceMiddleware: relatedResourceMiddleware,
+                           queryModifier: queryModifier,
                            siblingKeyPath: siblingKeyPath)
     }
 }
@@ -142,6 +154,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
     where
 
@@ -156,7 +169,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         req.db.tryTransaction { db in
 
             try findRelated(req, db)
-                .and(Self.findByIdKey(req, database: db))
+                .and(Self.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,
                                                                    req: req,
@@ -169,9 +182,11 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func createRelation<Output, RelatedModel>(
-        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
+        findRelated: @escaping (_ req: Request,
+                                _ db: Database) throws -> EventLoopFuture<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
@@ -186,7 +201,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         req.db.tryTransaction { db in
 
             try findRelated(req, db)
-                .and(Self.findByIdKey(req, database: db))
+                .and(Self.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
@@ -203,6 +218,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
     where
 
@@ -218,7 +234,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         req.db.tryTransaction { db in
 
             try findRelated(req, db)
-                .and(Self.findByIdKey(req, database: db))
+                .and(Self.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,

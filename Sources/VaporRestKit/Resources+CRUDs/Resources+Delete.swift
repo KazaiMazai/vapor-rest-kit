@@ -9,7 +9,9 @@ import Vapor
 import Fluent
 
 extension Model where IDValue: LosslessStringConvertible {
-    static func delete<Output>(req: Request, using deleter: DeleteHandler<Self>) throws -> EventLoopFuture<Output> where
+    static func delete<Output>(req: Request,
+                               using deleter: DeleteHandler<Self>,
+                               queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Output> where
         Output: ResourceOutputModel,
         Output.Model == Self {
 
@@ -28,6 +30,7 @@ extension Model where IDValue: LosslessStringConvertible {
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
         where
 
@@ -42,6 +45,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: deleter,
                       relatedResourceMiddleware: relatedResourceMiddleware,
+                      queryModifier: queryModifier,
                       childrenKeyPath: childrenKeyPath)
     }
 
@@ -49,6 +53,7 @@ extension Model where IDValue: LosslessStringConvertible {
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
@@ -63,6 +68,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: deleter,
                       relatedResourceMiddleware: relatedResourceMiddleware,
+                      queryModifier: queryModifier,
                       childrenKeyPath: childrenKeyPath)
     }
 
@@ -70,6 +76,7 @@ extension Model where IDValue: LosslessStringConvertible {
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
         where
 
@@ -85,6 +92,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: deleter,
                       relatedResourceMiddleware: relatedResourceMiddleware,
+                      queryModifier: queryModifier,
                       siblingKeyPath: siblingKeyPath)
     }
 }
@@ -94,6 +102,7 @@ extension Model where IDValue: LosslessStringConvertible {
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
         where
 
@@ -109,6 +118,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: deleter,
                       relatedResourceMiddleware: relatedResourceMiddleware,
+                      queryModifier: queryModifier,
                       childrenKeyPath: childrenKeyPath)
     }
 
@@ -116,6 +126,7 @@ extension Model where IDValue: LosslessStringConvertible {
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
@@ -131,6 +142,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: deleter,
                       relatedResourceMiddleware: relatedResourceMiddleware,
+                      queryModifier: queryModifier,
                       childrenKeyPath: childrenKeyPath)
     }
 
@@ -138,6 +150,7 @@ extension Model where IDValue: LosslessStringConvertible {
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
         where
 
@@ -154,6 +167,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: deleter,
                       relatedResourceMiddleware: relatedResourceMiddleware,
+                      queryModifier: queryModifier,
                       siblingKeyPath: siblingKeyPath)
     }
 }
@@ -164,10 +178,12 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
      static func deleteRelated<Output, RelatedModel>(
         findWithRelated: @escaping (_ req: Request,
                                     _ db: Database,
-                                    _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<(Self, RelatedModel)>,
+                                    _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
+                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
         where
 
@@ -180,7 +196,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, childrenKeyPath)
+            try findWithRelated(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                    relatedModel: related,
                                                                    req: req,
@@ -193,10 +209,12 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     static func deleteRelated<Output, RelatedModel>(
         findWithRelated: @escaping (_ req: Request,
                                     _ db: Database,
-                                    _ childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<(Self, RelatedModel)>,
+                                    _ childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
+                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
@@ -209,7 +227,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, childrenKeyPath)
+            try findWithRelated(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                         relatedModel: related,
                                                                         req: req,
@@ -228,10 +246,12 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     static func deleteRelated<Output, RelatedModel, Through>(
         findWithRelated: @escaping (_ req: Request,
                                     _ db: Database,
-                                    _ siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<(Self, RelatedModel)>,
+                                    _ siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
+                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
         where
 
@@ -245,7 +265,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, siblingKeyPath)
+            try findWithRelated(req, db, siblingKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                         relatedModel: related,
                                                                         req: req,
