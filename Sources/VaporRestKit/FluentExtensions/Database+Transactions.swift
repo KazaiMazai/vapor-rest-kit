@@ -10,7 +10,7 @@ import Vapor
 
 extension Database {
     func tryTransaction<T>(_ closure: @escaping (Database) throws -> EventLoopFuture<T>) -> EventLoopFuture<T> {
-        self.transaction { (db) -> EventLoopFuture<T> in
+        transaction { (db) -> EventLoopFuture<T> in
             db.context.eventLoop
                 .tryFuture { try closure(db) }
                 .flatMap { $0 }
