@@ -134,7 +134,6 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func createAuthRelated<Input, Output, RelatedModel>(
-        findRelated: (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -159,12 +158,11 @@ extension Model where IDValue: LosslessStringConvertible {
                       childrenKeyPath: childrenKeyPath)
     }
 
-    static func createAuthRelated<Input, Output, RelatedModel>(
-        findRelated: (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
+    static func createAuthRelated<Input, Output, RelatedModel, Through>(
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
@@ -182,7 +180,7 @@ extension Model where IDValue: LosslessStringConvertible {
                       req: req,
                       using: using,
                       relatedResourceMiddleware: relatedResourceMiddleware,
-                      childrenKeyPath: childrenKeyPath)
+                      siblingKeyPath: siblingKeyPath)
     }
 }
 
