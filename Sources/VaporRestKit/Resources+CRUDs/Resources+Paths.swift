@@ -17,7 +17,6 @@ extension Model where IDValue: LosslessStringConvertible {
         return [endpointPath]
     }
 
-
     static func idResourcePathFor(endpoint: String) -> [PathComponent] {
         let endpointPath = PathComponent(stringLiteral: endpoint)
         return [endpointPath, idPathComponent]
