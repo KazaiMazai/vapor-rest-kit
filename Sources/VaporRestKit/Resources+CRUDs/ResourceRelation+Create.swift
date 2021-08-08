@@ -9,25 +9,153 @@ import Vapor
 import Fluent
 
 extension Model where IDValue: LosslessStringConvertible {
-
     static func createRelation<Output, RelatedModel>(
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Output: ResourceOutputModel,
         Output.Model: Fluent.Model,
         Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Output.Model: ResourceOutputModel,
+
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
+        try createRelation(findRelated: RelatedModel.findByIdKey,
+                           req: req, relatedResourceMiddleware: relatedResourceMiddleware,
+                           childrenKeyPath: childrenKeyPath)
+    }
 
-        return req.db.tryTransaction { db in
+    static func createRelation<Output, RelatedModel>(
+        req: Request,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+    where
 
-            try RelatedModel.findByIdKey(req, database: db)
+        Output: ResourceOutputModel,
+        Output.Model: Fluent.Model,
+        Output.Model.IDValue: LosslessStringConvertible,
+        Self == Output.Model,
+
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible {
+
+        try createRelation(findRelated: RelatedModel.findByIdKey,
+                           req: req,
+                           relatedResourceMiddleware: relatedResourceMiddleware,
+                           childrenKeyPath: childrenKeyPath)
+    }
+
+    static func createRelation<Output, RelatedModel, Through>(
+        req: Request,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+    where
+
+        Output: ResourceOutputModel,
+        Output.Model: Fluent.Model,
+        Through: Fluent.Model,
+        Output.Model.IDValue: LosslessStringConvertible,
+        Self == Output.Model,
+
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible {
+
+        try createRelation(findRelated: RelatedModel.findByIdKey,
+                           req: req,
+                           relatedResourceMiddleware: relatedResourceMiddleware,
+                           siblingKeyPath: siblingKeyPath)
+    }
+}
+
+
+extension Model where IDValue: LosslessStringConvertible {
+    static func createAuthedRelation<Output, RelatedModel>(
+        req: Request,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+    where
+
+        Output: ResourceOutputModel,
+        Output.Model: Fluent.Model,
+        Output.Model.IDValue: LosslessStringConvertible,
+        Self == Output.Model,
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible,
+        RelatedModel: Authenticatable {
+
+        try createRelation(findRelated: RelatedModel.findAsAuth,
+                           req: req,
+                           relatedResourceMiddleware: relatedResourceMiddleware,
+                           childrenKeyPath: childrenKeyPath)
+    }
+
+    static func createAuthedRelation<Output, RelatedModel>(
+        req: Request,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+    where
+
+        Output: ResourceOutputModel,
+        Output.Model: Fluent.Model,
+        Output.Model.IDValue: LosslessStringConvertible,
+        Self == Output.Model,
+
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible,
+        RelatedModel: Authenticatable {
+
+        try createRelation(findRelated: RelatedModel.findAsAuth,
+                           req: req,
+                           relatedResourceMiddleware: relatedResourceMiddleware,
+                           childrenKeyPath: childrenKeyPath)
+    }
+
+    static func createAuthedRelation<Output, RelatedModel, Through>(
+        req: Request,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+    where
+
+        Output: ResourceOutputModel,
+        Output.Model: Fluent.Model,
+        Through: Fluent.Model,
+        Output.Model.IDValue: LosslessStringConvertible,
+        Self == Output.Model,
+
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible,
+        RelatedModel: Authenticatable  {
+
+        try createRelation(findRelated: RelatedModel.findAsAuth,
+                           req: req,
+                           relatedResourceMiddleware: relatedResourceMiddleware,
+                           siblingKeyPath: siblingKeyPath)
+    }
+}
+
+fileprivate extension Model where IDValue: LosslessStringConvertible {
+
+    static func createRelation<Output, RelatedModel>(
+        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
+        req: Request,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+    where
+
+        Output: ResourceOutputModel,
+        Output.Model: Fluent.Model,
+        Output.Model.IDValue: LosslessStringConvertible,
+        Self == Output.Model,
+
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible {
+
+        req.db.tryTransaction { db in
+
+            try findRelated(req, db)
                 .and(Self.findByIdKey(req, database: db))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,
@@ -41,67 +169,66 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func createRelation<Output, RelatedModel>(
+        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
+    where
 
         Output: ResourceOutputModel,
         Output.Model: Fluent.Model,
         Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Output.Model: ResourceOutputModel,
+
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
+        req.db.tryTransaction { db in
 
-        return req.db.tryTransaction { db in
-
-            try RelatedModel.findByIdKey(req, database: db)
+            try findRelated(req, db)
                 .and(Self.findByIdKey(req, database: db))
-                .flatMap { relatedResourceMiddleware.handleRelated($0.1,
-                                                                   relatedModel: $0.0,
-                                                                   req: req,
-                                                                   database: db) }
-                .flatMapThrowing { (resource, related) in
-                    try resource.attached(to: related, with: childrenKeyPath)
-                    return related.save(on: db).transform(to: resource) }
+                .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
+                                                                                       relatedModel: related,
+                                                                                       req: req,
+                                                                                       database: db) }
+                .flatMapThrowing { (model, related) in
+                    try model.attached(to: related, with: childrenKeyPath)
+                    return related.save(on: db).transform(to: model) }
                 .flatMap { $0 }
                 .flatMapThrowing { try Output($0, req: req) }
         }
     }
 
-    static func createRelation<Input, Output, RelatedModel, Through>(
+    static func createRelation<Output, RelatedModel, Through>(
+        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
         req: Request,
-        using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
+    where
 
-        Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
         Output.Model: Fluent.Model,
         Through: Fluent.Model,
         Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
+
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
-        return req.db.tryTransaction { db in
+        req.db.tryTransaction { db in
 
-            try RelatedModel.findByIdKey(req, database: db)
+            try findRelated(req, db)
                 .and(Self.findByIdKey(req, database: db))
-                .flatMap { relatedResourceMiddleware.handleRelated($0.1,
-                                                                   relatedModel: $0.0,
-                                                                   req: req,
-                                                                   database: db) }
-                .flatMap { (resource, related) in
-                    resource.attached(to: related, with: siblingKeyPath, on: db) }
+                .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
+                                                                                       relatedModel: related,
+                                                                                       req: req,
+                                                                                       database: db) }
+                .flatMap { (model, related) in
+                    model.attached(to: related, with: siblingKeyPath, on: db) }
                 .flatMapThrowing { try Output($0, req: req)}
         }
     }
 }
+
+
 
