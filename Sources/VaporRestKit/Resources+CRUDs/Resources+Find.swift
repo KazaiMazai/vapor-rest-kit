@@ -51,6 +51,19 @@ extension Model where IDValue: LosslessStringConvertible {
     static func findWithRelatedOn<RelatedModel>(
         _ req: Request,
         database: Database,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
+
+    where
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible {
+
+        try findWithRelatedOn(req, database: database, childrenKeyPath: childrenKeyPath, using: nil)
+    }
+
+    
+    static func findWithRelatedOn<RelatedModel>(
+        _ req: Request,
+        database: Database,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
         using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
 
@@ -81,7 +94,20 @@ extension Model where IDValue: LosslessStringConvertible {
 //    }
     
 
-    static func findWitAuthRelatedOn<RelatedModel>(
+    static func findWithAuthRelatedOn<RelatedModel>(
+        _ req: Request,
+        database: Database,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
+
+    where
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible,
+        RelatedModel: Authenticatable {
+
+        try findWithAuthRelatedOn(req, database: database, childrenKeyPath: childrenKeyPath, using: nil)
+    }
+
+    static func findWithAuthRelatedOn<RelatedModel>(
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
@@ -111,8 +137,19 @@ extension Model where IDValue: LosslessStringConvertible {
     static func findWithRelatedOn<RelatedModel>(
         _ req: Request,
         database: Database,
+        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<(Self, RelatedModel)>
+    where
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible {
+
+        try findWithRelatedOn(req, database: database, childrenKeyPath: childrenKeyPath, using: nil)
+    }
+
+    static func findWithRelatedOn<RelatedModel>(
+        _ req: Request,
+        database: Database,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(RelatedModel, Self)>
+        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where
         RelatedModel: Fluent.Model,
@@ -126,15 +163,28 @@ extension Model where IDValue: LosslessStringConvertible {
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .findBy(idKey, from: req)
-                    .map { (relatedResource, $0) }}
+                    .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
 
     static func findWithAuthRelatedOn<RelatedModel>(
         _ req: Request,
         database: Database,
+        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<(Self, RelatedModel)>
+
+    where
+        RelatedModel: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible,
+        RelatedModel: Authenticatable {
+
+        try findWithRelatedOn(req, database:database, childrenKeyPath: childrenKeyPath, using: nil)
+    }
+
+    static func findWithAuthRelatedOn<RelatedModel>(
+        _ req: Request,
+        database: Database,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(RelatedModel, Self)>
+        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where
         RelatedModel: Fluent.Model,
@@ -148,7 +198,7 @@ extension Model where IDValue: LosslessStringConvertible {
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .findBy(idKey, from: req)
-                    .map { (relatedResource, $0) }}
+                    .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
 }
@@ -157,6 +207,17 @@ extension Model where IDValue: LosslessStringConvertible {
 //Siblings
 
 extension Model where IDValue: LosslessStringConvertible {
+    static func findWithRelatedOn<RelatedModel, Through>(
+        _ req: Request,
+        database: Database,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<(Self, RelatedModel)>
+
+    where Through: Fluent.Model,
+          RelatedModel.IDValue: LosslessStringConvertible {
+
+        try findWithRelatedOn(req, database: database, siblingKeyPath: siblingKeyPath, using: nil)
+    }
+
     static func findWithRelatedOn<RelatedModel, Through>(
         _ req: Request,
         database: Database,
@@ -175,6 +236,14 @@ extension Model where IDValue: LosslessStringConvertible {
                     .findBy(self.idKey, from: req)
                     .map { ($0, relatedResoure) }}
             .flatMap { $0 }
+    }
+
+    static func findWithAuthRelatedOn<RelatedModel, Through>(
+        _ req: Request,
+        database: Database,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<(Self, RelatedModel)> {
+
+        try findWithAuthRelatedOn(req, database: database, siblingKeyPath: siblingKeyPath)
     }
 
     static func findWithAuthRelatedOn<RelatedModel, Through>(
