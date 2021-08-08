@@ -16,7 +16,7 @@ extension Model where IDValue: LosslessStringConvertible {
         Output.Model == Self {
 
         req.db.tryTransaction { db in
-            try Self.findByIdKey(req, database: db)
+            try Self.findByIdKey(req, database: db, using: queryModifier)
                 .flatMap { deleter
                     .performDelete($0, req: req, database: db)
                     .transform(to: $0) }
