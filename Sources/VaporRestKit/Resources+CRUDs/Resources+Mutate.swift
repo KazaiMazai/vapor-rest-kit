@@ -31,177 +31,10 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 }
 
-
-
-extension Model where IDValue: LosslessStringConvertible {
-    static func mutateRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-    where
-
-        Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        try mutateRelated(findWithRelated: Self.findWithRelatedOn,
-                          req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          childrenKeyPath: childrenKeyPath)
-    }
-
-    static func mutateRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-    where
-
-        Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        try mutateRelated(findWithRelated: Self.findWithRelatedOn,
-                          req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          childrenKeyPath: childrenKeyPath)
-    }
-
-    static func mutateRelated<Input, Output, RelatedModel, Through>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-    where
-
-        Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        Through: Fluent.Model {
-
-        try mutateRelated(findWithRelated: Self.findWithRelatedOn,
-                          req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          siblingKeyPath: siblingKeyPath)
-    }
-}
-
-
 extension Model where IDValue: LosslessStringConvertible {
 
-    static func mutateAuthRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-    where
-
-        Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try mutateRelated(findWithRelated: Self.findWithAuthRelatedOn,
-                          req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          childrenKeyPath: childrenKeyPath)
-    }
-
-    static func mutateAuthRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-    where
-
-        Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try mutateRelated(findWithRelated: Self.findWithAuthRelatedOn,
-                          req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          childrenKeyPath: childrenKeyPath)
-    }
-
-    static func mutateAuthRelated<Input, Output, RelatedModel, Through>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-    where
-
-        Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable,
-        Through: Fluent.Model {
-
-        try mutateRelated(findWithRelated: Self.findWithAuthRelatedOn,
-                          req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          siblingKeyPath: siblingKeyPath)
-    }
-}
-
-
-fileprivate extension Model where IDValue: LosslessStringConvertible {
-
     static func mutateRelated<Input, Output, RelatedModel>(
-        findWithRelated: @escaping (_ req: Request,
-                                    _ db: Database,
-                                    _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
-                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
+        resolver: ChildPairResolver<Self, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -211,18 +44,14 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceMutationModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Input.Model {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
@@ -235,10 +64,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func mutateRelated<Input, Output, RelatedModel>(
-        findWithRelated: @escaping (_ req: Request,
-                                    _ db: Database,
-                                    _ childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
-                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
+        resolver: ParentPairResolver<Self, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -248,12 +74,8 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceMutationModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Input.Model {
 
 
         try Input.validate(content: req)
@@ -261,7 +83,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         let keyPath = childrenKeyPath
         return req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related ) in relatedResourceMiddleware.handleRelated(model,
                                                                                         relatedModel: related,
@@ -277,10 +99,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func mutateRelated<Input, Output, RelatedModel, Through>(
-        findWithRelated: @escaping (_ req: Request,
-                                    _ db: Database,
-                                    _ siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
-                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
+        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -290,19 +109,14 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceMutationModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Through: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Input.Model {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, siblingKeyPath, queryModifier)
+            try resolver.findWithRelated(req, db, siblingKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,

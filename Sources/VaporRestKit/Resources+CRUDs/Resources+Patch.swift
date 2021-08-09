@@ -27,6 +27,7 @@ extension Model where IDValue: LosslessStringConvertible {
 extension Model where IDValue: LosslessStringConvertible {
 
     static func patchRelated<Input, Output, RelatedModel>(
+        resolver: ChildPairResolver<Self, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -43,7 +44,8 @@ extension Model where IDValue: LosslessStringConvertible {
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
-        try mutateRelated(req: req,
+        try mutateRelated(resolver: resolver,
+                          req: req,
                           using: using,
                           relatedResourceMiddleware: relatedResourceMiddleware,
                           queryModifier: queryModifier,
@@ -51,6 +53,7 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func patchRelated<Input, Output, RelatedModel>(
+        resolver: ParentPairResolver<Self, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -68,7 +71,8 @@ extension Model where IDValue: LosslessStringConvertible {
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
-        try mutateRelated(req: req,
+        try mutateRelated(resolver: resolver,
+                          req: req,
                           using: using,
                           relatedResourceMiddleware: relatedResourceMiddleware,
                           queryModifier: queryModifier,
@@ -76,6 +80,7 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func patchRelated<Input, Output, RelatedModel, Through>(
+        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -94,91 +99,8 @@ extension Model where IDValue: LosslessStringConvertible {
         RelatedModel.IDValue: LosslessStringConvertible,
         Through: Fluent.Model {
 
-        try mutateRelated(req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          siblingKeyPath: siblingKeyPath)
-    }
-}
-
-
-extension Model where IDValue: LosslessStringConvertible {
-
-    static func patchAuthRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourcePatchModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try mutateAuthRelated(req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          childrenKeyPath: childrenKeyPath)
-    }
-
-    static func patchAuthRelated<Input, Output, RelatedModel>(
-        findRelated: (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourcePatchModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try mutateAuthRelated(req: req,
-                          using: using,
-                          relatedResourceMiddleware: relatedResourceMiddleware,
-                          queryModifier: queryModifier,
-                          childrenKeyPath: childrenKeyPath)
-    }
-
-    static func patchAuthRelated<Input, Output, RelatedModel, Through>(
-        findRelated: (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourcePatchModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try mutateAuthRelated(req: req,
+        try mutateRelated(resolver: resolver,
+                          req: req,
                           using: using,
                           relatedResourceMiddleware: relatedResourceMiddleware,
                           queryModifier: queryModifier,
