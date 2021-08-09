@@ -26,160 +26,9 @@ extension Model where IDValue: LosslessStringConvertible {
 }
 
 extension Model where IDValue: LosslessStringConvertible {
-    static func deleteRelated<Output, RelatedModel>(
-        req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-        where
-
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        try deleteRelated(findWithRelated: Self.findWithRelatedOn,
-                      req: req,
-                      using: deleter,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      queryModifier: queryModifier,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func deleteRelated<Output, RelatedModel>(
-        req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        try deleteRelated(findWithRelated: Self.findWithRelatedOn,
-                      req: req,
-                      using: deleter,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      queryModifier: queryModifier,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func deleteRelated<Output, RelatedModel, Through>(
-        req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
-
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        Through: Fluent.Model {
-
-        try deleteRelated(findWithRelated: Self.findWithRelatedOn,
-                      req: req,
-                      using: deleter,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      queryModifier: queryModifier,
-                      siblingKeyPath: siblingKeyPath)
-    }
-}
-
-extension Model where IDValue: LosslessStringConvertible {
-    static func deleteAuthRelated<Output, RelatedModel>(
-        req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-        where
-
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try deleteRelated(findWithRelated: Self.findWithAuthRelatedOn,
-                      req: req,
-                      using: deleter,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      queryModifier: queryModifier,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func deleteAuthRelated<Output, RelatedModel>(
-        req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable  {
-
-        try deleteRelated(findWithRelated: Self.findWithAuthRelatedOn,
-                      req: req,
-                      using: deleter,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      queryModifier: queryModifier,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func deleteAuthRelated<Output, RelatedModel, Through>(
-        req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
-
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        Through: Fluent.Model,
-        RelatedModel: Authenticatable {
-
-        try deleteRelated(findWithRelated: Self.findWithAuthRelatedOn,
-                      req: req,
-                      using: deleter,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      queryModifier: queryModifier,
-                      siblingKeyPath: siblingKeyPath)
-    }
-}
-
-
-fileprivate extension Model where IDValue: LosslessStringConvertible {
 
      static func deleteRelated<Output, RelatedModel>(
-        findWithRelated: @escaping (_ req: Request,
-                                    _ db: Database,
-                                    _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
-                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
+        resolver: ChildPairResolver<Self, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -196,7 +45,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                    relatedModel: related,
                                                                    req: req,
@@ -207,10 +56,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func deleteRelated<Output, RelatedModel>(
-        findWithRelated: @escaping (_ req: Request,
-                                    _ db: Database,
-                                    _ childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
-                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
+        resolver: ParentPairResolver<Self, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -227,7 +73,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                         relatedModel: related,
                                                                         req: req,
@@ -244,10 +90,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func deleteRelated<Output, RelatedModel, Through>(
-        findWithRelated: @escaping (_ req: Request,
-                                    _ db: Database,
-                                    _ siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
-                                    _ queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>,
+        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
         req: Request,
         using deleter: DeleteHandler<Self>,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -265,7 +108,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         req.db.tryTransaction { db in
 
-            try findWithRelated(req, db, siblingKeyPath, queryModifier)
+            try resolver.findWithRelated(req, db, siblingKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                         relatedModel: related,
                                                                         req: req,
