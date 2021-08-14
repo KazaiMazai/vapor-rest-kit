@@ -9,7 +9,8 @@ import Vapor
 import Fluent
 
 extension Model where IDValue: LosslessStringConvertible {
-    static func read<Output>(req: Request, queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Output> where
+    static func read<Output>(req: Request,
+                             queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Output> where
         Output: ResourceOutputModel,
         Output.Model == Self {
 
@@ -22,7 +23,6 @@ extension Model where IDValue: LosslessStringConvertible {
     static func readRelated<Output, RelatedModel>(
         resolver: ChildPairResolver<Self, RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
     where
@@ -38,7 +38,6 @@ extension Model where IDValue: LosslessStringConvertible {
     static func readRelated<Output, RelatedModel>(
         resolver: ParentPairResolver<Self, RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
     where
@@ -54,7 +53,6 @@ extension Model where IDValue: LosslessStringConvertible {
     static func readRelated<Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
     where
