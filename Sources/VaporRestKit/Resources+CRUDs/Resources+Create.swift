@@ -14,8 +14,7 @@ extension Model where IDValue: LosslessStringConvertible {
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
         Output.Model == Self,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel {
+        Input.Model == Output.Model {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
