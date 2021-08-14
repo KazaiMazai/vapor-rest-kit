@@ -8,33 +8,6 @@
 import Vapor
 import Fluent
 
-struct SiblingsPairResolver<Model, RelatedModel, Through>
-    where
-    Model: Fluent.Model,
-    Through: Fluent.Model,
-    RelatedModel: Fluent.Model,
-    RelatedModel.IDValue: LosslessStringConvertible,
-    Model.IDValue: LosslessStringConvertible {
-
-    let findWithRelated: (_ req: Request,
-                          _ db: Database,
-                          _ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-                          _ queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<(Model, RelatedModel)>
-}
-
-extension SiblingsPairResolver {
-    static func asAuth() -> SiblingsPairResolver
-    where
-        RelatedModel: Authenticatable {
-
-        SiblingsPairResolver(findWithRelated: Model.findWithAuthRelatedOn)
-    }
-
-    static func asRequestPath() -> SiblingsPairResolver  {
-        SiblingsPairResolver(findWithRelated: Model.findWithRelatedOn)
-    }
-}
-
 struct ChildPairResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
@@ -80,3 +53,53 @@ extension ParentPairResolver {
         ParentPairResolver(findWithRelated: Model.findWithRelatedOn)
     }
 }
+
+
+struct SiblingsPairResolver<Model, RelatedModel, Through>
+    where
+    Model: Fluent.Model,
+    Through: Fluent.Model,
+    RelatedModel: Fluent.Model,
+    RelatedModel.IDValue: LosslessStringConvertible,
+    Model.IDValue: LosslessStringConvertible {
+
+    let findWithRelated: (_ req: Request,
+                          _ db: Database,
+                          _ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+                          _ queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<(Model, RelatedModel)>
+}
+
+extension SiblingsPairResolver {
+    static func asAuth() -> SiblingsPairResolver
+    where
+        RelatedModel: Authenticatable {
+
+        SiblingsPairResolver(findWithRelated: Model.findWithAuthRelatedOn)
+    }
+
+    static func asRequestPath() -> SiblingsPairResolver  {
+        SiblingsPairResolver(findWithRelated: Model.findWithRelatedOn)
+    }
+}
+
+
+struct ModelResolver<Model>
+    where
+    Model: Fluent.Model,
+    Model.IDValue: LosslessStringConvertible {
+
+    let find: (_ req: Request,
+               _ db: Database) throws -> EventLoopFuture<Model>
+}
+
+
+extension ModelResolver {
+    static func asAuth() -> ModelResolver where Model: Authenticatable {
+        ModelResolver(find: Model.findAsAuth)
+    }
+
+    static func asRequestPath() -> ModelResolver {
+        ModelResolver(find: Model.findByIdKey)
+    }
+}
+
