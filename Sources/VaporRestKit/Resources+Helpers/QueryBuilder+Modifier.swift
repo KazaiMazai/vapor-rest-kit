@@ -7,8 +7,10 @@
 
 import Vapor
 import Fluent
-
-typealias QueryModifier<Model: Fluent.Model> = (QueryBuilder<Model>) -> QueryBuilder<Model>
+ 
+struct QueryModifier<Model: Fluent.Model> {
+    let query: (QueryBuilder<Model>, Request) -> QueryBuilder<Model>
+}
 
 extension QueryBuilder {
     func with(_ queryModifier: QueryModifier<Model>?, for req: Request) -> QueryBuilder<Model> {
@@ -16,7 +18,7 @@ extension QueryBuilder {
             return self
         }
 
-        return queryModifier(self)
+        return queryModifier.query(self, req)
     }
 
     func using<EagerLoading: EagerLoadProvider,
