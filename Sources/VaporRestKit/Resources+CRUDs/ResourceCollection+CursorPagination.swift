@@ -19,7 +19,7 @@ extension Model {
 
         Self.query(on: req.db)
             .with(queryModifier, for: req)
-            .paginate(for: req)
+            .paginateWithCursor(for: req, config: config)
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
 }
