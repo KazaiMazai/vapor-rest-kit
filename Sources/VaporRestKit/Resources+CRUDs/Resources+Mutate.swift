@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension Model where {
+extension Model {
     static func mutate<Input, Output>(
         req: Request,
         using: Input.Type,

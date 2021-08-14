@@ -37,11 +37,7 @@ extension Model where IDValue: LosslessStringConvertible {
         where
 
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -65,11 +61,7 @@ extension Model where IDValue: LosslessStringConvertible {
         where
 
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -99,12 +91,7 @@ extension Model where IDValue: LosslessStringConvertible {
         where
 
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Through: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Output.Model {
 
         req.db.tryTransaction { db in
 
