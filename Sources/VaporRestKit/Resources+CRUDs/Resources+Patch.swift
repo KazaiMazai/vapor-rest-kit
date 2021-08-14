@@ -17,8 +17,7 @@ extension Model where IDValue: LosslessStringConvertible {
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
         Output.Model == Self,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel {
+        Input.Model == Output.Model {
 
         try mutate(req: req, using: using, queryModifier: queryModifier)
     }
