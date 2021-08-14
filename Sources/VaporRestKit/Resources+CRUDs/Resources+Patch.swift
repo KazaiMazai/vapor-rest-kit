@@ -24,7 +24,7 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 }
 
-extension Model where IDValue: LosslessStringConvertible {
+extension Model {
 
     static func patchRelated<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Self, RelatedModel>,
@@ -36,13 +36,8 @@ extension Model where IDValue: LosslessStringConvertible {
     where
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,
                           req: req,
@@ -63,13 +58,8 @@ extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,
                           req: req,
@@ -90,14 +80,8 @@ extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        Through: Fluent.Model {
+        Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,
                           req: req,
