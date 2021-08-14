@@ -17,7 +17,6 @@ extension ResourceController {
         Input: ResourceMutationModel,
         Output: ResourceOutputModel,
         Output.Model == Model,
-        Model.IDValue: LosslessStringConvertible,
         Input.Model == Output.Model {
         
         try Input.validate(content: req)

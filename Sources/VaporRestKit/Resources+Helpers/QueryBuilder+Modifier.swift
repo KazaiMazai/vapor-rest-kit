@@ -12,6 +12,12 @@ struct QueryModifier<Model: Fluent.Model> {
     let query: (QueryBuilder<Model>, Request) -> QueryBuilder<Model>
 }
 
+extension QueryModifier {
+    static var empty: QueryModifier {
+        QueryModifier { query, _ in query  }
+    }
+}
+
 extension QueryBuilder {
     func with(_ queryModifier: QueryModifier<Model>?, for req: Request) -> QueryBuilder<Model> {
         guard let queryModifier = queryModifier else {

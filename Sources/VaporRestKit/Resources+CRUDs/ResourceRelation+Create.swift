@@ -19,7 +19,6 @@ extension ResourceController {
     where
         
         Output: ResourceOutputModel,
-        Output.Model.IDValue: LosslessStringConvertible,
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -46,7 +45,6 @@ extension ResourceController {
     where
         
         Output: ResourceOutputModel,
-        Output.Model.IDValue: LosslessStringConvertible,
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -74,7 +72,6 @@ extension ResourceController {
     where
         
         Output: ResourceOutputModel,
-        Output.Model.IDValue: LosslessStringConvertible,
         Model == Output.Model {
         
         req.db.tryTransaction { db in

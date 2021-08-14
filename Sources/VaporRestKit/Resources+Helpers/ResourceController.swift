@@ -11,4 +11,3 @@ import Fluent
 struct ResourceController<Model: Fluent.Model> where Model.IDValue: LosslessStringConvertible {
 
 }
-

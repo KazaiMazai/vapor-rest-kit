@@ -35,46 +35,46 @@ struct StarTagControllers {
                 apiV1.addMethodsTo(routeBuilder, on: endpoint)
             }
         }
-//
-//        func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-//            try StarTag.create(
-//                req: req,
-//                using: StarTag.Input.self)
-//        }
-//
-//        func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-//            try StarTag.read(
-//                req: req,
-//                queryModifier: queryModifier)
-//        }
-//
-//        func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-//            try StarTag.update(
-//                req: req,
-//                using: StarTag.Input.self,
-//                queryModifier: queryModifier)
-//        }
-//
-//        func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-//            try StarTag.delete(
-//                req: req,
-//                using: .defaultDeleter,
-//                queryModifier: queryModifier)
-//        }
-//
-//        func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-//            try StarTag.patch(
-//                req: req,
-//                using: StarTag.PatchInput.self,
-//                queryModifier: queryModifier)
-//        }
-//
-//        func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
-//            try StarTag.readWithCursorPagination(
-//                req: req,
-//                queryModifier: queryModifier,
-//                config: CursorPaginationConfig.defaultConfig)
-//        }
+
+        func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+            try ResourceController<StarTag>().create(
+                req: req,
+                using: StarTag.Input.self)
+        }
+
+        func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+            try ResourceController<StarTag>().read(
+                req: req,
+                queryModifier: queryModifier)
+        }
+
+        func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+            try ResourceController<StarTag>().update(
+                req: req,
+                using: StarTag.Input.self,
+                queryModifier: queryModifier)
+        }
+
+        func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+            try ResourceController<StarTag>().delete(
+                req: req,
+                using: .defaultDeleter,
+                queryModifier: queryModifier)
+        }
+
+        func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+            try ResourceController<StarTag>().patch(
+                req: req,
+                using: StarTag.PatchInput.self,
+                queryModifier: queryModifier)
+        }
+
+        func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
+            try ResourceController<StarTag>().readWithCursorPagination(
+                req: req,
+                queryModifier: queryModifier,
+                config: CursorPaginationConfig.defaultConfig)
+        }
     }
 
     struct StarTagForStarNestedController: VersionableController {
