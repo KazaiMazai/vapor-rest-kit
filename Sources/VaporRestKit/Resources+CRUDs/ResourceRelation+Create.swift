@@ -8,11 +8,7 @@
 import Vapor
 import Fluent
 
-
-//MARK:-
-
-
-fileprivate extension Model where IDValue: LosslessStringConvertible {
+extension Model {
 
     static func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
@@ -23,12 +19,8 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     where
 
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
         Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -54,12 +46,8 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         where
 
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
         Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -86,13 +74,8 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         where
 
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Through: Fluent.Model,
         Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Self == Output.Model {
 
         req.db.tryTransaction { db in
 
