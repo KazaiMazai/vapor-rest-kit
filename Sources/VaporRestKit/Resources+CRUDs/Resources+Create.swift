@@ -29,166 +29,9 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 }
 
-extension Model where IDValue: LosslessStringConvertible {
-
-    static func createRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        try createRelated(findRelated: RelatedModel.findByIdKey,
-                      req: req,
-                      using: using,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func createRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
-
-        try createRelated(findRelated: RelatedModel.findByIdKey,
-                      req: req,
-                      using: using,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func createRelated<Input, Output, RelatedModel, Through>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        Through: Fluent.Model {
-
-        try createRelated(findRelated: RelatedModel.findByIdKey,
-                      req: req,
-                      using: using,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      siblingKeyPath: siblingKeyPath)
-    }
-}
-
-
-extension Model where IDValue: LosslessStringConvertible {
-
-    static func createAuthRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try createRelated(findRelated: RelatedModel.findAsAuth,
-                      req: req,
-                      using: using,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func createAuthRelated<Input, Output, RelatedModel>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try createRelated(findRelated: RelatedModel.findAsAuth,
-                      req: req,
-                      using: using,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      childrenKeyPath: childrenKeyPath)
-    }
-
-    static func createAuthRelated<Input, Output, RelatedModel, Through>(
-        req: Request,
-        using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
-
-        Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        RelatedModel: Authenticatable {
-
-        try createRelated(findRelated: RelatedModel.findAsAuth,
-                      req: req,
-                      using: using,
-                      relatedResourceMiddleware: relatedResourceMiddleware,
-                      siblingKeyPath: siblingKeyPath)
-    }
-}
-
-
-fileprivate extension Model where IDValue: LosslessStringConvertible {
-
+extension Model {
      static func createRelated<Input, Output, RelatedModel>(
-        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
+        resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -197,19 +40,15 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Input.Model == Output.Model {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
 
-            try findRelated(req, db)
+            try resolver
+                .find(req, db)
                 .and(inputModel.update(Output.Model(), req: req, database: db))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
@@ -222,7 +61,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func createRelated<Input, Output, RelatedModel>(
-        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
+        resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -231,13 +70,8 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Input.Model == Output.Model {
 
 
         try Input.validate(content: req)
@@ -245,7 +79,8 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         let keyPath = childrenKeyPath
         return req.db.tryTransaction { db in
 
-            try findRelated(req, db)
+            try resolver
+                .find(req, db)
                 .and(inputModel.update(Output.Model(), req: req, database: db))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
@@ -261,7 +96,7 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func createRelated<Input, Output, RelatedModel, Through>(
-        findRelated: @escaping (_ req: Request, _ db: Database) throws -> EventLoopFuture<RelatedModel>,
+        resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
@@ -270,20 +105,16 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Through: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
         Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Through: Fluent.Model {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
 
-            try findRelated(req, db)
+            try resolver
+                .find(req, db)
                 .and(inputModel.update(Output.Model(), req: req, database: db))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
@@ -295,4 +126,3 @@ fileprivate extension Model where IDValue: LosslessStringConvertible {
         }
     }
 }
-
