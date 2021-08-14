@@ -8,24 +8,24 @@
 import Vapor
 import Fluent
 
-extension Model {
+extension ResourceController {
 
     static func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
 
         Output: ResourceOutputModel,
         Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
             try resolver.find(req, db)
-                .and(Self.findByIdKey(req, database: db, using: queryModifier))
+                .and(Model.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,
                                                                    req: req,
@@ -40,19 +40,19 @@ extension Model {
     static func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
         Output: ResourceOutputModel,
         Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
             try resolver.find(req, db)
-                .and(Self.findByIdKey(req, database: db, using: queryModifier))
+                .and(Model.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
@@ -68,19 +68,19 @@ extension Model {
     static func createRelation<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
         where
 
         Output: ResourceOutputModel,
         Output.Model.IDValue: LosslessStringConvertible,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
             try resolver.find(req, db)
-                .and(Self.findByIdKey(req, database: db, using: queryModifier))
+                .and(Model.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,

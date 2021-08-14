@@ -8,15 +8,15 @@
 import Vapor
 import Fluent
 
-extension Model where IDValue: LosslessStringConvertible {
+extension ResourceController {
     static func delete<Output>(req: Request,
-                               using deleter: DeleteHandler<Self>,
-                               queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Output> where
+                               using deleter: DeleteHandler<Model>,
+                               queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
         Output: ResourceOutputModel,
-        Output.Model == Self {
+        Output.Model == Model {
 
         req.db.tryTransaction { db in
-            try Self.findByIdKey(req, database: db, using: queryModifier)
+            try Model.findByIdKey(req, database: db, using: queryModifier)
                 .flatMap { deleter
                     .performDelete($0, req: req, database: db)
                     .transform(to: $0) }
@@ -25,19 +25,19 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 }
 
-extension Model where IDValue: LosslessStringConvertible {
+extension ResourceController {
 
      static func deleteRelated<Output, RelatedModel>(
-        resolver: ChildPairResolver<Self, RelatedModel>,
+        resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        using deleter: DeleteHandler<Model>,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
         where
 
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -52,16 +52,16 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func deleteRelated<Output, RelatedModel>(
-        resolver: ParentPairResolver<Self, RelatedModel>,
+        resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+        using deleter: DeleteHandler<Model>,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -82,16 +82,16 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func deleteRelated<Output, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
+        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
-        using deleter: DeleteHandler<Self>,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+        using deleter: DeleteHandler<Model>,
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
         where
 
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 

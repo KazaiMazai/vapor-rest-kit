@@ -10,28 +10,28 @@ import Foundation
 import Vapor
 import Fluent
 
-extension Model {
+extension ResourceController {
     static func readAll<Output>(req: Request,
-                                queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<[Output]> where
+                                queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<[Output]> where
         Output: ResourceOutputModel,
-        Output.Model == Self {
+        Output.Model == Model {
 
-        Self.query(on: req.db)
+        Model.query(on: req.db)
             .with(queryModifier, for: req)
             .all()
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
 }
 
-extension Model {
+extension ResourceController {
     static func readAllRelated<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<[Output]>
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<[Output]>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .find(req, req.db)
@@ -44,11 +44,11 @@ extension Model {
     static func readAllRelated<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<[Output]>
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<[Output]>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .find(req, req.db)
@@ -61,11 +61,11 @@ extension Model {
     static func readAllRelated<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<[Output]>
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<[Output]>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .find(req, req.db)

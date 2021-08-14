@@ -8,17 +8,17 @@
 import Vapor
 import Fluent
 
-extension Model {
+extension ResourceController {
     static func deleteRelation<Output, RelatedModel>(
-        resolver: ChildPairResolver<Self, RelatedModel>,
+        resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
         where
 
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -35,15 +35,15 @@ extension Model {
     }
 
     static func deleteRelation<Output, RelatedModel>(
-        resolver: ParentPairResolver<Self, RelatedModel>,
+        resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
 
         where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 
@@ -61,15 +61,15 @@ extension Model {
     }
 
     static func deleteRelation<Output, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
+        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
 
         where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         req.db.tryTransaction { db in
 

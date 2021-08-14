@@ -9,11 +9,11 @@ import Vapor
 import Fluent
 
 
-extension Model where IDValue: LosslessStringConvertible {
+extension ResourceController {
     static func create<Input, Output>(req: Request, using: Input.Type) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model == Self,
+        Output.Model == Model,
         Input.Model == Output.Model {
 
         try Input.validate(content: req)
@@ -28,18 +28,18 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 }
 
-extension Model {
+extension ResourceController {
      static func createRelated<Input, Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Self == Output.Model,
+        Model == Output.Model,
         Input.Model == Output.Model {
 
         try Input.validate(content: req)
@@ -63,13 +63,13 @@ extension Model {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Self == Output.Model,
+        Model == Output.Model,
         Input.Model == Output.Model {
 
 
@@ -98,13 +98,13 @@ extension Model {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Self == Output.Model,
+        Model == Output.Model,
         Input.Model == Output.Model,
         Through: Fluent.Model {
 

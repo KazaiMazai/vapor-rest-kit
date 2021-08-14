@@ -9,31 +9,31 @@
 import Vapor
 import Fluent
 
-extension Model where IDValue: LosslessStringConvertible {
-    static func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Output> where
+extension ResourceController {
+    static func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model == Self,
+        Output.Model == Model,
         Input.Model == Output.Model {
 
         try mutate(req: req, using: using, queryModifier: queryModifier)
     }
 }
 
-extension Model where IDValue: LosslessStringConvertible {
+extension ResourceController {
 
     static func updateRelated<Input, Output, RelatedModel>(
-        resolver: ChildPairResolver<Self, RelatedModel>,
+        resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Self == Output.Model,
+        Model == Output.Model,
         Input.Model == Output.Model  {
 
         try mutateRelated(resolver: resolver,
@@ -45,17 +45,17 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func updateRelated<Input, Output, RelatedModel>(
-        resolver: ParentPairResolver<Self, RelatedModel>,
+        resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Self == Output.Model,
+        Model == Output.Model,
         Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,
@@ -67,17 +67,17 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func updateRelated<Input, Output, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
+        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
-        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+        relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
         where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Self == Output.Model,
+        Model == Output.Model,
         Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,

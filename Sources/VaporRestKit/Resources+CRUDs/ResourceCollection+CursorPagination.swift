@@ -8,32 +8,32 @@
 import Vapor
 import Fluent
 
-extension Model {
+extension ResourceController {
     static func readWithCursorPagination<Output>(
         req: Request,
-        queryModifier: QueryModifier<Self>?,
+        queryModifier: QueryModifier<Model>?,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Output: ResourceOutputModel,
-        Output.Model == Self {
+        Output.Model == Model {
 
-        Self.query(on: req.db)
+        Model.query(on: req.db)
             .with(queryModifier, for: req)
             .paginateWithCursor(for: req, config: config)
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
 }
 
-extension Model {
+extension ResourceController {
     static func readWithCursorPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .find(req, req.db)
@@ -46,12 +46,12 @@ extension Model {
     static func readWithCursorPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .find(req, req.db)
@@ -64,12 +64,12 @@ extension Model {
     static func readWithCursorPagination<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .find(req, req.db)

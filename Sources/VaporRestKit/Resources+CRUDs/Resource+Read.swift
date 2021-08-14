@@ -8,26 +8,27 @@
 import Vapor
 import Fluent
 
-extension Model where IDValue: LosslessStringConvertible {
+extension ResourceController {
     static func read<Output>(req: Request,
-                             queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Output> where
+                             queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
         Output: ResourceOutputModel,
-        Output.Model == Self {
+        Output.Model == Model {
 
-        try Self.findByIdKey(req, database: req.db, using: queryModifier)
+        try Model
+            .findByIdKey(req, database: req.db, using: queryModifier)
             .flatMapThrowing { model in try Output(model, req: req) }
     }
 }
 
-extension Model where IDValue: LosslessStringConvertible {
+extension ResourceController {
     static func readRelated<Output, RelatedModel>(
-        resolver: ChildPairResolver<Self, RelatedModel>,
+        resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>) throws -> EventLoopFuture<Output>
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .findWithRelated(req, req.db, childrenKeyPath, queryModifier)
@@ -36,13 +37,13 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func readRelated<Output, RelatedModel>(
-        resolver: ParentPairResolver<Self, RelatedModel>,
+        resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
+        queryModifier: QueryModifier<Model>?,
+        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .findWithRelated(req, req.db, childrenKeyPath, queryModifier)
@@ -51,13 +52,13 @@ extension Model where IDValue: LosslessStringConvertible {
     }
 
     static func readRelated<Output, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Self, RelatedModel, Through>,
+        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
-        queryModifier: QueryModifier<Self>?,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
+        queryModifier: QueryModifier<Model>?,
+        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         Output: ResourceOutputModel,
-        Self == Output.Model {
+        Model == Output.Model {
 
         try resolver
             .findWithRelated(req, req.db, siblingKeyPath, queryModifier)
