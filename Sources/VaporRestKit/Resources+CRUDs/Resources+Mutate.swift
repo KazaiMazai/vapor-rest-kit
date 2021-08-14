@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension Model where IDValue: LosslessStringConvertible {
+extension Model where {
     static func mutate<Input, Output>(
         req: Request,
         using: Input.Type,
@@ -17,6 +17,7 @@ extension Model where IDValue: LosslessStringConvertible {
         Input: ResourceMutationModel,
         Output: ResourceOutputModel,
         Output.Model == Self,
+        Self.IDValue: LosslessStringConvertible,
         Input.Model == Output.Model {
 
         try Input.validate(content: req)
@@ -25,13 +26,14 @@ extension Model where IDValue: LosslessStringConvertible {
         return req.db.tryTransaction { db in
             try Self.findByIdKey(req, database: db, using: queryModifier)
                 .flatMap { inputModel.mutate($0, req: req, database: db) }
-                .flatMap { model in return model.save(on: db)
-                    .flatMapThrowing { try Output(model, req: req) }}
+                .flatMap { model in return model.save(on: db).transform(to: model) }
+                .flatMapThrowing { try Output($0, req: req) }
+
         }
     }
 }
 
-extension Model where IDValue: LosslessStringConvertible {
+extension Model {
 
     static func mutateRelated<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Self, RelatedModel>,
@@ -52,12 +54,12 @@ extension Model where IDValue: LosslessStringConvertible {
         return req.db.tryTransaction { db in
 
             try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
-                .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
+                .flatMap { (model, related) in inputModel.mutate(model, req: req, database: db).and(value: related) }
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
                                                                                        database: db) }
-                .flatMapThrowing { try $0.0.attached(to: $0.1, with: childrenKeyPath) }
+                .flatMapThrowing { (model, related) in try model.attached(to: related, with: childrenKeyPath) }
                 .flatMap { $0.save(on: db).transform(to: $0) }
                 .flatMapThrowing { try Output($0, req: req) }
         }
