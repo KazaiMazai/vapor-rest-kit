@@ -34,13 +34,8 @@ extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Input.Model == Output.Model  {
 
         try mutateRelated(resolver: resolver,
                           req: req,
@@ -61,13 +56,8 @@ extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible {
+        Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,
                           req: req,
@@ -88,14 +78,8 @@ extension Model where IDValue: LosslessStringConvertible {
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
-        Output.Model: Fluent.Model,
-        Output.Model.IDValue: LosslessStringConvertible,
         Self == Output.Model,
-        Input.Model == Output.Model,
-        Output.Model: ResourceOutputModel,
-        RelatedModel: Fluent.Model,
-        RelatedModel.IDValue: LosslessStringConvertible,
-        Through: Fluent.Model {
+        Input.Model == Output.Model {
 
         try mutateRelated(resolver: resolver,
                           req: req,

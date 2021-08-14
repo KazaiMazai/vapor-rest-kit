@@ -53,8 +53,7 @@ extension Model {
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Self>?,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
+    where
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
         Self == Output.Model,
@@ -75,7 +74,7 @@ extension Model {
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Self, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Self>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
