@@ -9,8 +9,8 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    static func read<Output>(req: Request,
-                             queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
+    func read<Output>(req: Request,
+                      queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
         Output: ResourceOutputModel,
         Output.Model == Model {
 
@@ -21,7 +21,7 @@ extension ResourceController {
 }
 
 extension ResourceController {
-    static func readRelated<Output, RelatedModel>(
+    func readRelated<Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -36,7 +36,7 @@ extension ResourceController {
 
     }
 
-    static func readRelated<Output, RelatedModel>(
+    func readRelated<Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -51,7 +51,7 @@ extension ResourceController {
 
     }
 
-    static func readRelated<Output, RelatedModel, Through>(
+    func readRelated<Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         queryModifier: QueryModifier<Model>?,

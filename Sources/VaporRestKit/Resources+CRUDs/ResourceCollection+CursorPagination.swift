@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    static func readWithCursorPagination<Output>(
+    func readWithCursorPagination<Output>(
         req: Request,
         queryModifier: QueryModifier<Model>?,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
@@ -25,7 +25,7 @@ extension ResourceController {
 }
 
 extension ResourceController {
-    static func readWithCursorPagination<Output, RelatedModel>(
+    func readWithCursorPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -43,7 +43,7 @@ extension ResourceController {
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
 
-    static func readWithCursorPagination<Output, RelatedModel>(
+    func readWithCursorPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -61,7 +61,7 @@ extension ResourceController {
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
 
-    static func readWithCursorPagination<Output, RelatedModel, Through>(
+    func readWithCursorPagination<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,

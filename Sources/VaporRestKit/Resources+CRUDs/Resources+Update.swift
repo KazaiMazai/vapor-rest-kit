@@ -10,7 +10,7 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    static func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
+    func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
         Output.Model == Model,
@@ -22,14 +22,14 @@ extension ResourceController {
 
 extension ResourceController {
 
-    static func updateRelated<Input, Output, RelatedModel>(
+    func updateRelated<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
@@ -44,14 +44,14 @@ extension ResourceController {
                           childrenKeyPath: childrenKeyPath)
     }
 
-    static func updateRelated<Input, Output, RelatedModel>(
+    func updateRelated<Input, Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>?,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
@@ -65,15 +65,15 @@ extension ResourceController {
                           queryModifier: queryModifier,
                           childrenKeyPath: childrenKeyPath)
     }
-
-    static func updateRelated<Input, Output, RelatedModel, Through>(
+    
+    func updateRelated<Input, Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,

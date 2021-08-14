@@ -9,21 +9,21 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-
-    static func createRelation<Output, RelatedModel>(
+    
+    func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>?,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
-
+        
         Output: ResourceOutputModel,
         Output.Model.IDValue: LosslessStringConvertible,
         Model == Output.Model {
-
+        
         req.db.tryTransaction { db in
-
+            
             try resolver.find(req, db)
                 .and(Model.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
@@ -36,21 +36,21 @@ extension ResourceController {
                 .flatMapThrowing { try Output($0, req: req) }
         }
     }
-
-    static func createRelation<Output, RelatedModel>(
+    
+    func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>?,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
-
+    where
+        
         Output: ResourceOutputModel,
         Output.Model.IDValue: LosslessStringConvertible,
         Model == Output.Model {
-
+        
         req.db.tryTransaction { db in
-
+            
             try resolver.find(req, db)
                 .and(Model.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
@@ -64,21 +64,21 @@ extension ResourceController {
                 .flatMapThrowing { try Output($0, req: req) }
         }
     }
-
-    static func createRelation<Output, RelatedModel, Through>(
+    
+    func createRelation<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
-        where
-
+    where
+        
         Output: ResourceOutputModel,
         Output.Model.IDValue: LosslessStringConvertible,
         Model == Output.Model {
-
+        
         req.db.tryTransaction { db in
-
+            
             try resolver.find(req, db)
                 .and(Model.findByIdKey(req, database: db, using: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,

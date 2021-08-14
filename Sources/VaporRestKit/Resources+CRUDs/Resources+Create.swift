@@ -10,7 +10,7 @@ import Fluent
 
 
 extension ResourceController {
-    static func create<Input, Output>(req: Request, using: Input.Type) throws -> EventLoopFuture<Output> where
+    func create<Input, Output>(req: Request, using: Input.Type) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
         Output.Model == Model,
@@ -29,13 +29,13 @@ extension ResourceController {
 }
 
 extension ResourceController {
-     static func createRelated<Input, Output, RelatedModel>(
+    func createRelated<Input, Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
@@ -59,13 +59,13 @@ extension ResourceController {
         }
     }
 
-    static func createRelated<Input, Output, RelatedModel>(
+    func createRelated<Input, Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
@@ -94,13 +94,13 @@ extension ResourceController {
         }
     }
 
-    static func createRelated<Input, Output, RelatedModel, Through>(
+    func createRelated<Input, Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
-        where
+    where
 
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,

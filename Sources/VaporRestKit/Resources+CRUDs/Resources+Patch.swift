@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    static func patch<Input, Output>(
+    func patch<Input, Output>(
         req: Request,
         using: Input.Type,
         queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output>
@@ -18,14 +18,14 @@ extension ResourceController {
         Output: ResourceOutputModel,
         Output.Model == Model,
         Input.Model == Output.Model {
-
+        
         try mutate(req: req, using: using, queryModifier: queryModifier)
     }
 }
 
 extension ResourceController {
-
-    static func patchRelated<Input, Output, RelatedModel>(
+    
+    func patchRelated<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -37,7 +37,7 @@ extension ResourceController {
         Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model {
-
+        
         try mutateRelated(resolver: resolver,
                           req: req,
                           using: using,
@@ -45,8 +45,8 @@ extension ResourceController {
                           queryModifier: queryModifier,
                           childrenKeyPath: childrenKeyPath)
     }
-
-    static func patchRelated<Input, Output, RelatedModel>(
+    
+    func patchRelated<Input, Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -58,7 +58,7 @@ extension ResourceController {
         Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model {
-
+        
         try mutateRelated(resolver: resolver,
                           req: req,
                           using: using,
@@ -66,8 +66,8 @@ extension ResourceController {
                           queryModifier: queryModifier,
                           childrenKeyPath: childrenKeyPath)
     }
-
-    static func patchRelated<Input, Output, RelatedModel, Through>(
+    
+    func patchRelated<Input, Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
@@ -75,12 +75,12 @@ extension ResourceController {
         queryModifier: QueryModifier<Model>?,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
-
+        
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model {
-
+        
         try mutateRelated(resolver: resolver,
                           req: req,
                           using: using,

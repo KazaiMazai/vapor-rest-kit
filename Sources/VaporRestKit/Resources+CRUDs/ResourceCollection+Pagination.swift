@@ -9,8 +9,8 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    static func readWithPagination<Output>(req: Request,
-                                queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Page<Output>> where
+    func readWithPagination<Output>(req: Request,
+                                    queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Page<Output>> where
         Output: ResourceOutputModel,
         Output.Model == Model {
 
@@ -22,7 +22,7 @@ extension ResourceController {
 }
 
 extension ResourceController {
-    static func readWithPagination<Output, RelatedModel>(
+    func readWithPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -38,8 +38,8 @@ extension ResourceController {
             .flatMap { $0.paginate(for: req) }
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
-
-    static func readWithPagination<Output, RelatedModel>(
+    
+    func readWithPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -56,7 +56,7 @@ extension ResourceController {
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
 
-    static func readWithPagination<Output, RelatedModel, Through>(
+    func readWithPagination<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
