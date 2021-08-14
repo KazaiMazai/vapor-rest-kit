@@ -20,7 +20,7 @@ extension ResourceController {
     }
 }
 
-extension ResourceController {
+extension RelatedResourceController {
     func readRelated<Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,

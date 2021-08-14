@@ -24,7 +24,7 @@ extension ResourceController {
     }
 }
 
-extension ResourceController {
+extension RelatedResourceController {
     func readWithCursorPagination<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,

@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+extension RelationsController {
     
     func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,

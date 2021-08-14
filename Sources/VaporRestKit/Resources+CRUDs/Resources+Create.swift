@@ -28,7 +28,7 @@ extension ResourceController {
     }
 }
 
-extension ResourceController {
+extension RelatedResourceController {
     func createRelated<Input, Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,

@@ -25,7 +25,7 @@ extension ResourceController {
     }
 }
 
-extension ResourceController {
+extension RelatedResourceController {
 
     func deleteRelated<Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,

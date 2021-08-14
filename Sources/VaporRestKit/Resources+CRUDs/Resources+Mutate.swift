@@ -32,7 +32,7 @@ extension ResourceController {
     }
 }
 
-extension ResourceController {
+extension RelatedResourceController {
     
     func mutateRelated<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,

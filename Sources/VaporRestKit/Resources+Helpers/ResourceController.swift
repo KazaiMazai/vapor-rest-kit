@@ -11,3 +11,11 @@ import Fluent
 struct ResourceController<Model: Fluent.Model> where Model.IDValue: LosslessStringConvertible {
 
 }
+
+struct RelatedResourceController<Model: Fluent.Model> where Model.IDValue: LosslessStringConvertible {
+
+}
+
+struct RelationsController<Model: Fluent.Model> where Model.IDValue: LosslessStringConvertible {
+
+}

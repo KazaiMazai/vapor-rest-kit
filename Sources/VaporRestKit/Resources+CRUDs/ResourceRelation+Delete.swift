@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+extension RelationsController {
     func deleteRelation<Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
