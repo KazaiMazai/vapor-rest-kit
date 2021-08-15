@@ -21,35 +21,35 @@ public typealias SiblingKeyPath<From: Fluent.Model, To: Fluent.Model, Through: F
 extension Model {
     @discardableResult
     func attached<From>(to parent: From,
-                           with childrenKeyPath: ChildrenKeyPath<From, Self>) throws -> Self {
+                        with childrenKeyPath: ChildrenKeyPath<From, Self>) throws -> Self {
 
-            switch parent[keyPath: childrenKeyPath].parentKey {
-            case .required(let requiredKeyPath):
-                self[keyPath: requiredKeyPath].id = try parent.requireID()
-            case .optional(let optionalKeyPath):
-                self[keyPath: optionalKeyPath].id = parent.id
-            }
+        switch parent[keyPath: childrenKeyPath].parentKey {
+        case .required(let requiredKeyPath):
+            self[keyPath: requiredKeyPath].id = try parent.requireID()
+        case .optional(let optionalKeyPath):
+            self[keyPath: optionalKeyPath].id = parent.id
+        }
 
-            return self
+        return self
     }
 
     @discardableResult
     func detached<From>(from parent: From,
-                           with childrenKeyPath: ChildrenKeyPath<From, Self>) throws -> Self {
+                        with childrenKeyPath: ChildrenKeyPath<From, Self>) throws -> Self {
 
-            switch parent[keyPath: childrenKeyPath].parentKey {
-            case .required(_):
-                throw FluentError.idRequired
-            case .optional(let optionalKeyPath):
-                self[keyPath: optionalKeyPath].id = nil
-            }
+        switch parent[keyPath: childrenKeyPath].parentKey {
+        case .required(_):
+            throw FluentError.idRequired
+        case .optional(let optionalKeyPath):
+            self[keyPath: optionalKeyPath].id = nil
+        }
 
-            return self
+        return self
     }
 
     @discardableResult
     func attached<To>(to child: To,
-                          with childrenKeyPath: ChildrenKeyPath<Self, To>) throws -> Self {
+                      with childrenKeyPath: ChildrenKeyPath<Self, To>) throws -> Self {
 
         switch self[keyPath: childrenKeyPath].parentKey {
         case .required(let requiredKeyPath):
@@ -62,7 +62,7 @@ extension Model {
 
     @discardableResult
     func detached<To>(from child: To,
-                          with childrenKeyPath: ChildrenKeyPath<Self, To>) throws -> Self {
+                      with childrenKeyPath: ChildrenKeyPath<Self, To>) throws -> Self {
 
         switch self[keyPath: childrenKeyPath].parentKey {
         case .required(_):
@@ -81,7 +81,7 @@ extension Model {
                                edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
 
         return self[keyPath: childrenKeyPath].attach(child, method: method, on: database, edit)
-                                             .transform(to: self)
+            .transform(to: self)
 
     }
 
@@ -89,37 +89,37 @@ extension Model {
     func detached<To, Through>(from child: To,
                                with childrenKeyPath: SiblingKeyPath<Self, To, Through>, on database: Database) -> EventLoopFuture<Self> {
         return self[keyPath: childrenKeyPath].detach(child, on: database)
-                                             .transform(to: self)
+            .transform(to: self)
     }
 
     @discardableResult
     func attached<From, Through>(to parent: From,
-                                  with siblingKeyPath: SiblingKeyPath<From, Self, Through>,
-                                  on database: Database,
-                                  method: SiblingsProperty<From, Self, Through>.AttachMethod = .ifNotExists,
-                                  edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
+                                 with siblingKeyPath: SiblingKeyPath<From, Self, Through>,
+                                 on database: Database,
+                                 method: SiblingsProperty<From, Self, Through>.AttachMethod = .ifNotExists,
+                                 edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
 
         return parent[keyPath: siblingKeyPath].attach(self, method: method, on: database, edit)
-                                              .transform(to: self)
+            .transform(to: self)
     }
     @discardableResult
     func detached<From, Through>(from parent: From,
-                                  with siblingKeyPath: SiblingKeyPath<From, Self, Through>,
-                                  on database: Database) -> EventLoopFuture<Self> {
+                                 with siblingKeyPath: SiblingKeyPath<From, Self, Through>,
+                                 on database: Database) -> EventLoopFuture<Self> {
 
         return parent[keyPath: siblingKeyPath].detach(self, on: database)
-                                              .transform(to: self)
+            .transform(to: self)
     }
 
     @discardableResult
     func getParentKey<From>(with childrenKeyPath: ChildrenKeyPath<From, Self>) -> ChildrenProperty<From, Self>.Key {
 
-            return From()[keyPath: childrenKeyPath].parentKey
+        return From()[keyPath: childrenKeyPath].parentKey
     }
 
     func queryRelated<From>(keyPath childrenKeyPath: ChildrenKeyPath<From, Self>,
-                              on database: Database) throws -> QueryBuilder<From>
-        where From: Fluent.Model {
+                            on database: Database) throws -> QueryBuilder<From>
+    where From: Fluent.Model {
 
         let parentKey = getParentKey(with: childrenKeyPath)
 
@@ -135,12 +135,12 @@ extension Model {
     }
 
     func queryRelated<To>(keyPath childrenKeyPath: ChildrenKeyPath<Self, To>,
-                            on database: Database) -> QueryBuilder<To> {
+                          on database: Database) -> QueryBuilder<To> {
         return self[keyPath: childrenKeyPath].query(on: database)
     }
 
     func queryRelated<To, Through>(keyPath siblingKeyPath: SiblingKeyPath<Self, To, Through>,
-                                    on database: Database) -> QueryBuilder<To> {
+                                   on database: Database) -> QueryBuilder<To> {
         return self[keyPath: siblingKeyPath].query(on: database)
     }
 }
