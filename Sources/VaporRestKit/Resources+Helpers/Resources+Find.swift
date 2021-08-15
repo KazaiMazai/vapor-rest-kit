@@ -20,7 +20,7 @@ extension Model where IDValue: LosslessStringConvertible {
                             using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Self> {
         try Self.query(on: database)
                 .with(queryModifier, for: req)
-                .findBy(idKey, from: req)
+                .find(by: idKey, from: req)
     }
 }
 
@@ -48,12 +48,12 @@ extension Model where IDValue: LosslessStringConvertible {
 
         try RelatedModel
             .query(on: database)
-            .findBy(RelatedModel.idKey, from: req)
+            .find(by: RelatedModel.idKey, from: req)
             .flatMapThrowing { relatedResource in
                 try relatedResource
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
-                    .findBy(idKey, from: req)
+                    .find(by: idKey, from: req)
                     .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
@@ -75,7 +75,7 @@ extension Model where IDValue: LosslessStringConvertible {
                 try relatedResource
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
-                    .findBy(idKey, from: req)
+                    .find(by: idKey, from: req)
                     .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
@@ -98,12 +98,12 @@ extension Model where IDValue: LosslessStringConvertible {
 
         try RelatedModel
             .query(on: database)
-            .findBy(RelatedModel.idKey, from: req)
+            .find(by: RelatedModel.idKey, from: req)
             .flatMapThrowing { relatedResource in
                 try relatedResource
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
-                    .findBy(idKey, from: req)
+                    .find(by: idKey, from: req)
                     .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
@@ -125,7 +125,7 @@ extension Model where IDValue: LosslessStringConvertible {
                 try relatedResource
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
-                    .findBy(idKey, from: req)
+                    .find(by: idKey, from: req)
                     .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
@@ -146,11 +146,11 @@ extension Model where IDValue: LosslessStringConvertible {
 
         try RelatedModel
             .query(on: database)
-            .findBy(RelatedModel.idKey, from: req)
+            .find(by: RelatedModel.idKey, from: req)
             .flatMapThrowing { relatedResoure in
                 try relatedResoure.queryRelated(keyPath: siblingKeyPath, on: database)
                     .with(queryModifier, for: req)
-                    .findBy(idKey, from: req)
+                    .find(by: idKey, from: req)
                     .map { ($0, relatedResoure) }}
             .flatMap { $0 }
     }
@@ -170,7 +170,7 @@ extension Model where IDValue: LosslessStringConvertible {
             .flatMapThrowing { relatedResoure in
                 try relatedResoure.queryRelated(keyPath: siblingKeyPath, on: database)
                     .with(queryModifier, for: req)
-                    .findBy(idKey, from: req)
+                    .find(by: idKey, from: req)
                     .map { ($0, relatedResoure) }}
             .flatMap { $0 }
     }

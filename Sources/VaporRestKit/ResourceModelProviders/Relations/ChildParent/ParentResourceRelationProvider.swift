@@ -18,7 +18,7 @@ extension ParentResourceRelationProvider {
                         .with(self.eagerLoadHandler, for: req)
                         .sort(self.sortingHandler, for: req)
                         .filter(self.filteringHandler, for: req)
-                        .findBy(idKey, from: req)
+                        .find(by: idKey, from: req)
     }
 
     func idResourcePathFor(endpoint: String) -> [PathComponent] {

@@ -68,7 +68,7 @@ extension ChildrenResourceModelProvider {
 extension ChildrenResourceModelProvider {
     func findRelated(_ req: Request, database: Database) throws -> EventLoopFuture<RelatedModel> {
         return try RelatedModel.query(on: database)
-            .findBy(rootIdComponentKey, from: req)
+            .find(by: rootIdComponentKey, from: req)
     }
 }
 
@@ -92,7 +92,7 @@ extension ChildrenResourceModelProvider {
                     .with(self.eagerLoadHandler, for: req)
                     .sort(self.sortingHandler, for: req)
                     .filter(self.filteringHandler, for: req)
-                    .findBy(self.idKey, from: req)
+                    .find(by: self.idKey, from: req)
                     .map { ($0, relatedResource) }}
             .flatMap { $0 }
     }
