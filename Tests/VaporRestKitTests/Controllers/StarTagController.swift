@@ -12,8 +12,6 @@ import Fluent
 
 struct StarTagControllers {
     struct StarTagController: VersionableController {
-        let queryModifier: QueryModifier<StarTag> = .empty
-
         var apiV1: APIMethodsProviding {
             return StarTag.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
