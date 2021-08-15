@@ -25,7 +25,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
     
-    func patchRelated<Input, Output, RelatedModel>(
+    func patch<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -46,7 +46,7 @@ extension RelatedResourceController {
                           childrenKeyPath: childrenKeyPath)
     }
     
-    func patchRelated<Input, Output, RelatedModel>(
+    func patch<Input, Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -67,7 +67,7 @@ extension RelatedResourceController {
                           childrenKeyPath: childrenKeyPath)
     }
     
-    func patchRelated<Input, Output, RelatedModel, Through>(
+    func patch<Input, Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,

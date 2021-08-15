@@ -24,7 +24,7 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func readAllRelated<Output, RelatedModel>(
+    func readAll<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -41,7 +41,7 @@ extension RelatedResourceController {
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
     
-    func readAllRelated<Output, RelatedModel>(
+    func readAll<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -58,7 +58,7 @@ extension RelatedResourceController {
             .flatMapThrowing { try $0.map { try Output($0, req: req) } }
     }
     
-    func readAllRelated<Output, RelatedModel, Through>(
+    func readAll<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,

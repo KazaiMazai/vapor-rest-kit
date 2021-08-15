@@ -22,7 +22,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
 
-    func updateRelated<Input, Output, RelatedModel>(
+    func update<Input, Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -44,7 +44,7 @@ extension RelatedResourceController {
                           childrenKeyPath: childrenKeyPath)
     }
 
-    func updateRelated<Input, Output, RelatedModel>(
+    func update<Input, Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -66,7 +66,7 @@ extension RelatedResourceController {
                           childrenKeyPath: childrenKeyPath)
     }
     
-    func updateRelated<Input, Output, RelatedModel, Through>(
+    func update<Input, Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,

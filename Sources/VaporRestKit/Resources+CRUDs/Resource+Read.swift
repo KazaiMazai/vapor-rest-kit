@@ -21,7 +21,7 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func readRelated<Output, RelatedModel>(
+    func read<Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -36,7 +36,7 @@ extension RelatedResourceController {
 
     }
 
-    func readRelated<Output, RelatedModel>(
+    func read<Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>?,
@@ -51,7 +51,7 @@ extension RelatedResourceController {
 
     }
 
-    func readRelated<Output, RelatedModel, Through>(
+    func read<Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         queryModifier: QueryModifier<Model>?,

@@ -29,7 +29,7 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func createRelated<Input, Output, RelatedModel>(
+    func create<Input, Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -59,7 +59,7 @@ extension RelatedResourceController {
         }
     }
 
-    func createRelated<Input, Output, RelatedModel>(
+    func create<Input, Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -94,7 +94,7 @@ extension RelatedResourceController {
         }
     }
 
-    func createRelated<Input, Output, RelatedModel, Through>(
+    func create<Input, Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,

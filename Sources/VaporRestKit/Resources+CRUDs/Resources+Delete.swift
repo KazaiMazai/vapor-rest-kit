@@ -27,7 +27,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
 
-    func deleteRelated<Output, RelatedModel>(
+    func delete<Output, RelatedModel>(
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
@@ -51,7 +51,7 @@ extension RelatedResourceController {
         }
     }
 
-    func deleteRelated<Output, RelatedModel>(
+    func delete<Output, RelatedModel>(
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
@@ -81,7 +81,7 @@ extension RelatedResourceController {
         }
     }
 
-    func deleteRelated<Output, RelatedModel, Through>(
+    func delete<Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using deleter: DeleteHandler<Model>,
