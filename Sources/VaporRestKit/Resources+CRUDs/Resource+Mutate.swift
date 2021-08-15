@@ -56,9 +56,9 @@ extension RelatedResourceController {
                 .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req, database: db).and(value: related) }
                 .flatMap { (model, related) in middleware.handle(model,
-                                                                        relatedModel: related,
-                                                                        req: req,
-                                                                        database: db) }
+                                                                 relatedModel: related,
+                                                                 req: req,
+                                                                 database: db) }
                 .flatMapThrowing { (model, related) in try model.attached(to: related, with: relationKeyPath) }
                 .flatMap { model in model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }
@@ -88,9 +88,9 @@ extension RelatedResourceController {
                 .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related ) in middleware.handle(model,
-                                                                         relatedModel: related,
-                                                                         req: req,
-                                                                         database: db) }
+                                                                  relatedModel: related,
+                                                                  req: req,
+                                                                  database: db) }
                 .flatMap { (model, related) in  model.save(on: db).transform(to: (model, related)) }
                 .flatMapThrowing { (model, related) in (try model.attached(to: related, with: keyPath), related) }
                 .flatMap { (model, related) in
@@ -123,9 +123,9 @@ extension RelatedResourceController {
                 .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related) in middleware.handle(model,
-                                                                        relatedModel: related,
-                                                                        req: req,
-                                                                        database: db) }
+                                                                 relatedModel: related,
+                                                                 req: req,
+                                                                 database: db) }
                 .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
                 .flatMap { (model, related) in model.attached(to: related, with: relationKeyPath, on: db) }
                 .flatMapThrowing { try Output($0, req: req) }
