@@ -52,7 +52,7 @@ extension RelatedResourceController {
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
             
-            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.find(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req, database: db).and(value: related) }
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
@@ -84,7 +84,7 @@ extension RelatedResourceController {
         let keyPath = childrenKeyPath
         return req.db.tryTransaction { db in
             
-            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.find(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related ) in relatedResourceMiddleware.handleRelated(model,
                                                                                         relatedModel: related,
@@ -117,7 +117,7 @@ extension RelatedResourceController {
         let inputModel = try req.content.decode(Input.self)
         return req.db.tryTransaction { db in
             
-            try resolver.findWithRelated(req, db, siblingKeyPath, queryModifier)
+            try resolver.find(req, db, siblingKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,

@@ -31,7 +31,7 @@ extension RelatedResourceController {
         Model == Output.Model {
 
         try resolver
-            .findWithRelated(req, req.db, childrenKeyPath, queryModifier)
+            .find(req, req.db, childrenKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req) }
 
     }
@@ -46,7 +46,7 @@ extension RelatedResourceController {
         Model == Output.Model {
 
         try resolver
-            .findWithRelated(req, req.db, childrenKeyPath, queryModifier)
+            .find(req, req.db, childrenKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req)}
 
     }
@@ -61,7 +61,7 @@ extension RelatedResourceController {
         Model == Output.Model {
 
         try resolver
-            .findWithRelated(req, req.db, siblingKeyPath, queryModifier)
+            .find(req, req.db, siblingKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req) }
 
     }

@@ -15,19 +15,19 @@ where
     RelatedModel.IDValue: LosslessStringConvertible,
     Model.IDValue: LosslessStringConvertible {
 
-    let findWithRelated: (_ req: Request,
-                          _ db: Database,
-                          _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                          _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
+    let find: (_ req: Request,
+               _ db: Database,
+               _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+               _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
 extension ChildPairResolver {
     static func asAuth() -> ChildPairResolver where RelatedModel: Authenticatable {
-        ChildPairResolver(findWithRelated: Model.findWithAuthRelatedOn)
+        ChildPairResolver(find: Model.findWithAuthRelatedOn)
     }
 
     static func asRequestPath() -> ChildPairResolver {
-        ChildPairResolver(findWithRelated: Model.findWithRelatedOn)
+        ChildPairResolver(find: Model.findWithRelatedOn)
     }
 }
 
@@ -38,35 +38,35 @@ where
     RelatedModel.IDValue: LosslessStringConvertible,
     Model.IDValue: LosslessStringConvertible {
 
-    let findWithRelated: (_ req: Request,
-                          _ db: Database,
-                          _ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                          _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
+    let find: (_ req: Request,
+               _ db: Database,
+               _ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+               _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
 extension ParentPairResolver {
     static func asAuth() -> ParentPairResolver where RelatedModel: Authenticatable {
-        ParentPairResolver(findWithRelated: Model.findWithAuthRelatedOn)
+        ParentPairResolver(find: Model.findWithAuthRelatedOn)
     }
 
     static func asRequestPath() -> ParentPairResolver {
-        ParentPairResolver(findWithRelated: Model.findWithRelatedOn)
+        ParentPairResolver(find: Model.findWithRelatedOn)
     }
 }
 
 
 struct SiblingsPairResolver<Model, RelatedModel, Through>
-    where
+where
     Model: Fluent.Model,
     Through: Fluent.Model,
     RelatedModel: Fluent.Model,
     RelatedModel.IDValue: LosslessStringConvertible,
     Model.IDValue: LosslessStringConvertible {
 
-    let findWithRelated: (_ req: Request,
-                          _ db: Database,
-                          _ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-                          _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
+    let find: (_ req: Request,
+               _ db: Database,
+               _ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+               _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
 extension SiblingsPairResolver {
@@ -74,17 +74,17 @@ extension SiblingsPairResolver {
     where
         RelatedModel: Authenticatable {
 
-        SiblingsPairResolver(findWithRelated: Model.findWithAuthRelatedOn)
+        SiblingsPairResolver(find: Model.findWithAuthRelatedOn)
     }
 
     static func asRequestPath() -> SiblingsPairResolver  {
-        SiblingsPairResolver(findWithRelated: Model.findWithRelatedOn)
+        SiblingsPairResolver(find: Model.findWithRelatedOn)
     }
 }
 
 
 struct ModelResolver<Model>
-    where
+where
     Model: Fluent.Model,
     Model.IDValue: LosslessStringConvertible {
 

@@ -22,7 +22,7 @@ extension RelationsController {
         
         req.db.tryTransaction { db in
             
-            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.find(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
@@ -47,7 +47,7 @@ extension RelationsController {
         
         req.db.tryTransaction { db in
             
-            try resolver.findWithRelated(req, db, childrenKeyPath, queryModifier)
+            try resolver.find(req, db, childrenKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
@@ -73,7 +73,7 @@ extension RelationsController {
         
         req.db.tryTransaction { db in
             
-            try resolver.findWithRelated(req, db, siblingKeyPath, queryModifier)
+            try resolver.find(req, db, siblingKeyPath, queryModifier)
                 .flatMap { (model, related) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
