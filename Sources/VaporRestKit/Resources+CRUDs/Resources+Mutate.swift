@@ -35,7 +35,7 @@ extension ResourceController {
 extension RelatedResourceController {
     
     func mutateRelated<Input, Output, RelatedModel>(
-        resolver: ChildPairResolver<Model, RelatedModel>,
+        resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
@@ -65,7 +65,7 @@ extension RelatedResourceController {
     }
     
     func mutateRelated<Input, Output, RelatedModel>(
-        resolver: ParentPairResolver<Model, RelatedModel>,
+        resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,

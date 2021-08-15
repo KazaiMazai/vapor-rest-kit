@@ -18,14 +18,14 @@ extension Model where IDValue: LosslessStringConvertible {
                             database: Database,
                             queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<Self> {
         try Self.query(on: database)
-                .with(queryModifier, for: req)
-                .find(by: idKey, from: req)
+            .with(queryModifier, for: req)
+            .find(by: idKey, from: req)
     }
 }
 
 extension Model where Self: Authenticatable {
-    static func findAsAuth(_ req: Request,
-                           database: Database) throws -> EventLoopFuture<Self>  {
+    static func requireAuth(_ req: Request,
+                            database: Database) throws -> EventLoopFuture<Self>  {
 
         let related = try req.auth.require(Self.self)
         return req.eventLoop.makeSucceededFuture(related)
@@ -35,47 +35,47 @@ extension Model where Self: Authenticatable {
 //Parent - Children
 
 extension Model where IDValue: LosslessStringConvertible {
-    static func findWithRelatedOn<RelatedModel>(
+    static func findByIdKeys<RelatedModel>(
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
         queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
-        where
+    where
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
         try RelatedModel
             .query(on: database)
             .find(by: RelatedModel.idKey, from: req)
-            .flatMapThrowing { relatedResource in
-                try relatedResource
+            .flatMapThrowing { related in
+                try related
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, relatedResource) }}
+                    .map { ($0, related) }}
             .flatMap { $0 }
     }
 
-    static func findWithAuthRelatedOn<RelatedModel>(
+    static func findByIdKeyAndAuthRelated<RelatedModel>(
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
         queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
-        where
+    where
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible,
         RelatedModel: Authenticatable {
 
         let related = try req.auth.require(RelatedModel.self)
         return req.eventLoop.makeSucceededFuture(related)
-            .flatMapThrowing { relatedResource in
-                try relatedResource
+            .flatMapThrowing { related in
+                try related
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, relatedResource) }}
+                    .map { ($0, related) }}
             .flatMap { $0 }
     }
 }
@@ -85,47 +85,47 @@ extension Model where IDValue: LosslessStringConvertible {
 
 extension Model where IDValue: LosslessStringConvertible {
 
-    static func findWithRelatedOn<RelatedModel>(
+    static func findByIdKeys<RelatedModel>(
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
         queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
-        where
+    where
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible {
 
         try RelatedModel
             .query(on: database)
             .find(by: RelatedModel.idKey, from: req)
-            .flatMapThrowing { relatedResource in
-                try relatedResource
+            .flatMapThrowing { related in
+                try related
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, relatedResource) }}
+                    .map { ($0, related) }}
             .flatMap { $0 }
     }
 
-    static func findWithAuthRelatedOn<RelatedModel>(
+    static func findByIdKeyAndAuthRelated<RelatedModel>(
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
         queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
-        where
+    where
         RelatedModel: Fluent.Model,
         RelatedModel.IDValue: LosslessStringConvertible,
         RelatedModel: Authenticatable {
 
         let related = try req.auth.require(RelatedModel.self)
         return req.eventLoop.makeSucceededFuture(related)
-            .flatMapThrowing { relatedResource in
-                try relatedResource
+            .flatMapThrowing { related in
+                try related
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, relatedResource) }}
+                    .map { ($0, related) }}
             .flatMap { $0 }
     }
 }
@@ -134,43 +134,45 @@ extension Model where IDValue: LosslessStringConvertible {
 //Siblings
 
 extension Model where IDValue: LosslessStringConvertible {
-    static func findWithRelatedOn<RelatedModel, Through>(
+    static func findByIdKeys<RelatedModel, Through>(
         _ req: Request,
         database: Database,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
         queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
-        where Through: Fluent.Model,
-              RelatedModel.IDValue: LosslessStringConvertible {
+    where
+        Through: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible {
 
         try RelatedModel
             .query(on: database)
             .find(by: RelatedModel.idKey, from: req)
-            .flatMapThrowing { relatedResoure in
-                try relatedResoure.queryRelated(keyPath: siblingKeyPath, on: database)
+            .flatMapThrowing { related in
+                try related.queryRelated(keyPath: siblingKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, relatedResoure) }}
+                    .map { ($0, related) }}
             .flatMap { $0 }
     }
 
-    static func findWithAuthRelatedOn<RelatedModel, Through>(
+    static func findByIdKeyAndAuthRelated<RelatedModel, Through>(
         _ req: Request,
         database: Database,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
         queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
-        where Through: Fluent.Model,
-              RelatedModel.IDValue: LosslessStringConvertible,
-              RelatedModel: Authenticatable {
+    where
+        Through: Fluent.Model,
+        RelatedModel.IDValue: LosslessStringConvertible,
+        RelatedModel: Authenticatable {
 
         let related = try req.auth.require(RelatedModel.self)
         return req.eventLoop.makeSucceededFuture(related)
-            .flatMapThrowing { relatedResoure in
-                try relatedResoure.queryRelated(keyPath: siblingKeyPath, on: database)
+            .flatMapThrowing { related in
+                try related.queryRelated(keyPath: siblingKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, relatedResoure) }}
+                    .map { ($0, related) }}
             .flatMap { $0 }
     }
 }

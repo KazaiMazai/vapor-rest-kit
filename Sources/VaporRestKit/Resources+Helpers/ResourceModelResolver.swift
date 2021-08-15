@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct ChildPairResolver<Model, RelatedModel>
+struct ParentChildResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
     RelatedModel: Fluent.Model,
@@ -21,17 +21,17 @@ where
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension ChildPairResolver {
-    static func asAuth() -> ChildPairResolver where RelatedModel: Authenticatable {
-        ChildPairResolver(find: Model.findWithAuthRelatedOn)
+extension ParentChildResolver {
+    static func requireAuth() -> ParentChildResolver where RelatedModel: Authenticatable {
+        ParentChildResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static func asRequestPath() -> ChildPairResolver {
-        ChildPairResolver(find: Model.findWithRelatedOn)
+    static func byIdKeys() -> ParentChildResolver {
+        ParentChildResolver(find: Model.findByIdKeys)
     }
 }
 
-struct ParentPairResolver<Model, RelatedModel>
+struct ChildParentResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
     RelatedModel: Fluent.Model,
@@ -44,13 +44,13 @@ where
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension ParentPairResolver {
-    static func asAuth() -> ParentPairResolver where RelatedModel: Authenticatable {
-        ParentPairResolver(find: Model.findWithAuthRelatedOn)
+extension ChildParentResolver {
+    static func requireAuth() -> ChildParentResolver where RelatedModel: Authenticatable {
+        ChildParentResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static func asRequestPath() -> ParentPairResolver {
-        ParentPairResolver(find: Model.findWithRelatedOn)
+    static func byIdKeys() -> ChildParentResolver {
+        ChildParentResolver(find: Model.findByIdKeys)
     }
 }
 
@@ -70,18 +70,17 @@ where
 }
 
 extension SiblingsPairResolver {
-    static func asAuth() -> SiblingsPairResolver
+    static func requireAuth() -> SiblingsPairResolver
     where
         RelatedModel: Authenticatable {
 
-        SiblingsPairResolver(find: Model.findWithAuthRelatedOn)
+        SiblingsPairResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static func asRequestPath() -> SiblingsPairResolver  {
-        SiblingsPairResolver(find: Model.findWithRelatedOn)
+    static func byIdKeys() -> SiblingsPairResolver  {
+        SiblingsPairResolver(find: Model.findByIdKeys)
     }
 }
-
 
 struct ModelResolver<Model>
 where
@@ -92,13 +91,12 @@ where
                _ db: Database) throws -> EventLoopFuture<Model>
 }
 
-
 extension ModelResolver {
-    static func asAuth() -> ModelResolver where Model: Authenticatable {
-        ModelResolver(find: Model.findAsAuth)
+    static func requireAuth() -> ModelResolver where Model: Authenticatable {
+        ModelResolver(find: Model.requireAuth)
     }
 
-    static func asRequestPath() -> ModelResolver {
+    static func byIdKeys() -> ModelResolver {
         ModelResolver(find: Model.findByIdKey)
     }
 }

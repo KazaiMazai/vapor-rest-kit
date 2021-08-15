@@ -22,7 +22,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
     func read<Output, RelatedModel>(
-        resolver: ChildPairResolver<Model, RelatedModel>,
+        resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
@@ -37,7 +37,7 @@ extension RelatedResourceController {
     }
 
     func read<Output, RelatedModel>(
-        resolver: ParentPairResolver<Model, RelatedModel>,
+        resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
