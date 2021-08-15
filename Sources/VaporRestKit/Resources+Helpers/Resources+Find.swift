@@ -53,7 +53,8 @@ extension Model where IDValue: LosslessStringConvertible {
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, related) }}
+                    .and(value: related)
+            }
             .flatMap { $0 }
     }
 
@@ -69,13 +70,15 @@ extension Model where IDValue: LosslessStringConvertible {
         RelatedModel: Authenticatable {
 
         let related = try req.auth.require(RelatedModel.self)
-        return req.eventLoop.makeSucceededFuture(related)
+        return req.eventLoop
+            .makeSucceededFuture(related)
             .flatMapThrowing { related in
                 try related
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, related) }}
+                    .and(value: related)
+            }
             .flatMap { $0 }
     }
 }
@@ -103,7 +106,8 @@ extension Model where IDValue: LosslessStringConvertible {
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, related) }}
+                    .and(value: related)
+            }
             .flatMap { $0 }
     }
 
@@ -119,13 +123,15 @@ extension Model where IDValue: LosslessStringConvertible {
         RelatedModel: Authenticatable {
 
         let related = try req.auth.require(RelatedModel.self)
-        return req.eventLoop.makeSucceededFuture(related)
+        return req.eventLoop
+            .makeSucceededFuture(related)
             .flatMapThrowing { related in
                 try related
                     .query(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, related) }}
+                    .and(value: related)
+            }
             .flatMap { $0 }
     }
 }
@@ -151,7 +157,8 @@ extension Model where IDValue: LosslessStringConvertible {
                 try related.queryRelated(keyPath: siblingKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, related) }}
+                    .and(value: related)
+            }
             .flatMap { $0 }
     }
 
@@ -167,12 +174,14 @@ extension Model where IDValue: LosslessStringConvertible {
         RelatedModel: Authenticatable {
 
         let related = try req.auth.require(RelatedModel.self)
-        return req.eventLoop.makeSucceededFuture(related)
+        return req.eventLoop
+            .makeSucceededFuture(related)
             .flatMapThrowing { related in
                 try related.queryRelated(keyPath: siblingKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
-                    .map { ($0, related) }}
+                    .and(value: related)
+            }
             .flatMap { $0 }
     }
 }
