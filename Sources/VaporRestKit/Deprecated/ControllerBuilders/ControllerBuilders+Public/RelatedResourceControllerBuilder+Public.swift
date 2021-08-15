@@ -23,7 +23,7 @@ public extension RelatedResourceControllerBuilder {
 
 public extension RelatedResourceControllerBuilder {
     func create<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -71,7 +71,7 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func update<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -100,7 +100,7 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func patch<Input>(using: Input.Type,
-                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -130,7 +130,7 @@ public extension RelatedResourceControllerBuilder {
     }
 
     func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
-                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware)  -> RelatedResourceControllerBuilder {
+                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty)  -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
         case .children(let relationKeyPath):
@@ -188,7 +188,7 @@ public extension RelatedResourceControllerBuilder {
 
 public extension RelatedResourceControllerBuilder where RelatedModel: Authenticatable {
     func create<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        authenticatable: RelatedModel.Type,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
@@ -237,7 +237,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
     }
 
     func update<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        authenticatable: RelatedModel.Type,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
@@ -268,7 +268,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
     }
 
     func patch<Input>(using: Input.Type,
-                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                       authenticatable: RelatedModel.Type,
                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> RelatedResourceControllerBuilder
         where
@@ -298,7 +298,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
     }
 
     func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
-                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                 authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 
         switch keyPathType {

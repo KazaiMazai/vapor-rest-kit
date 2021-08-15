@@ -33,7 +33,7 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
 
@@ -63,7 +63,7 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
@@ -98,7 +98,7 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
 

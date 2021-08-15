@@ -13,7 +13,7 @@ extension RelationsController {
     func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -40,7 +40,7 @@ extension RelationsController {
     func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
@@ -68,7 +68,7 @@ extension RelationsController {
     func createRelation<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where

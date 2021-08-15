@@ -27,7 +27,7 @@ public extension SiblingsResourceControllerBuilder {
 
 public extension SiblingsResourceControllerBuilder {
     func create<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -56,7 +56,7 @@ public extension SiblingsResourceControllerBuilder {
 
 
     func update<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourceUpdateModel,
@@ -74,7 +74,7 @@ public extension SiblingsResourceControllerBuilder {
     }
 
     func patch<Input>(using: Input.Type,
-                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
         Input: ResourcePatchModel,
@@ -92,7 +92,7 @@ public extension SiblingsResourceControllerBuilder {
     }
 
     func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
-                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware) -> SiblingsResourceControllerBuilder {
+                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty) -> SiblingsResourceControllerBuilder {
 
         return adding(DeleteRelatedResourceController<Model,
             RelatedModel,
@@ -123,7 +123,7 @@ public extension SiblingsResourceControllerBuilder {
 
 public extension SiblingsResourceControllerBuilder where RelatedModel: Authenticatable {
     func create<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        authenticatable: RelatedModel.Type,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
@@ -151,7 +151,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func update<Input>(using: Input.Type,
-                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                       middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                        authenticatable: RelatedModel.Type,
                        bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
@@ -170,7 +170,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func patch<Input>(using: Input.Type,
-                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                      middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                       authenticatable: RelatedModel.Type,
                       bodyStreamingStrategy: HTTPBodyStreamStrategy = .collect) -> SiblingsResourceControllerBuilder
         where
@@ -189,7 +189,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
     }
 
     func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
-                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+                middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
                 authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
 
         return adding(DeleteRelatedAuthResourceController<Model,

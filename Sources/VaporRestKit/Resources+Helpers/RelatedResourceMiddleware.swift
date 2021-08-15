@@ -17,7 +17,7 @@ public struct RelatedResourceMiddleware<Model: Fluent.Model, RelatedModel: Fluen
         self.handler = handler
     }
 
-    public static var defaultMiddleware: RelatedResourceMiddleware<Model, RelatedModel> {
+    public static var empty: RelatedResourceMiddleware<Model, RelatedModel> {
         RelatedResourceMiddleware { model, relatedModel, req, _ in
             req.eventLoop.makeSucceededFuture((model, relatedModel))
         }

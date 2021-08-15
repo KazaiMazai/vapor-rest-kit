@@ -12,7 +12,7 @@ extension RelationsController {
     func deleteRelation<Output, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -38,7 +38,7 @@ extension RelationsController {
     func deleteRelation<Output, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     
@@ -65,7 +65,7 @@ extension RelationsController {
     func deleteRelation<Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     

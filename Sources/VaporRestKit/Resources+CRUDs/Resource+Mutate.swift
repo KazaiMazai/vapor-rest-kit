@@ -38,7 +38,7 @@ extension RelatedResourceController {
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -69,7 +69,7 @@ extension RelatedResourceController {
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
@@ -105,7 +105,7 @@ extension RelatedResourceController {
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
