@@ -88,7 +88,7 @@ extension ChildrenResourceModelProvider {
 
         return try findRelated(req, database: database)
             .flatMapThrowing { relatedResource in
-                try relatedResource.query(keyPath: childrenKeyPath, on: database)
+                try relatedResource.queryRelated(keyPath: childrenKeyPath, on: database)
                     .with(self.eagerLoadHandler, for: req)
                     .sort(self.sortingHandler, for: req)
                     .filter(self.filteringHandler, for: req)

@@ -117,7 +117,7 @@ extension Model {
             return From()[keyPath: childrenKeyPath].parentKey
     }
 
-    func query<From>(keyPath childrenKeyPath: ChildrenKeyPath<From, Self>,
+    func queryRelated<From>(keyPath childrenKeyPath: ChildrenKeyPath<From, Self>,
                               on database: Database) throws -> QueryBuilder<From>
         where From: Fluent.Model {
 
@@ -134,7 +134,7 @@ extension Model {
         }
     }
 
-    func query<To>(keyPath childrenKeyPath: ChildrenKeyPath<Self, To>,
+    func queryRelated<To>(keyPath childrenKeyPath: ChildrenKeyPath<Self, To>,
                             on database: Database) -> QueryBuilder<To> {
         return self[keyPath: childrenKeyPath].query(on: database)
     }

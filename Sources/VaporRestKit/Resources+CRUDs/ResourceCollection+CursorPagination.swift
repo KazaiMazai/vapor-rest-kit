@@ -20,7 +20,7 @@ extension ResourceController {
         try Model.query(on: req.db)
             .with(queryModifier, for: req)
             .paginateWithCursor(for: req, config: config)
-            .flatMapThrowing { try $0.map { try Output($0, req: req) } }
+            .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
 }
 
@@ -37,10 +37,10 @@ extension RelatedResourceController {
 
         try resolver
             .find(req, req.db)
-            .flatMapThrowing { related in related.query(keyPath: childrenKeyPath, on: req.db) }
+            .flatMapThrowing { related in related.queryRelated(keyPath: childrenKeyPath, on: req.db) }
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
-            .flatMap { $0.paginateWithCursor(for: req, config: config) }
-            .flatMapThrowing { try $0.map { try Output($0, req: req) } }
+            .flatMap { query in query.paginateWithCursor(for: req, config: config) }
+            .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
 
     func readWithCursorPagination<Output, RelatedModel>(
@@ -55,10 +55,10 @@ extension RelatedResourceController {
 
         try resolver
             .find(req, req.db)
-            .flatMapThrowing { related in try related.query(keyPath: childrenKeyPath, on: req.db) }
+            .flatMapThrowing { related in try related.queryRelated(keyPath: childrenKeyPath, on: req.db) }
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
-            .flatMap { $0.paginateWithCursor(for: req, config: config) }
-            .flatMapThrowing { try $0.map { try Output($0, req: req) } }
+            .flatMap { query in query.paginateWithCursor(for: req, config: config) }
+            .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
 
     func readWithCursorPagination<Output, RelatedModel, Through>(
@@ -75,7 +75,7 @@ extension RelatedResourceController {
             .find(req, req.db)
             .flatMapThrowing { related in related.queryRelated(keyPath: siblingKeyPath, on: req.db) }
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
-            .flatMap { $0.paginateWithCursor(for: req, config: config) }
-            .flatMapThrowing { try $0.map { try Output($0, req: req) } }
+            .flatMap { query in query.paginateWithCursor(for: req, config: config) }
+            .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
 }

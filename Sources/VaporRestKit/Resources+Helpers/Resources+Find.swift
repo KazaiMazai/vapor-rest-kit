@@ -11,7 +11,10 @@ import Fluent
 extension Model where IDValue: LosslessStringConvertible {
     static func findByIdKey(_ req: Request,
                             database: Database) throws -> EventLoopFuture<Self> {
-        try findByIdKey(req, database: database, queryModifier: .empty)
+        try findByIdKey(
+            req,
+            database: database,
+            queryModifier: .empty)
     }
 
     static func findByIdKey(_ req: Request,
@@ -50,7 +53,7 @@ extension Model where IDValue: LosslessStringConvertible {
             .find(by: RelatedModel.idKey, from: req)
             .flatMapThrowing { related in
                 try related
-                    .query(keyPath: childrenKeyPath, on: database)
+                    .queryRelated(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
                     .and(value: related)
@@ -74,7 +77,7 @@ extension Model where IDValue: LosslessStringConvertible {
             .makeSucceededFuture(related)
             .flatMapThrowing { related in
                 try related
-                    .query(keyPath: childrenKeyPath, on: database)
+                    .queryRelated(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
                     .and(value: related)
@@ -103,7 +106,7 @@ extension Model where IDValue: LosslessStringConvertible {
             .find(by: RelatedModel.idKey, from: req)
             .flatMapThrowing { related in
                 try related
-                    .query(keyPath: childrenKeyPath, on: database)
+                    .queryRelated(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
                     .and(value: related)
@@ -127,7 +130,7 @@ extension Model where IDValue: LosslessStringConvertible {
             .makeSucceededFuture(related)
             .flatMapThrowing { related in
                 try related
-                    .query(keyPath: childrenKeyPath, on: database)
+                    .queryRelated(keyPath: childrenKeyPath, on: database)
                     .with(queryModifier, for: req)
                     .find(by: idKey, from: req)
                     .and(value: related)
