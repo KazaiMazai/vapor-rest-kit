@@ -11,12 +11,13 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func readAll<Output>(req: Request,
-                         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<[Output]> where
+    func getAll<Output>(req: Request,
+                        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<[Output]> where
         Output: ResourceOutputModel,
         Output.Model == Model {
         
-        try Model.query(on: req.db)
+        try Model
+            .query(on: req.db)
             .with(queryModifier, for: req)
             .all()
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
@@ -24,7 +25,7 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func readAll<Output, RelatedModel>(
+    func getAll<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
@@ -41,7 +42,7 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func readAll<Output, RelatedModel>(
+    func getAll<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
@@ -58,7 +59,7 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func readAll<Output, RelatedModel, Through>(
+    func getAll<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,

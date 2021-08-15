@@ -14,9 +14,7 @@ import Fluent
 
 struct StarTagControllers {
     struct StarTagController: VersionableController {
-        var queryModifier = QueryModifier<StarTag> { query, req in
-            query
-        }
+        let queryModifier: QueryModifier<StarTag> = .empty
 
         var apiV1: APIMethodsProviding {
             return StarTag.Output
@@ -36,44 +34,48 @@ struct StarTagControllers {
             }
         }
 
-        func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-            try ResourceController<StarTag>().create(
-                req: req,
-                using: StarTag.Input.self)
-        }
+        struct StarTagControllerV2 {
+            let queryModifier: QueryModifier<StarTag> = .empty
 
-        func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-            try ResourceController<StarTag>().read(
-                req: req,
-                queryModifier: queryModifier)
-        }
+            func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+                try ResourceController<StarTag>().create(
+                    req: req,
+                    using: StarTag.Input.self)
+            }
 
-        func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-            try ResourceController<StarTag>().update(
-                req: req,
-                using: StarTag.Input.self,
-                queryModifier: queryModifier)
-        }
+            func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+                try ResourceController<StarTag>().read(
+                    req: req,
+                    queryModifier: queryModifier)
+            }
 
-        func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-            try ResourceController<StarTag>().delete(
-                req: req,
-                using: .defaultDeleter,
-                queryModifier: queryModifier)
-        }
+            func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+                try ResourceController<StarTag>().update(
+                    req: req,
+                    using: StarTag.Input.self,
+                    queryModifier: queryModifier)
+            }
 
-        func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-            try ResourceController<StarTag>().patch(
-                req: req,
-                using: StarTag.PatchInput.self,
-                queryModifier: queryModifier)
-        }
+            func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+                try ResourceController<StarTag>().delete(
+                    req: req,
+                    using: .defaultDeleter,
+                    queryModifier: queryModifier)
+            }
 
-        func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
-            try ResourceController<StarTag>().readWithCursorPagination(
-                req: req,
-                queryModifier: queryModifier,
-                config: CursorPaginationConfig.defaultConfig)
+            func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
+                try ResourceController<StarTag>().patch(
+                    req: req,
+                    using: StarTag.PatchInput.self,
+                    queryModifier: queryModifier)
+            }
+
+            func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
+                try ResourceController<StarTag>().getCursorPage(
+                    req: req,
+                    queryModifier: queryModifier,
+                    config: CursorPaginationConfig.defaultConfig)
+            }
         }
     }
 
@@ -116,5 +118,5 @@ struct StarTagControllers {
             }
         }
     }
-
 }
+
