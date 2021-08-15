@@ -12,7 +12,7 @@ extension ResourceController {
     func mutate<Input, Output>(
         req: Request,
         using: Input.Type,
-        queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output>
+        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
     where
         Input: ResourceMutationModel,
         Output: ResourceOutputModel,
@@ -23,7 +23,7 @@ extension ResourceController {
         let inputModel = try req.content.decode(Input.self)
         
         return req.db.tryTransaction { db in
-            try Model.findByIdKey(req, database: db, using: queryModifier)
+            try Model.findByIdKey(req, database: db, queryModifier: queryModifier)
                 .flatMap { inputModel.mutate($0, req: req, database: db) }
                 .flatMap { model in return model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }
@@ -39,7 +39,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
@@ -69,7 +69,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         
@@ -104,7 +104,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         

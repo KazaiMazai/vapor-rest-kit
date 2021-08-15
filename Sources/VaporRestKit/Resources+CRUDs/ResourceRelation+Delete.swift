@@ -13,7 +13,7 @@ extension RelationsController {
         resolver: ChildPairResolver<Model, RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
@@ -38,7 +38,7 @@ extension RelationsController {
         resolver: ParentPairResolver<Model, RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     
     where
@@ -64,7 +64,7 @@ extension RelationsController {
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     
     where

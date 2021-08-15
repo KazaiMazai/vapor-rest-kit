@@ -11,13 +11,12 @@ import Fluent
 extension Model where IDValue: LosslessStringConvertible {
     static func findByIdKey(_ req: Request,
                             database: Database) throws -> EventLoopFuture<Self> {
-        try findByIdKey(req, database: database, using: nil)
+        try findByIdKey(req, database: database, queryModifier: .empty)
     }
 
-    
     static func findByIdKey(_ req: Request,
                             database: Database,
-                            using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<Self> {
+                            queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<Self> {
         try Self.query(on: database)
                 .with(queryModifier, for: req)
                 .find(by: idKey, from: req)
@@ -40,7 +39,7 @@ extension Model where IDValue: LosslessStringConvertible {
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
+        queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where
         RelatedModel: Fluent.Model,
@@ -62,7 +61,7 @@ extension Model where IDValue: LosslessStringConvertible {
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Self>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
+        queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where
         RelatedModel: Fluent.Model,
@@ -90,7 +89,7 @@ extension Model where IDValue: LosslessStringConvertible {
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
+        queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where
         RelatedModel: Fluent.Model,
@@ -112,7 +111,7 @@ extension Model where IDValue: LosslessStringConvertible {
         _ req: Request,
         database: Database,
         childrenKeyPath: ChildrenKeyPath<Self, RelatedModel>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
+        queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where
         RelatedModel: Fluent.Model,
@@ -139,7 +138,7 @@ extension Model where IDValue: LosslessStringConvertible {
         _ req: Request,
         database: Database,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
+        queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where Through: Fluent.Model,
               RelatedModel.IDValue: LosslessStringConvertible {
@@ -159,7 +158,7 @@ extension Model where IDValue: LosslessStringConvertible {
         _ req: Request,
         database: Database,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Self, Through>,
-        using queryModifier: QueryModifier<Self>?) throws -> EventLoopFuture<(Self, RelatedModel)>
+        queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<(Self, RelatedModel)>
 
         where Through: Fluent.Model,
               RelatedModel.IDValue: LosslessStringConvertible,

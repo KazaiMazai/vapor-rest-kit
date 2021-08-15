@@ -10,7 +10,7 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<Output> where
+    func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
         Output: ResourceOutputModel,
         Output.Model == Model,
@@ -27,7 +27,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
 
@@ -49,7 +49,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
@@ -71,7 +71,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
 

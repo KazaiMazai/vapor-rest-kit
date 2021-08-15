@@ -18,7 +18,7 @@ where
     let findWithRelated: (_ req: Request,
                           _ db: Database,
                           _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-                          _ queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<(Model, RelatedModel)>
+                          _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
 extension ChildPairResolver {
@@ -41,7 +41,7 @@ where
     let findWithRelated: (_ req: Request,
                           _ db: Database,
                           _ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-                          _ queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<(Model, RelatedModel)>
+                          _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
 extension ParentPairResolver {
@@ -66,7 +66,7 @@ struct SiblingsPairResolver<Model, RelatedModel, Through>
     let findWithRelated: (_ req: Request,
                           _ db: Database,
                           _ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-                          _ queryModifier: QueryModifier<Model>?) throws -> EventLoopFuture<(Model, RelatedModel)>
+                          _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
 extension SiblingsPairResolver {

@@ -14,7 +14,7 @@ extension RelationsController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
@@ -24,7 +24,7 @@ extension RelationsController {
         req.db.tryTransaction { db in
             
             try resolver.find(req, db)
-                .and(Model.findByIdKey(req, database: db, using: queryModifier))
+                .and(Model.findByIdKey(req, database: db, queryModifier: queryModifier))
                 .flatMap { relatedResourceMiddleware.handleRelated($0.1,
                                                                    relatedModel: $0.0,
                                                                    req: req,
@@ -40,7 +40,7 @@ extension RelationsController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         
@@ -50,7 +50,7 @@ extension RelationsController {
         req.db.tryTransaction { db in
             
             try resolver.find(req, db)
-                .and(Model.findByIdKey(req, database: db, using: queryModifier))
+                .and(Model.findByIdKey(req, database: db, queryModifier: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
@@ -67,7 +67,7 @@ extension RelationsController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        queryModifier: QueryModifier<Model>?,
+        queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         
@@ -77,7 +77,7 @@ extension RelationsController {
         req.db.tryTransaction { db in
             
             try resolver.find(req, db)
-                .and(Model.findByIdKey(req, database: db, using: queryModifier))
+                .and(Model.findByIdKey(req, database: db, queryModifier: queryModifier))
                 .flatMap { (related, model) in relatedResourceMiddleware.handleRelated(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
