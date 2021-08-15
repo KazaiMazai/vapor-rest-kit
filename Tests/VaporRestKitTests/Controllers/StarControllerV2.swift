@@ -749,7 +749,7 @@ extension StarControllersV2 {
                 filterProvider: StarTagControllers.StarsFiltering())
         }
 
-        func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
+        func create(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star>().create(
                 resolver: .byIdKeys(),
                 req: req,
@@ -757,7 +757,7 @@ extension StarControllersV2 {
                 relationKeyPath: \Galaxy.$stars)
         }
 
-        func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
+        func read(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star>().read(
                 resolver: .byIdKeys(),
                 req: req,
@@ -765,7 +765,7 @@ extension StarControllersV2 {
                 relationKeyPath: \Galaxy.$stars)
         }
 
-        func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
+        func update(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star>().update(
                 resolver: .byIdKeys(),
                 req: req,
@@ -774,7 +774,7 @@ extension StarControllersV2 {
                 relationKeyPath: \Galaxy.$stars)
         }
 
-        func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
+        func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star>().delete(
                 resolver: .byIdKeys(),
                 req: req,
@@ -783,7 +783,7 @@ extension StarControllersV2 {
                 relationKeyPath: \Galaxy.$stars)
         }
 
-        func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
+        func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star>().patch(
                 resolver: .byIdKeys(),
                 req: req,
@@ -792,7 +792,7 @@ extension StarControllersV2 {
                 relationKeyPath: \Galaxy.$stars)
         }
 
-        func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
+        func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
             try RelatedResourceController<Star>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
