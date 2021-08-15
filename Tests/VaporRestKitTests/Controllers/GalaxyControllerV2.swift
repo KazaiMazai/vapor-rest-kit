@@ -73,7 +73,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.Input.self,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
@@ -81,7 +81,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
@@ -90,7 +90,7 @@ struct GalaxyControllersV2 {
                 req: req,
                 using: Galaxy.Input.self,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
@@ -99,7 +99,7 @@ struct GalaxyControllersV2 {
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
@@ -108,7 +108,7 @@ struct GalaxyControllersV2 {
                 req: req,
                 using: Galaxy.PatchInput.self,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.Output>> {
@@ -116,7 +116,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars,
+                relationKeyPath: \Galaxy.$stars,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
@@ -134,7 +134,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.Input.self,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
@@ -142,7 +142,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
@@ -151,7 +151,7 @@ struct GalaxyControllersV2 {
                 req: req,
                 using: Galaxy.Input.self,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
@@ -160,7 +160,7 @@ struct GalaxyControllersV2 {
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
@@ -169,7 +169,7 @@ struct GalaxyControllersV2 {
                 req: req,
                 using: Galaxy.PatchInput.self,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.ExtendedOutput<Star.Output>>> {
@@ -177,7 +177,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                childrenKeyPath: \Galaxy.$stars,
+                relationKeyPath: \Galaxy.$stars,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
@@ -188,7 +188,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
@@ -196,7 +196,7 @@ struct GalaxyControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                childrenKeyPath: \Galaxy.$stars)
+                relationKeyPath: \Galaxy.$stars)
         }
     }
 }

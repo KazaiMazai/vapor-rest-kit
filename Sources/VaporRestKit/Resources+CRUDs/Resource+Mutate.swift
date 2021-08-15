@@ -40,7 +40,7 @@ extension RelatedResourceController {
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
         Input: ResourceMutationModel,
@@ -53,13 +53,13 @@ extension RelatedResourceController {
         return req.db.tryTransaction { db in
             
             try resolver
-                .find(req, db, childrenKeyPath, queryModifier)
+                .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req, database: db).and(value: related) }
                 .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
-                .flatMapThrowing { (model, related) in try model.attached(to: related, with: childrenKeyPath) }
+                .flatMapThrowing { (model, related) in try model.attached(to: related, with: relationKeyPath) }
                 .flatMap { model in model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }
         }
@@ -71,7 +71,7 @@ extension RelatedResourceController {
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         
         Input: ResourceMutationModel,
@@ -81,11 +81,11 @@ extension RelatedResourceController {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
-        let keyPath = childrenKeyPath
+        let keyPath = relationKeyPath
         return req.db.tryTransaction { db in
             
             try resolver
-                .find(req, db, childrenKeyPath, queryModifier)
+                .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related ) in middleware.handle(model,
                                                                          relatedModel: related,
@@ -107,7 +107,7 @@ extension RelatedResourceController {
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         
         Input: ResourceMutationModel,
@@ -120,14 +120,14 @@ extension RelatedResourceController {
         return req.db.tryTransaction { db in
             
             try resolver
-                .find(req, db, siblingKeyPath, queryModifier)
+                .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in inputModel.mutate(model, req: req ,database: db).and(value: related) }
                 .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
                 .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
-                .flatMap { (model, related) in model.attached(to: related, with: siblingKeyPath, on: db) }
+                .flatMap { (model, related) in model.attached(to: related, with: relationKeyPath, on: db) }
                 .flatMapThrowing { try Output($0, req: req) }
         }
     }

@@ -34,7 +34,7 @@ struct UserControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$assignees)
+                relationKeyPath: \Todo.$assignees)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<User.Output>> {
@@ -42,7 +42,7 @@ struct UserControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$assignees,
+                relationKeyPath: \Todo.$assignees,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
@@ -61,7 +61,7 @@ struct UserControllersV2 {
                 req: req,
                 willAttach: todoOwnerGuardMiddleware,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$assignees)
+                relationKeyPath: \Todo.$assignees)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<User.Output> {
@@ -70,7 +70,7 @@ struct UserControllersV2 {
                 req: req,
                 willDetach: todoOwnerGuardMiddleware,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$assignees)
+                relationKeyPath: \Todo.$assignees)
         }
     }
 }

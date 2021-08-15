@@ -34,7 +34,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
 
         Input: ResourceUpdateModel,
@@ -53,7 +53,7 @@ extension RelatedResourceController {
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
-                .flatMapThrowing { (model, related) in try model.attached(to: related, with: childrenKeyPath) }
+                .flatMapThrowing { (model, related) in try model.attached(to: related, with: relationKeyPath) }
                 .flatMap { model in model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }
         }
@@ -64,7 +64,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
         Input: ResourceUpdateModel,
@@ -75,7 +75,7 @@ extension RelatedResourceController {
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
-        let keyPath = childrenKeyPath
+        let keyPath = relationKeyPath
         return req.db.tryTransaction { db in
 
             try resolver
@@ -99,7 +99,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
 
         Input: ResourceUpdateModel,
@@ -120,7 +120,7 @@ extension RelatedResourceController {
                                                                                        req: req,
                                                                                        database: db) }
                 .flatMap { (model, related) in model.save(on: db).transform(to: (model, related)) }
-                .flatMap { (model, related) in model.attached(to: related, with: siblingKeyPath, on: db) }
+                .flatMap { (model, related) in model.attached(to: related, with: relationKeyPath, on: db) }
                 .flatMapThrowing { try Output($0, req: req) }
         }
     }

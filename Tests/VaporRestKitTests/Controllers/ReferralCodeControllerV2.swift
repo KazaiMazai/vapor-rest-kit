@@ -56,7 +56,7 @@ struct ReferralCodeControllersV2 {
                 resolver: .requireAuth(),
                 req: req,
                 using: ReferralCode.Input.self,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
 
         func read(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
@@ -64,7 +64,7 @@ struct ReferralCodeControllersV2 {
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
 
         func update(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
@@ -73,7 +73,7 @@ struct ReferralCodeControllersV2 {
                 req: req,
                 using: ReferralCode.Input.self,
                 queryModifier: .empty,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
@@ -82,7 +82,7 @@ struct ReferralCodeControllersV2 {
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: .empty,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
@@ -91,7 +91,7 @@ struct ReferralCodeControllersV2 {
                 req: req,
                 using: ReferralCode.PatchInput.self,
                 queryModifier: .empty,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
     }
 
@@ -101,7 +101,7 @@ struct ReferralCodeControllersV2 {
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
@@ -109,7 +109,7 @@ struct ReferralCodeControllersV2 {
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
-                childrenKeyPath: \ReferralCode.$users)
+                relationKeyPath: \ReferralCode.$users)
         }
     }
 }

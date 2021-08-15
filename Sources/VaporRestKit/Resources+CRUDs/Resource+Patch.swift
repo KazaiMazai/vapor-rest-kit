@@ -31,7 +31,7 @@ extension RelatedResourceController {
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
@@ -43,7 +43,7 @@ extension RelatedResourceController {
                    using: using,
                    willSave: middleware,
                    queryModifier: queryModifier,
-                   childrenKeyPath: childrenKeyPath)
+                   relationKeyPath: relationKeyPath)
     }
     
     func patch<Input, Output, RelatedModel>(
@@ -52,7 +52,7 @@ extension RelatedResourceController {
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
         Output: ResourceOutputModel,
@@ -64,7 +64,7 @@ extension RelatedResourceController {
                    using: using,
                    willSave: middleware,
                    queryModifier: queryModifier,
-                   childrenKeyPath: childrenKeyPath)
+                   relationKeyPath: relationKeyPath)
     }
     
     func patch<Input, Output, RelatedModel, Through>(
@@ -73,7 +73,7 @@ extension RelatedResourceController {
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         
         Input: ResourcePatchModel,
@@ -86,6 +86,6 @@ extension RelatedResourceController {
                    using: using,
                    willSave: middleware,
                    queryModifier: queryModifier,
-                   siblingKeyPath: siblingKeyPath)
+                   relationKeyPath: relationKeyPath)
     }
 }

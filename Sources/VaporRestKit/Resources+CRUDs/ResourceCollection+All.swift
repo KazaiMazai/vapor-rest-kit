@@ -29,14 +29,14 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<[Output]>
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<[Output]>
     where
         Output: ResourceOutputModel,
         Model == Output.Model {
         
         try resolver
             .find(req, req.db)
-            .flatMapThrowing { related in related.queryRelated(keyPath: childrenKeyPath, on: req.db) }
+            .flatMapThrowing { related in related.queryRelated(keyPath: relationKeyPath, on: req.db) }
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
             .flatMap { $0.all() }
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
@@ -46,14 +46,14 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<[Output]>
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<[Output]>
     where
         Output: ResourceOutputModel,
         Model == Output.Model {
         
         try resolver
             .find(req, req.db)
-            .flatMapThrowing { related in try related.queryRelated(keyPath: childrenKeyPath, on: req.db) }
+            .flatMapThrowing { related in try related.queryRelated(keyPath: relationKeyPath, on: req.db) }
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
             .flatMap { $0.all() }
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
@@ -63,14 +63,14 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<[Output]>
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<[Output]>
     where
         Output: ResourceOutputModel,
         Model == Output.Model {
         
         try resolver
             .find(req, req.db)
-            .flatMapThrowing { related in related.queryRelated(keyPath: siblingKeyPath, on: req.db) }
+            .flatMapThrowing { related in related.queryRelated(keyPath: relationKeyPath, on: req.db) }
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
             .flatMap { $0.all() }
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }

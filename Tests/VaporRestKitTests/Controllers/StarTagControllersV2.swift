@@ -63,7 +63,7 @@ struct StarTagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 using: StarTag.Input.self,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
         func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
@@ -71,7 +71,7 @@ struct StarTagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
         func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
@@ -80,7 +80,7 @@ struct StarTagControllersV2 {
                 req: req,
                 using: StarTag.Input.self,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
@@ -89,7 +89,7 @@ struct StarTagControllersV2 {
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
@@ -98,7 +98,7 @@ struct StarTagControllersV2 {
                 req: req,
                 using: StarTag.PatchInput.self,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
@@ -106,7 +106,7 @@ struct StarTagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags,
+                relationKeyPath: \Star.$starTags,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
@@ -119,7 +119,7 @@ struct StarTagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<StarTag.Output> {
@@ -127,7 +127,7 @@ struct StarTagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
-                siblingKeyPath: \Star.$starTags)
+                relationKeyPath: \Star.$starTags)
         }
 
     }

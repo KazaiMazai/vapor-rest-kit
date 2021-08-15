@@ -15,7 +15,7 @@ extension RelationsController {
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
         Output: ResourceOutputModel,
@@ -31,7 +31,7 @@ extension RelationsController {
                                                                         req: req,
                                                                         database: db) }
                 .flatMapThrowing { (model, related) in
-                    try model.attached(to: related, with: childrenKeyPath) }
+                    try model.attached(to: related, with: relationKeyPath) }
                 .flatMap { model in model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }
         }
@@ -42,7 +42,7 @@ extension RelationsController {
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         
         Output: ResourceOutputModel,
@@ -58,7 +58,7 @@ extension RelationsController {
                                                                         req: req,
                                                                         database: db) }
                 .flatMapThrowing { (model, related) in
-                    try model.attached(to: related, with: childrenKeyPath)
+                    try model.attached(to: related, with: relationKeyPath)
                     return related.save(on: db).transform(to: model) }
                 .flatMap { $0 }
                 .flatMapThrowing { try Output($0, req: req) }
@@ -70,7 +70,7 @@ extension RelationsController {
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         
         Output: ResourceOutputModel,
@@ -86,7 +86,7 @@ extension RelationsController {
                                                                         req: req,
                                                                         database: db) }
                 .flatMap { (model, related) in
-                    model.attached(to: related, with: siblingKeyPath, on: db) }
+                    model.attached(to: related, with: relationKeyPath, on: db) }
                 .flatMapThrowing { try Output($0, req: req)}
         }
     }

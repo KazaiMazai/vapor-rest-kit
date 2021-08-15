@@ -25,13 +25,13 @@ extension RelatedResourceController {
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Output: ResourceOutputModel,
         Model == Output.Model {
 
         try resolver
-            .find(req, req.db, childrenKeyPath, queryModifier)
+            .find(req, req.db, relationKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req) }
 
     }
@@ -40,13 +40,13 @@ extension RelatedResourceController {
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
-        childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Output: ResourceOutputModel,
         Model == Output.Model {
 
         try resolver
-            .find(req, req.db, childrenKeyPath, queryModifier)
+            .find(req, req.db, relationKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req)}
 
     }
@@ -55,13 +55,13 @@ extension RelatedResourceController {
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         queryModifier: QueryModifier<Model>,
-        siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         Output: ResourceOutputModel,
         Model == Output.Model {
 
         try resolver
-            .find(req, req.db, siblingKeyPath, queryModifier)
+            .find(req, req.db, relationKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req) }
 
     }

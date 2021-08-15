@@ -17,7 +17,7 @@ struct TagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$tags,
+                relationKeyPath: \Todo.$tags,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
@@ -36,7 +36,7 @@ struct TagControllersV2 {
                 req: req,
                 using: Tag.CreateInput.self,
                 willAttach: todoOwnerGuardMiddleware,
-                siblingKeyPath: \Todo.$tags)
+                relationKeyPath: \Todo.$tags)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Tag.Output> {
@@ -44,7 +44,7 @@ struct TagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$tags)
+                relationKeyPath: \Todo.$tags)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Tag.Output> {
@@ -54,7 +54,7 @@ struct TagControllersV2 {
                 using: Tag.UpdateInput.self,
                 willSave: todoOwnerGuardMiddleware,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$tags)
+                relationKeyPath: \Todo.$tags)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Tag.Output> {
@@ -64,7 +64,7 @@ struct TagControllersV2 {
                 using: Tag.PatchInput.self,
                 willSave: todoOwnerGuardMiddleware,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$tags)
+                relationKeyPath: \Todo.$tags)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
@@ -72,7 +72,7 @@ struct TagControllersV2 {
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
-                siblingKeyPath: \Todo.$tags,
+                relationKeyPath: \Todo.$tags,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
