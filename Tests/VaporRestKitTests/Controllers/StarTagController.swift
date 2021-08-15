@@ -10,8 +10,6 @@ import XCTVapor
 import Vapor
 import Fluent
 
-
-
 struct StarTagControllers {
     struct StarTagController: VersionableController {
         let queryModifier: QueryModifier<StarTag> = .empty
@@ -31,50 +29,6 @@ struct StarTagControllers {
             switch version {
             case .v1:
                 apiV1.addMethodsTo(routeBuilder, on: endpoint)
-            }
-        }
-
-        struct StarTagControllerV2 {
-            let queryModifier: QueryModifier<StarTag> = .empty
-
-            func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-                try ResourceController<StarTag>().create(
-                    req: req,
-                    using: StarTag.Input.self)
-            }
-
-            func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-                try ResourceController<StarTag>().read(
-                    req: req,
-                    queryModifier: queryModifier)
-            }
-
-            func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-                try ResourceController<StarTag>().update(
-                    req: req,
-                    using: StarTag.Input.self,
-                    queryModifier: queryModifier)
-            }
-
-            func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-                try ResourceController<StarTag>().delete(
-                    req: req,
-                    using: .defaultDeleter,
-                    queryModifier: queryModifier)
-            }
-
-            func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
-                try ResourceController<StarTag>().patch(
-                    req: req,
-                    using: StarTag.PatchInput.self,
-                    queryModifier: queryModifier)
-            }
-
-            func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
-                try ResourceController<StarTag>().getCursorPage(
-                    req: req,
-                    queryModifier: queryModifier,
-                    config: CursorPaginationConfig.defaultConfig)
             }
         }
     }
@@ -119,4 +73,5 @@ struct StarTagControllers {
         }
     }
 }
+
 
