@@ -13,7 +13,7 @@ extension RelationsController {
     func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        willAttach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -26,7 +26,7 @@ extension RelationsController {
             try resolver
                 .find(req, db)
                 .and(Model.findByIdKey(req, database: db, queryModifier: queryModifier))
-                .flatMap { (related, model) in middleware.handleRelated(model,
+                .flatMap { (related, model) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -40,7 +40,7 @@ extension RelationsController {
     func createRelation<Output, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        willAttach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
@@ -53,7 +53,7 @@ extension RelationsController {
             try resolver
                 .find(req, db)
                 .and(Model.findByIdKey(req, database: db, queryModifier: queryModifier))
-                .flatMap { (related, model) in middleware.handleRelated(model,
+                .flatMap { (related, model) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -68,7 +68,7 @@ extension RelationsController {
     func createRelation<Output, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
-        willAttach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
@@ -81,7 +81,7 @@ extension RelationsController {
             try resolver
                 .find(req, db)
                 .and(Model.findByIdKey(req, database: db, queryModifier: queryModifier))
-                .flatMap { (related, model) in middleware.handleRelated(model,
+                .flatMap { (related, model) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }

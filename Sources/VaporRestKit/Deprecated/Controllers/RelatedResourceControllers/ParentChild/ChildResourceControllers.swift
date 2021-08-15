@@ -23,7 +23,7 @@ struct CreateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -63,7 +63,7 @@ struct UpdateChildrenResourceController<Model, RelatedModel, Output, Input, Eage
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -86,7 +86,7 @@ struct PatchChildrenResourceController<Model, RelatedModel, Output, Patch, Eager
     EagerLoading.Model == Model {
 
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -107,7 +107,7 @@ struct DeleteChildrenResourceController<Model, RelatedModel, Output, EagerLoadin
     EagerLoading.Model == Model {
 
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let deleter: DeleteHandler<Model>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>

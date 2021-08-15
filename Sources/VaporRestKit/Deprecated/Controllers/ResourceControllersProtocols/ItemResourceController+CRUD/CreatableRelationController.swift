@@ -20,7 +20,7 @@ extension CreatableRelationController where Self: ChildrenResourceRelationProvid
 
             try self.findRelated(req, database: db)
                 .and(self.find(req, database: db))
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.1,
+                .flatMap { self.relatedResourceMiddleware.handle($0.1,
                                                                         relatedModel: $0.0,
                                                                         req: req,
                                                                         database: db) }
@@ -38,7 +38,7 @@ extension CreatableRelationController where Self: ParentResourceRelationProvider
 
             try self.findRelated(req, database: db)
                 .and(self.find(req, database: db))
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.1,
+                .flatMap { self.relatedResourceMiddleware.handle($0.1,
                                                                         relatedModel: $0.0,
                                                                         req: req,
                                                                         database: db) }
@@ -57,7 +57,7 @@ extension CreatableRelationController where Self: SiblingsResourceRelationProvid
 
             try self.findRelated(req, database: db)
                 .and(self.find(req, database: db))
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.1,
+                .flatMap { self.relatedResourceMiddleware.handle($0.1,
                                                                         relatedModel: $0.0,
                                                                         req: req,
                                                                         database: db) }

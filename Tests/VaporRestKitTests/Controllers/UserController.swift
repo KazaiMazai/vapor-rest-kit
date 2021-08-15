@@ -48,7 +48,7 @@ struct UserControllers {
     }
 
     struct TodoAssigneesRelationController: VersionableController {
-        let todoOwnerGuardMiddleware = RelatedResourceControllerMiddleware<User, Todo>(handler: { (user, todo, req, db) in
+        let todoOwnerGuardMiddleware = RelatedResourceMiddleware<User, Todo>(handler: { (user, todo, req, db) in
             db.eventLoop
                 .tryFuture { try req.auth.require(User.self) }
                 .guard( { $0.id == todo.$user.id}, else: Abort(.unauthorized))

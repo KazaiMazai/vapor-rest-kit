@@ -46,7 +46,7 @@ extension PatchableResourceController
         return req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
                 .flatMap { patchModel.patch($0.resource, req: req, database: db).and(value: $0.relatedResource) }
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.0,
+                .flatMap { self.relatedResourceMiddleware.handle($0.0,
                                                                         relatedModel: $0.1,
                                                                         req: req,
                                                                         database: db).map { $0.0 } }
@@ -68,7 +68,7 @@ extension PatchableResourceController
         return req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
                 .flatMap { patchModel.patch($0.resource, req: req, database: db).and(value: $0.relatedResource) }
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.0,
+                .flatMap { self.relatedResourceMiddleware.handle($0.0,
                                                                         relatedModel: $0.1,
                                                                         req: req,
                                                                         database: db).map { $0.0 } }
@@ -90,7 +90,7 @@ extension PatchableResourceController
         return req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
                 .flatMap { patchModel.patch($0.resource, req: req, database: db).and(value: $0.relatedResoure) }
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.0,
+                .flatMap { self.relatedResourceMiddleware.handle($0.0,
                                                                         relatedModel: $0.1,
                                                                         req: req,
                                                                         database: db).map { $0.0 } }

@@ -97,13 +97,13 @@ extension IterableResourceController where Self: SiblingsResourceModelProvider {
 }
 
 extension IterableResourceController where Self: ChildrenResourceModelProvider {
-    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
+    var relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
 
 extension IterableResourceController where Self: ParentResourceModelProvider {
-    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
+    var relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }
 
 extension IterableResourceController where Self: SiblingsResourceModelProvider {
-    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { .defaultMiddleware }
+    var relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel> { .defaultMiddleware }
 }

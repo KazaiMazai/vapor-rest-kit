@@ -24,7 +24,7 @@ struct CreateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -66,7 +66,7 @@ struct UpdateRelatedResourceController<Model, RelatedModel, Through, Output, Inp
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -89,7 +89,7 @@ struct PatchRelatedResourceController<Model, RelatedModel, Through, Output, Patc
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -110,7 +110,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Eag
     EagerLoading.Model == Model,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let deleter: DeleteHandler<Model>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>

@@ -21,7 +21,7 @@ struct CreateParentRelationController<Model, RelatedModel, Output, EagerLoading>
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 
@@ -41,7 +41,7 @@ struct DeleteParentRelationController<Model, RelatedModel, Output, EagerLoading>
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    let relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

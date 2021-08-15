@@ -19,7 +19,7 @@ RelatedModel.IDValue: LosslessStringConvertible {
     var rootIdComponentKey: String { get }
     var rootIdPathComponent: PathComponent { get }
 
-    var relatedResourceMiddleware: RelatedResourceControllerMiddleware<Model, RelatedModel> { get }
+    var relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel> { get }
     var relationNamePath: String? { get }
     var inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel> { get }
 

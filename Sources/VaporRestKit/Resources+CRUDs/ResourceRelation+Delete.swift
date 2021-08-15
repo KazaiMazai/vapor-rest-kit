@@ -12,7 +12,7 @@ extension RelationsController {
     func deleteRelation<Output, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
-        willDetach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -24,7 +24,7 @@ extension RelationsController {
             
             try resolver
                 .find(req, db, childrenKeyPath, queryModifier)
-                .flatMap { (model, related) in middleware.handleRelated(model,
+                .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -38,7 +38,7 @@ extension RelationsController {
     func deleteRelation<Output, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
-        willDetach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     
@@ -50,7 +50,7 @@ extension RelationsController {
             
             try resolver
                 .find(req, db, childrenKeyPath, queryModifier)
-                .flatMap { (model, related) in middleware.handleRelated(model,
+                .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -65,7 +65,7 @@ extension RelationsController {
     func deleteRelation<Output, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
-        willDetach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     
@@ -77,7 +77,7 @@ extension RelationsController {
             
             try resolver
                 .find(req, db, siblingKeyPath, queryModifier)
-                .flatMap { (model, related) in middleware.handleRelated(model,
+                .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }

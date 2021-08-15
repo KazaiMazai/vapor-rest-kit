@@ -29,7 +29,7 @@ extension DeletableResourceController where Self: ChildrenResourceModelProvider 
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                .flatMap { self.relatedResourceMiddleware.handle($0.resource,
                                                                         relatedModel: $0.relatedResource,
                                                                         req: req,
                                                                         database: db) }
@@ -43,7 +43,7 @@ extension DeletableResourceController where Self: ParentResourceModelProvider {
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                .flatMap { self.relatedResourceMiddleware.handle($0.resource,
                                                                         relatedModel: $0.relatedResource,
                                                                         req: req,
                                                                         database: db) }
@@ -63,7 +63,7 @@ extension DeletableResourceController where Self: SiblingsResourceModelProvider 
     func delete(_ req: Request) throws -> EventLoopFuture<Output> {
         req.db.tryTransaction { db in
             try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                .flatMap { self.relatedResourceMiddleware.handle($0.resource,
                                                                         relatedModel: $0.relatedResoure,
                                                                         req: req,
                                                                         database: db) }

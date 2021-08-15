@@ -33,7 +33,7 @@ extension RelatedResourceController {
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
-        willDetach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -45,7 +45,7 @@ extension RelatedResourceController {
 
             try resolver
                 .find(req, db, childrenKeyPath, queryModifier)
-                .flatMap { (model, related) in middleware.handleRelated(model,
+                .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -61,7 +61,7 @@ extension RelatedResourceController {
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
-        willDetach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
@@ -73,7 +73,7 @@ extension RelatedResourceController {
 
             try resolver
                 .find(req, db, childrenKeyPath, queryModifier)
-                .flatMap { (model, related) in middleware.handleRelated(model,
+                .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -93,7 +93,7 @@ extension RelatedResourceController {
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using deleter: DeleteHandler<Model>,
-        willDetach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         queryModifier: QueryModifier<Model>,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
@@ -105,7 +105,7 @@ extension RelatedResourceController {
 
             try resolver
                 .find(req, db, siblingKeyPath, queryModifier)
-                .flatMap { (model, related) in middleware.handleRelated(model,
+                .flatMap { (model, related) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }

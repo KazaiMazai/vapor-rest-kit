@@ -20,7 +20,7 @@ extension DeletableRelationController where Self: ChildrenResourceRelationProvid
         return req.db.tryTransaction { db in
 
             try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                .flatMap { self.relatedResourceMiddleware.handle($0.resource,
                                                                         relatedModel: $0.relatedResource,
                                                                         req: req,
                                                                         database: db) }
@@ -37,7 +37,7 @@ extension DeletableRelationController where Self: ParentResourceRelationProvider
         return req.db.tryTransaction { db in
 
             try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                .flatMap { self.relatedResourceMiddleware.handle($0.resource,
                                                                         relatedModel: $0.relatedResource,
                                                                         req: req,
                                                                         database: db) }
@@ -56,7 +56,7 @@ extension DeletableRelationController where Self: SiblingsResourceRelationProvid
         return req.db.tryTransaction { db in
 
             try self.findWithRelated(req, database: db)
-                .flatMap { self.relatedResourceMiddleware.handleRelated($0.resource,
+                .flatMap { self.relatedResourceMiddleware.handle($0.resource,
                                                                         relatedModel: $0.relatedResoure,
                                                                         req: req,
                                                                         database: db) }

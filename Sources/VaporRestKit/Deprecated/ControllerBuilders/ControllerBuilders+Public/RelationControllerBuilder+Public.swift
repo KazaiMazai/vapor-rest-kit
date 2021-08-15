@@ -16,7 +16,7 @@ public extension RelationControllerBuilder {
 }
 
 public extension RelationControllerBuilder {
-    func create(with middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelationControllerBuilder {
+    func create(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelationControllerBuilder {
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
             return adding(CreateChildrenRelationController<Model,
@@ -36,7 +36,7 @@ public extension RelationControllerBuilder {
         }
     }
 
-    func delete(with middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelationControllerBuilder {
+    func delete(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware) -> RelationControllerBuilder {
 
         switch resourceControllerBuilder.keyPathType {
         case .children(let relationKeyPath):
@@ -59,7 +59,7 @@ public extension RelationControllerBuilder {
 }
 
 public extension RelationControllerBuilder where RelatedModel: Authenticatable {
-    func create(with middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+    func create(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
 
         switch resourceControllerBuilder.keyPathType {
@@ -81,7 +81,7 @@ public extension RelationControllerBuilder where RelatedModel: Authenticatable {
         }
     }
 
-    func delete(with middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+    func delete(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
                 authenticatable: RelatedModel.Type) -> RelationControllerBuilder {
 
         switch resourceControllerBuilder.keyPathType {

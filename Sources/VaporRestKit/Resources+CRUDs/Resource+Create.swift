@@ -33,7 +33,7 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
 
@@ -49,7 +49,7 @@ extension RelatedResourceController {
             try resolver
                 .find(req, db)
                 .and(inputModel.update(Output.Model(), req: req, database: db))
-                .flatMap { (related, model) in middleware.handleRelated(model,
+                .flatMap { (related, model) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -63,7 +63,7 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
 
@@ -81,7 +81,7 @@ extension RelatedResourceController {
             try resolver
                 .find(req, db)
                 .and(inputModel.update(Output.Model(), req: req, database: db))
-                .flatMap { (related, model) in middleware.handleRelated(model,
+                .flatMap { (related, model) in middleware.handle(model,
                                                                         relatedModel: related,
                                                                         req: req,
                                                                         database: db) }
@@ -98,7 +98,7 @@ extension RelatedResourceController {
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceControllerMiddleware<Model, RelatedModel> = .defaultMiddleware,
+        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .defaultMiddleware,
         siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
 
@@ -115,7 +115,7 @@ extension RelatedResourceController {
             try resolver
                 .find(req, db)
                 .and(inputModel.update(Output.Model(), req: req, database: db))
-                .flatMap { (related, model) in middleware.handleRelated(model,
+                .flatMap { (related, model) in middleware.handle(model,
                                                                                        relatedModel: related,
                                                                                        req: req,
                                                                                        database: db) }
