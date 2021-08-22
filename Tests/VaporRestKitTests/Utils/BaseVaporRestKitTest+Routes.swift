@@ -13,8 +13,7 @@ import FluentSQLiteDriver
 
 extension BaseVaporRestKitTest {
     func routes() throws {
-        ApiVersion.allCases.forEach { version in
-            let base = app.grouped(version.path)
+        app.group("v1") { base in
 
             base.group("stars") {
                 let controller = StarControllersV2.StarController()
@@ -26,34 +25,35 @@ extension BaseVaporRestKitTest {
                 $0.on(.DELETE, Star.idPath, use: controller.delete)
                 $0.on(.GET, use: controller.index)
 
+                $0.group(Star.idPath, "belongs") {
+                    $0.group("galaxies") {
+                        let controller = GalaxyControllersV2.GalaxyForStarsNestedController()
 
-                $0.group(Star.idPath, "belongs", "galaxies") {
-                    let controller = GalaxyControllersV2.GalaxyForStarsNestedController()
+                        $0.on(.POST, use: controller.create)
+                        $0.on(.GET, Galaxy.idPath, use: controller.read)
+                        $0.on(.PUT, Galaxy.idPath, use: controller.update)
+                        $0.on(.PATCH, Galaxy.idPath, use: controller.patch)
+                        $0.on(.DELETE, Galaxy.idPath, use: controller.delete)
+                        $0.on(.GET, use: controller.index)
 
-                    $0.on(.POST, use: controller.create)
-                    $0.on(.GET, Galaxy.idPath, use: controller.read)
-                    $0.on(.PUT, Galaxy.idPath, use: controller.update)
-                    $0.on(.PATCH, Galaxy.idPath, use: controller.patch)
-                    $0.on(.DELETE, Galaxy.idPath, use: controller.delete)
-                    $0.on(.GET, use: controller.index)
+                        $0.group(Galaxy.idPath, "relation") {
+                            let controller = GalaxyControllersV2.GalaxyForStarsRelationNestedController()
 
-                    $0.group(Galaxy.idPath, "relation") {
-                        let controller = GalaxyControllersV2.GalaxyForStarsRelationNestedController()
-
-                        $0.on(.POST, use: controller.createRelation)
-                        $0.on(.DELETE, use: controller.deleteRelation)
+                            $0.on(.POST, use: controller.createRelation)
+                            $0.on(.DELETE, use: controller.deleteRelation)
+                        }
                     }
-                }
 
-                $0.group(Star.idPath, "belongs", "ext_galaxies") {
-                    let controller = GalaxyControllersV2.ExtendableGalaxyForStarsNestedController()
+                    $0.group("ext_galaxies") {
+                        let controller = GalaxyControllersV2.ExtendableGalaxyForStarsNestedController()
 
-                    $0.on(.POST, use: controller.create)
-                    $0.on(.GET, Galaxy.idPath, use: controller.read)
-                    $0.on(.PUT, Galaxy.idPath, use: controller.update)
-                    $0.on(.PATCH, Galaxy.idPath, use: controller.patch)
-                    $0.on(.DELETE, Galaxy.idPath, use: controller.delete)
-                    $0.on(.GET, use: controller.index)
+                        $0.on(.POST, use: controller.create)
+                        $0.on(.GET, Galaxy.idPath, use: controller.read)
+                        $0.on(.PUT, Galaxy.idPath, use: controller.update)
+                        $0.on(.PATCH, Galaxy.idPath, use: controller.patch)
+                        $0.on(.DELETE, Galaxy.idPath, use: controller.delete)
+                        $0.on(.GET, use: controller.index)
+                    }
                 }
 
                 $0.group(Star.idPath, "related", "star_tags") {
@@ -182,56 +182,59 @@ extension BaseVaporRestKitTest {
                 $0.on(.DELETE, StarTag.idPath, use: controller.delete)
                 $0.on(.GET, use: controller.index)
 
-                $0.group(StarTag.idPath, "related", "stars") {
-                    let controller = StarControllersV2.StarForTagsNestedController()
+                $0.group(StarTag.idPath, "related") {
+                    $0.group("stars") {
+                        let controller = StarControllersV2.StarForTagsNestedController()
 
-                    $0.on(.POST, use: controller.create)
-                    $0.on(.GET, Star.idPath, use: controller.read)
-                    $0.on(.PUT, Star.idPath, use: controller.update)
-                    $0.on(.PATCH, Star.idPath, use: controller.patch)
-                    $0.on(.DELETE, Star.idPath, use: controller.delete)
-                    $0.on(.GET, use: controller.index)
+                        $0.on(.POST, use: controller.create)
+                        $0.on(.GET, Star.idPath, use: controller.read)
+                        $0.on(.PUT, Star.idPath, use: controller.update)
+                        $0.on(.PATCH, Star.idPath, use: controller.patch)
+                        $0.on(.DELETE, Star.idPath, use: controller.delete)
+                        $0.on(.GET, use: controller.index)
 
-                    $0.group(Star.idPath, "relation") {
-                        let controller = StarControllersV2.StarForTagsRelationNestedController()
+                        $0.group(Star.idPath, "relation") {
+                            let controller = StarControllersV2.StarForTagsRelationNestedController()
 
-                        $0.on(.POST, use: controller.createRelation)
-                        $0.on(.DELETE, use: controller.deleteRelation)
+                            $0.on(.POST, use: controller.createRelation)
+                            $0.on(.DELETE, use: controller.deleteRelation)
+                        }
+                    }
+
+                    $0.group("ext_stars") {
+                        let controller = StarControllersV2.ExtendableStarForTagsNestedController()
+
+                        $0.on(.POST, use: controller.create)
+                        $0.on(.GET, Star.idPath, use: controller.read)
+                        $0.on(.PUT, Star.idPath, use: controller.update)
+                        $0.on(.PATCH, Star.idPath, use: controller.patch)
+                        $0.on(.DELETE, Star.idPath, use: controller.delete)
+                        $0.on(.GET, use: controller.index)
+                    }
+
+                    $0.group("full_stars") {
+                        let controller = StarControllersV2.FullStarForTagsNestedController()
+
+                        $0.on(.POST, use: controller.create)
+                        $0.on(.GET, Star.idPath, use: controller.read)
+                        $0.on(.PUT, Star.idPath, use: controller.update)
+                        $0.on(.PATCH, Star.idPath, use: controller.patch)
+                        $0.on(.DELETE, Star.idPath, use: controller.delete)
+                        $0.on(.GET, use: controller.index)
+                    }
+
+                    $0.group("d_stars") {
+                        let controller = StarControllersV2.DynamicStarForTagsNestedController()
+
+                        $0.on(.POST, use: controller.create)
+                        $0.on(.GET, Star.idPath, use: controller.read)
+                        $0.on(.PUT, Star.idPath, use: controller.update)
+                        $0.on(.PATCH, Star.idPath, use: controller.patch)
+                        $0.on(.DELETE, Star.idPath, use: controller.delete)
+                        $0.on(.GET, use: controller.index)
                     }
                 }
 
-                $0.group(StarTag.idPath, "related", "ext_stars") {
-                    let controller = StarControllersV2.ExtendableStarForTagsNestedController()
-
-                    $0.on(.POST, use: controller.create)
-                    $0.on(.GET, Star.idPath, use: controller.read)
-                    $0.on(.PUT, Star.idPath, use: controller.update)
-                    $0.on(.PATCH, Star.idPath, use: controller.patch)
-                    $0.on(.DELETE, Star.idPath, use: controller.delete)
-                    $0.on(.GET, use: controller.index)
-                }
-
-                $0.group(StarTag.idPath, "related", "full_stars") {
-                    let controller = StarControllersV2.FullStarForTagsNestedController()
-
-                    $0.on(.POST, use: controller.create)
-                    $0.on(.GET, Star.idPath, use: controller.read)
-                    $0.on(.PUT, Star.idPath, use: controller.update)
-                    $0.on(.PATCH, Star.idPath, use: controller.patch)
-                    $0.on(.DELETE, Star.idPath, use: controller.delete)
-                    $0.on(.GET, use: controller.index)
-                }
-
-                $0.group(StarTag.idPath, "related", "d_stars") {
-                    let controller = StarControllersV2.DynamicStarForTagsNestedController()
-
-                    $0.on(.POST, use: controller.create)
-                    $0.on(.GET, Star.idPath, use: controller.read)
-                    $0.on(.PUT, Star.idPath, use: controller.update)
-                    $0.on(.PATCH, Star.idPath, use: controller.patch)
-                    $0.on(.DELETE, Star.idPath, use: controller.delete)
-                    $0.on(.GET, use: controller.index)
-                }
             }
 
             base.group("planets") {
