@@ -324,6 +324,7 @@ extension BaseVaporRestKitTest {
 
                 auth.group("me", "assigned", "todos") {
                     let controller = TodoControllersV2.MyAssignedTodosForUserController()
+
                     $0.on(.GET, Todo.idPath, use: controller.read)
                     $0.on(.GET, use: controller.index)
 
