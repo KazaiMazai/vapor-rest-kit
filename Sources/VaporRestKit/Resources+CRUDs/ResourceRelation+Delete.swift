@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 extension RelationsController {
-    func deleteRelation<Output, RelatedModel>(
+    func deleteRelation<Model, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -17,7 +17,7 @@ extension RelationsController {
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -35,7 +35,7 @@ extension RelationsController {
         }
     }
     
-    func deleteRelation<Output, RelatedModel>(
+    func deleteRelation<Model, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -43,7 +43,7 @@ extension RelationsController {
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -62,7 +62,7 @@ extension RelationsController {
         }
     }
     
-    func deleteRelation<Output, RelatedModel, Through>(
+    func deleteRelation<Model, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -70,7 +70,7 @@ extension RelationsController {
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         req.db.tryTransaction { db in

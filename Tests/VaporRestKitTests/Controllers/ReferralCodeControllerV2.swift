@@ -17,33 +17,33 @@ struct ReferralCodeControllersV2 {
     struct ReferralCodeController {
 
         func create(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try ResourceController<ReferralCode>().create(
+            try ResourceController<ReferralCode.Output>().create(
                 req: req,
                 using: ReferralCode.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try ResourceController<ReferralCode>().read(
+            try ResourceController<ReferralCode.Output>().read(
                 req: req,
                 queryModifier: .empty)
         }
 
         func update(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try ResourceController<ReferralCode>().update(
+            try ResourceController<ReferralCode.Output>().update(
                 req: req,
                 using: ReferralCode.Input.self,
                 queryModifier: .empty)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try ResourceController<ReferralCode>().delete(
+            try ResourceController<ReferralCode.Output>().delete(
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: .empty)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try ResourceController<ReferralCode>().patch(
+            try ResourceController<ReferralCode.Output>().patch(
                 req: req,
                 using: ReferralCode.PatchInput.self,
                 queryModifier: .empty)
@@ -52,7 +52,7 @@ struct ReferralCodeControllersV2 {
 
     struct ReferralCodeForUserController {
         func create(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelatedResourceController<ReferralCode>().create(
+            try RelatedResourceController<ReferralCode.Output>().create(
                 resolver: .requireAuth(),
                 req: req,
                 using: ReferralCode.Input.self,
@@ -60,7 +60,7 @@ struct ReferralCodeControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelatedResourceController<ReferralCode>().read(
+            try RelatedResourceController<ReferralCode.Output>().read(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -68,7 +68,7 @@ struct ReferralCodeControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelatedResourceController<ReferralCode>().update(
+            try RelatedResourceController<ReferralCode.Output>().update(
                 resolver: .requireAuth(),
                 req: req,
                 using: ReferralCode.Input.self,
@@ -77,7 +77,7 @@ struct ReferralCodeControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelatedResourceController<ReferralCode>().delete(
+            try RelatedResourceController<ReferralCode.Output>().delete(
                 resolver: .requireAuth(),
                 req: req,
                 using: .defaultDeleter,
@@ -86,7 +86,7 @@ struct ReferralCodeControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelatedResourceController<ReferralCode>().patch(
+            try RelatedResourceController<ReferralCode.Output>().patch(
                 resolver: .requireAuth(),
                 req: req,
                 using: ReferralCode.PatchInput.self,
@@ -97,7 +97,7 @@ struct ReferralCodeControllersV2 {
 
     struct ReferralCodeForUserRelationController {
         func createRelation(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelationsController<ReferralCode>().createRelation(
+            try RelationsController<ReferralCode.Output>().createRelation(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -105,7 +105,7 @@ struct ReferralCodeControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
-            try RelationsController<ReferralCode>().deleteRelation(
+            try RelationsController<ReferralCode.Output>().deleteRelation(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,

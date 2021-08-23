@@ -10,9 +10,8 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func update<Input, Output>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output> where
+    func update<Input, Model>(req: Request, using: Input.Type, queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
         Output.Model == Model,
         Input.Model == Output.Model {
         
@@ -22,7 +21,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
     
-    func update<Input, Output, RelatedModel>(
+    func update<Input, Model, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -32,7 +31,6 @@ extension RelatedResourceController {
     where
         
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model  {
         
@@ -44,7 +42,7 @@ extension RelatedResourceController {
                    relationKeyPath: relationKeyPath)
     }
     
-    func update<Input, Output, RelatedModel>(
+    func update<Input, Model, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -54,7 +52,6 @@ extension RelatedResourceController {
     where
         
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model {
         
@@ -66,7 +63,7 @@ extension RelatedResourceController {
                    relationKeyPath: relationKeyPath)
     }
     
-    func update<Input, Output, RelatedModel, Through>(
+    func update<Input, Model, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
@@ -76,7 +73,6 @@ extension RelatedResourceController {
     where
         
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model {
         

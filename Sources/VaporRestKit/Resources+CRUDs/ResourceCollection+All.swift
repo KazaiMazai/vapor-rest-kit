@@ -11,9 +11,9 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func getAll<Output>(req: Request,
+    func getAll<Model>(req: Request,
                         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<[Output]> where
-        Output: ResourceOutputModel,
+
         Output.Model == Model {
         
         try Model
@@ -25,13 +25,13 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func getAll<Output, RelatedModel>(
+    func getAll<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<[Output]>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver
@@ -42,13 +42,13 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func getAll<Output, RelatedModel>(
+    func getAll<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<[Output]>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver
@@ -59,13 +59,13 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func getAll<Output, RelatedModel, Through>(
+    func getAll<Model, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<[Output]>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver

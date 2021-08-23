@@ -9,13 +9,13 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func mutate<Input, Output>(
+    func mutate<Input, Model>(
         req: Request,
         using: Input.Type,
         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
     where
         Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
+
         Output.Model == Model,
         Input.Model == Output.Model {
         
@@ -34,7 +34,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
     
-    func mutate<Input, Output, RelatedModel>(
+    func mutate<Input, Model, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -44,7 +44,6 @@ extension RelatedResourceController {
     where
         
         Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
         Model == Output.Model,
         Model == Input.Model {
         
@@ -65,7 +64,7 @@ extension RelatedResourceController {
         }
     }
     
-    func mutate<Input, Output, RelatedModel>(
+    func mutate<Input, Model, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -75,7 +74,7 @@ extension RelatedResourceController {
     where
         
         Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
+
         Model == Output.Model,
         Model == Input.Model {
 
@@ -101,7 +100,7 @@ extension RelatedResourceController {
         }
     }
     
-    func mutate<Input, Output, RelatedModel, Through>(
+    func mutate<Input, Model, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
@@ -111,7 +110,7 @@ extension RelatedResourceController {
     where
         
         Input: ResourceMutationModel,
-        Output: ResourceOutputModel,
+
         Model == Output.Model,
         Model == Input.Model {
         

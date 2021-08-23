@@ -13,19 +13,19 @@ import Fluent
 struct TodoControllersV2 {
     struct TodoController {
         func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try ResourceController<Todo>().create(
+            try ResourceController<Todo.Output>().create(
                 req: req,
                 using: Todo.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try ResourceController<Todo>().read(
+            try ResourceController<Todo.Output>().read(
                 req: req,
                 queryModifier: .empty)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-            try ResourceController<Todo>().getCursorPage(
+            try ResourceController<Todo.Output>().getCursorPage(
                 req: req,
                 queryModifier: .empty,
                 config: CursorPaginationConfig.defaultConfig)
@@ -34,7 +34,7 @@ struct TodoControllersV2 {
 
     struct TodosForTagsController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().read(
+            try RelatedResourceController<Todo.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -42,7 +42,7 @@ struct TodoControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-            try RelatedResourceController<Todo>().getCursorPage(
+            try RelatedResourceController<Todo.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -53,7 +53,7 @@ struct TodoControllersV2 {
 
     struct TodosForTagsRelationController {
         func createRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelationsController<Todo>().createRelation(
+            try RelationsController<Todo.Output>().createRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -61,7 +61,7 @@ struct TodoControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelationsController<Todo>().deleteRelation(
+            try RelationsController<Todo.Output>().deleteRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -71,7 +71,7 @@ struct TodoControllersV2 {
 
     struct MyTodosController {
         func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().create(
+            try RelatedResourceController<Todo.Output>().create(
                 resolver: .requireAuth(),
                 req: req,
                 using: Todo.Input.self,
@@ -79,7 +79,7 @@ struct TodoControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().read(
+            try RelatedResourceController<Todo.Output>().read(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -87,7 +87,7 @@ struct TodoControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().update(
+            try RelatedResourceController<Todo.Output>().update(
                 resolver: .requireAuth(),
                 req: req,
                 using: Todo.Input.self,
@@ -96,7 +96,7 @@ struct TodoControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().delete(
+            try RelatedResourceController<Todo.Output>().delete(
                 resolver: .requireAuth(),
                 req: req,
                 using: .defaultDeleter,
@@ -105,7 +105,7 @@ struct TodoControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().patch(
+            try RelatedResourceController<Todo.Output>().patch(
                 resolver: .requireAuth(),
                 req: req,
                 using: Todo.PatchInput.self,
@@ -114,7 +114,7 @@ struct TodoControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-            try RelatedResourceController<Todo>().getCursorPage(
+            try RelatedResourceController<Todo.Output>().getCursorPage(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -125,7 +125,7 @@ struct TodoControllersV2 {
 
     struct MyTodosRelationController {
         func createRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelationsController<Todo>().createRelation(
+            try RelationsController<Todo.Output>().createRelation(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -133,7 +133,7 @@ struct TodoControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelationsController<Todo>().deleteRelation(
+            try RelationsController<Todo.Output>().deleteRelation(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -143,7 +143,7 @@ struct TodoControllersV2 {
 
     struct TodosForUserController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().read(
+            try RelatedResourceController<Todo.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -151,7 +151,7 @@ struct TodoControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-            try RelatedResourceController<Todo>().getCursorPage(
+            try RelatedResourceController<Todo.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -162,7 +162,7 @@ struct TodoControllersV2 {
 
     struct AssignedTodosForUserController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().read(
+            try RelatedResourceController<Todo.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -170,7 +170,7 @@ struct TodoControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-            try RelatedResourceController<Todo>().getCursorPage(
+            try RelatedResourceController<Todo.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -181,7 +181,7 @@ struct TodoControllersV2 {
 
     struct MyAssignedTodosForUserController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelatedResourceController<Todo>().read(
+            try RelatedResourceController<Todo.Output>().read(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -189,7 +189,7 @@ struct TodoControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-            try RelatedResourceController<Todo>().getCursorPage(
+            try RelatedResourceController<Todo.Output>().getCursorPage(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -200,7 +200,7 @@ struct TodoControllersV2 {
 
     struct MyAssignedTodosForUserRelationController {
         func createRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelationsController<Todo>().createRelation(
+            try RelationsController<Todo.Output>().createRelation(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,
@@ -208,7 +208,7 @@ struct TodoControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
-            try RelationsController<Todo>().deleteRelation(
+            try RelationsController<Todo.Output>().deleteRelation(
                 resolver: .requireAuth(),
                 req: req,
                 queryModifier: .empty,

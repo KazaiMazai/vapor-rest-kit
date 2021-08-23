@@ -10,9 +10,9 @@ import Fluent
 
 
 extension ResourceController {
-    func create<Input, Output>(req: Request, using: Input.Type) throws -> EventLoopFuture<Output> where
+    func create<Input, Model>(req: Request, using: Input.Type) throws -> EventLoopFuture<Output> where
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
+
         Output.Model == Model,
         Input.Model == Output.Model {
 
@@ -29,7 +29,7 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func create<Input, Output, RelatedModel>(
+    func create<Input, Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -38,7 +38,7 @@ extension RelatedResourceController {
     where
 
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
+
         Model == Output.Model,
         Input.Model == Output.Model {
 
@@ -59,7 +59,7 @@ extension RelatedResourceController {
         }
     }
 
-    func create<Input, Output, RelatedModel>(
+    func create<Input, Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
@@ -68,7 +68,7 @@ extension RelatedResourceController {
     where
 
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
+
         Model == Output.Model,
         Input.Model == Output.Model {
 
@@ -94,16 +94,14 @@ extension RelatedResourceController {
         }
     }
 
-    func create<Input, Output, RelatedModel, Through>(
+    func create<Input, Model, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
-
         Input: ResourceUpdateModel,
-        Output: ResourceOutputModel,
         Model == Output.Model,
         Input.Model == Output.Model,
         Through: Fluent.Model {

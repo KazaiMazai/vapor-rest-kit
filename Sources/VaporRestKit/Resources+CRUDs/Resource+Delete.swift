@@ -9,10 +9,10 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func delete<Output>(req: Request,
+    func delete<Model>(req: Request,
                         using deleter: DeleteHandler<Model>,
                         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output> where
-        Output: ResourceOutputModel,
+
         Output.Model == Model {
 
         req.db.tryTransaction { db in
@@ -29,7 +29,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
 
-    func delete<Output, RelatedModel>(
+    func delete<Model, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
@@ -37,8 +37,6 @@ extension RelatedResourceController {
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
-
-        Output: ResourceOutputModel,
         Model == Output.Model {
 
         req.db.tryTransaction { db in
@@ -57,7 +55,7 @@ extension RelatedResourceController {
         }
     }
 
-    func delete<Output, RelatedModel>(
+    func delete<Model, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
@@ -65,8 +63,6 @@ extension RelatedResourceController {
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
-
-        Output: ResourceOutputModel,
         Model == Output.Model {
 
         req.db.tryTransaction { db in
@@ -89,7 +85,7 @@ extension RelatedResourceController {
         }
     }
 
-    func delete<Output, RelatedModel, Through>(
+    func delete<Model, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         using deleter: DeleteHandler<Model>,
@@ -98,7 +94,6 @@ extension RelatedResourceController {
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
 
-        Output: ResourceOutputModel,
         Model == Output.Model {
 
         req.db.tryTransaction { db in

@@ -9,9 +9,9 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func getPage<Output>(req: Request,
-                         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Page<Output>> where
-        Output: ResourceOutputModel,
+    func getPage<Model>(req: Request,
+                        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Page<Output>> where
+
         Output.Model == Model {
         
         try Model
@@ -23,13 +23,13 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func getPage<Output, RelatedModel>(
+    func getPage<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Page<Output>>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver
@@ -40,13 +40,13 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func getPage<Output, RelatedModel>(
+    func getPage<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Page<Output>>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver
@@ -57,13 +57,13 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func getPage<Output, RelatedModel, Through>(
+    func getPage<Model, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Page<Output>>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver

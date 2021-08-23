@@ -9,12 +9,12 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func getCursorPage<Output>(
+    func getCursorPage<Model>(
         req: Request,
         queryModifier: QueryModifier<Model>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-        Output: ResourceOutputModel,
+
         Output.Model == Model {
         
         try Model
@@ -26,14 +26,14 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func getCursorPage<Output, RelatedModel>(
+    func getCursorPage<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver
@@ -44,14 +44,14 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func getCursorPage<Output, RelatedModel>(
+    func getCursorPage<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver
@@ -62,14 +62,14 @@ extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
     
-    func getCursorPage<Output, RelatedModel, Through>(
+    func getCursorPage<Model, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         try resolver

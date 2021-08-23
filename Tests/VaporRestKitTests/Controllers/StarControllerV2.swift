@@ -23,40 +23,40 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try ResourceController<Star>().create(
+            try ResourceController<Star.Output>().create(
                 req: req,
                 using: Star.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try ResourceController<Star>().read(
+            try ResourceController<Star.Output>().read(
                 req: req,
                 queryModifier: queryModifier)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try ResourceController<Star>().update(
+            try ResourceController<Star.Output>().update(
                 req: req,
                 using: Star.Input.self,
                 queryModifier: queryModifier)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try ResourceController<Star>().delete(
+            try ResourceController<Star.Output>().delete(
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try ResourceController<Star>().patch(
+            try ResourceController<Star.Output>().patch(
                 req: req,
                 using: Star.PatchInput.self,
                 queryModifier: queryModifier)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
-            try ResourceController<Star>().getCursorPage(
+            try ResourceController<Star.Output>().getCursorPage(
                 req: req,
                 queryModifier: queryModifier,
                 config: CursorPaginationConfig.defaultConfig)
@@ -72,40 +72,40 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().create(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 req: req,
                 using: Star.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().read(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 req: req,
                 queryModifier: queryModifier)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().update(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 req: req,
                 using: Star.Input.self,
                 queryModifier: queryModifier)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().delete(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().patch(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 req: req,
                 using: Star.PatchInput.self,
                 queryModifier: queryModifier)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try ResourceController<Star>().getCursorPage(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 req: req,
                 queryModifier: queryModifier,
                 config: CursorPaginationConfig.defaultConfig)
@@ -121,40 +121,40 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().create(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 req: req,
                 using: Star.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().read(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 req: req,
                 queryModifier: queryModifier)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().update(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 req: req,
                 using: Star.Input.self,
                 queryModifier: queryModifier)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().delete(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().patch(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 req: req,
                 using: Star.PatchInput.self,
                 queryModifier: queryModifier)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try ResourceController<Star>().getCursorPage(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 req: req,
                 queryModifier: queryModifier,
                 config: CursorPaginationConfig.defaultConfig)
@@ -170,40 +170,40 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().create(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 req: req,
                 using: Star.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().read(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 req: req,
                 queryModifier: queryModifier)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().update(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 req: req,
                 using: Star.Input.self,
                 queryModifier: queryModifier)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().delete(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try ResourceController<Star>().patch(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 req: req,
                 using: Star.PatchInput.self,
                 queryModifier: queryModifier)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try ResourceController<Star>().getCursorPage(
+            try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 req: req,
                 queryModifier: queryModifier,
                 config: CursorPaginationConfig.defaultConfig)
@@ -220,7 +220,7 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.Output>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -228,7 +228,7 @@ struct StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -236,7 +236,7 @@ struct StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.Output>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -245,7 +245,7 @@ struct StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.Output>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -254,7 +254,7 @@ struct StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.Output>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -263,7 +263,7 @@ struct StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -281,7 +281,7 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -289,7 +289,7 @@ struct StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -297,7 +297,7 @@ struct StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -306,7 +306,7 @@ struct StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -315,7 +315,7 @@ struct StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -324,7 +324,7 @@ struct StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -342,7 +342,7 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -350,7 +350,7 @@ struct StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -358,7 +358,7 @@ struct StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -367,7 +367,7 @@ struct StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -376,7 +376,7 @@ struct StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -385,7 +385,7 @@ struct StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -403,7 +403,7 @@ struct StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -411,7 +411,7 @@ struct StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -419,7 +419,7 @@ struct StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -428,7 +428,7 @@ struct StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -437,7 +437,7 @@ struct StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -446,7 +446,7 @@ struct StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -457,7 +457,7 @@ struct StarControllersV2 {
 
     struct StarForTagsRelationNestedController {
         func createRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelationsController<Star>().createRelation(
+            try RelationsController<Star.Output>().createRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -465,7 +465,7 @@ struct StarControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelationsController<Star>().deleteRelation(
+            try RelationsController<Star.Output>().deleteRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -484,7 +484,7 @@ extension StarControllersV2  {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.Output>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -492,7 +492,7 @@ extension StarControllersV2  {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -500,7 +500,7 @@ extension StarControllersV2  {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.Output>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -509,7 +509,7 @@ extension StarControllersV2  {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.Output>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -518,7 +518,7 @@ extension StarControllersV2  {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.Output>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -527,7 +527,7 @@ extension StarControllersV2  {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -538,26 +538,7 @@ extension StarControllersV2  {
 }
 
 extension StarControllersV2 {
-    struct ExtendableStarForGalaxyNestedController: VersionableController {
-        var apiV1: APIMethodsProviding {
-            return Star.ExtendedOutput<Galaxy.Output, StarTag.Output>
-                .controller(eagerLoading: StarTagControllers.ExtendableStarEagerLoading.self)
-                .related(by: \Galaxy.$stars, relationName: "contains")
-                .create(using: Star.Input.self)
-                .read()
-                .update(using: Star.Input.self)
-                .patch(using: Star.PatchInput.self)
-                .delete()
-                .collection(sorting: StarTagControllers.StarsSorting.self, filtering: StarTagControllers.StarsFiltering.self)
-        }
-
-        func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
-            switch version {
-            case .v1:
-                apiV1.addMethodsTo(routeBuilder, on: endpoint)
-            }
-        }
-
+    struct ExtendableStarForGalaxyNestedController {
         var queryModifier: QueryModifier<Star> {
             QueryModifier.using(
                 eagerLoadProvider: StarTagControllers.ExtendableStarEagerLoading(),
@@ -566,7 +547,7 @@ extension StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -574,7 +555,7 @@ extension StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -582,7 +563,7 @@ extension StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -591,7 +572,7 @@ extension StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -600,7 +581,7 @@ extension StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -609,7 +590,7 @@ extension StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -627,7 +608,7 @@ extension StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -635,7 +616,7 @@ extension StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -643,7 +624,7 @@ extension StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -652,7 +633,7 @@ extension StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -661,7 +642,7 @@ extension StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -670,7 +651,7 @@ extension StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -688,7 +669,7 @@ extension StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -696,7 +677,7 @@ extension StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -704,7 +685,7 @@ extension StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -713,7 +694,7 @@ extension StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -722,7 +703,7 @@ extension StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -731,7 +712,7 @@ extension StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -750,7 +731,7 @@ extension StarControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().create(
+            try RelatedResourceController<Star.Output>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -758,7 +739,7 @@ extension StarControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().read(
+            try RelatedResourceController<Star.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -766,7 +747,7 @@ extension StarControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().update(
+            try RelatedResourceController<Star.Output>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.Input.self,
@@ -775,7 +756,7 @@ extension StarControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().delete(
+            try RelatedResourceController<Star.Output>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -784,7 +765,7 @@ extension StarControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelatedResourceController<Star>().patch(
+            try RelatedResourceController<Star.Output>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Star.PatchInput.self,
@@ -793,7 +774,7 @@ extension StarControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
-            try RelatedResourceController<Star>().getCursorPage(
+            try RelatedResourceController<Star.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -801,7 +782,7 @@ extension StarControllersV2 {
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
-
+    
     struct StarForGalaxyRelationNestedController {
         var queryModifier: QueryModifier<Star> {
             QueryModifier.using(
@@ -811,7 +792,7 @@ extension StarControllersV2 {
         }
 
         func createRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelationsController<Star>().createRelation(
+            try RelationsController<Star.Output>().createRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -819,7 +800,7 @@ extension StarControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
-            try RelationsController<Star>().deleteRelation(
+            try RelationsController<Star.Output>().deleteRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,

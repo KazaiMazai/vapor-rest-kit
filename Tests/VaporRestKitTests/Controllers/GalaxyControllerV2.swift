@@ -20,40 +20,40 @@ struct GalaxyControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try ResourceController<Galaxy>().create(
+            try ResourceController<Galaxy.Output>().create(
                 req: req,
                 using: Galaxy.Input.self)
         }
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try ResourceController<Galaxy>().read(
+            try ResourceController<Galaxy.Output>().read(
                 req: req,
                 queryModifier: queryModifier)
         }
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try ResourceController<Galaxy>().update(
+            try ResourceController<Galaxy.Output>().update(
                 req: req,
                 using: Galaxy.Input.self,
                 queryModifier: queryModifier)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try ResourceController<Galaxy>().delete(
+            try ResourceController<Galaxy.Output>().delete(
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try ResourceController<Galaxy>().patch(
+            try ResourceController<Galaxy.Output>().patch(
                 req: req,
                 using: Galaxy.PatchInput.self,
                 queryModifier: queryModifier)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.Output>> {
-            try ResourceController<Galaxy>().getCursorPage(
+            try ResourceController<Galaxy.Output>().getCursorPage(
                 req: req,
                 queryModifier: queryModifier,
                 config: CursorPaginationConfig.defaultConfig)
@@ -69,7 +69,7 @@ struct GalaxyControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelatedResourceController<Galaxy>().create(
+            try RelatedResourceController<Galaxy.Output>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.Input.self,
@@ -77,7 +77,7 @@ struct GalaxyControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelatedResourceController<Galaxy>().read(
+            try RelatedResourceController<Galaxy.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -85,7 +85,7 @@ struct GalaxyControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelatedResourceController<Galaxy>().update(
+            try RelatedResourceController<Galaxy.Output>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.Input.self,
@@ -94,7 +94,7 @@ struct GalaxyControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelatedResourceController<Galaxy>().delete(
+            try RelatedResourceController<Galaxy.Output>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -103,7 +103,7 @@ struct GalaxyControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelatedResourceController<Galaxy>().patch(
+            try RelatedResourceController<Galaxy.Output>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.PatchInput.self,
@@ -112,7 +112,7 @@ struct GalaxyControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.Output>> {
-            try RelatedResourceController<Galaxy>().getCursorPage(
+            try RelatedResourceController<Galaxy.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -130,7 +130,7 @@ struct GalaxyControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
-            try RelatedResourceController<Galaxy>().create(
+            try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.Input.self,
@@ -138,7 +138,7 @@ struct GalaxyControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
-            try RelatedResourceController<Galaxy>().read(
+            try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -146,7 +146,7 @@ struct GalaxyControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
-            try RelatedResourceController<Galaxy>().update(
+            try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.Input.self,
@@ -155,7 +155,7 @@ struct GalaxyControllersV2 {
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
-            try RelatedResourceController<Galaxy>().delete(
+            try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().delete(
                 resolver: .byIdKeys(),
                 req: req,
                 using: .defaultDeleter,
@@ -164,7 +164,7 @@ struct GalaxyControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
-            try RelatedResourceController<Galaxy>().patch(
+            try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Galaxy.PatchInput.self,
@@ -173,7 +173,7 @@ struct GalaxyControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.ExtendedOutput<Star.Output>>> {
-            try RelatedResourceController<Galaxy>().getCursorPage(
+            try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: queryModifier,
@@ -184,7 +184,7 @@ struct GalaxyControllersV2 {
 
     struct GalaxyForStarsRelationNestedController {
         func createRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelationsController<Galaxy>().createRelation(
+            try RelationsController<Galaxy.Output>().createRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -192,7 +192,7 @@ struct GalaxyControllersV2 {
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
-            try RelationsController<Galaxy>().deleteRelation(
+            try RelationsController<Galaxy.Output>().deleteRelation(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,

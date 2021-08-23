@@ -9,9 +9,9 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func read<Output>(req: Request,
-                      queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output> where
-        Output: ResourceOutputModel,
+    func read<Model>(req: Request,
+                      queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
+    where
         Output.Model == Model {
 
         try Model
@@ -21,13 +21,12 @@ extension ResourceController {
 }
 
 extension RelatedResourceController {
-    func read<Output, RelatedModel>(
+    func read<Model, RelatedModel>(
         resolver: ParentChildResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
-        Output: ResourceOutputModel,
         Model == Output.Model {
 
         try resolver
@@ -36,13 +35,12 @@ extension RelatedResourceController {
 
     }
 
-    func read<Output, RelatedModel>(
+    func read<Model, RelatedModel>(
         resolver: ChildParentResolver<Model, RelatedModel>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
-        Output: ResourceOutputModel,
         Model == Output.Model {
 
         try resolver
@@ -51,13 +49,12 @@ extension RelatedResourceController {
 
     }
 
-    func read<Output, RelatedModel, Through>(
+    func read<Model, RelatedModel, Through>(
         resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
-        Output: ResourceOutputModel,
         Model == Output.Model {
 
         try resolver

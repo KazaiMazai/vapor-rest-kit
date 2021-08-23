@@ -13,7 +13,7 @@ import Fluent
 struct TagControllersV2 {
     struct TagController {
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
-            try RelatedResourceController<Tag>().getCursorPage(
+            try RelatedResourceController<Tag.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -31,7 +31,7 @@ struct TagControllersV2 {
         }
 
         func create(req: Request) throws -> EventLoopFuture<Tag.Output> {
-            try RelatedResourceController<Tag>().create(
+            try RelatedResourceController<Tag.Output>().create(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Tag.CreateInput.self,
@@ -40,7 +40,7 @@ struct TagControllersV2 {
         }
 
         func read(req: Request) throws -> EventLoopFuture<Tag.Output> {
-            try RelatedResourceController<Tag>().read(
+            try RelatedResourceController<Tag.Output>().read(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,
@@ -48,7 +48,7 @@ struct TagControllersV2 {
         }
 
         func update(req: Request) throws -> EventLoopFuture<Tag.Output> {
-            try RelatedResourceController<Tag>().update(
+            try RelatedResourceController<Tag.Output>().update(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Tag.UpdateInput.self,
@@ -58,7 +58,7 @@ struct TagControllersV2 {
         }
 
         func patch(req: Request) throws -> EventLoopFuture<Tag.Output> {
-            try RelatedResourceController<Tag>().patch(
+            try RelatedResourceController<Tag.Output>().patch(
                 resolver: .byIdKeys(),
                 req: req,
                 using: Tag.PatchInput.self,
@@ -68,7 +68,7 @@ struct TagControllersV2 {
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
-            try RelatedResourceController<Tag>().getCursorPage(
+            try RelatedResourceController<Tag.Output>().getCursorPage(
                 resolver: .byIdKeys(),
                 req: req,
                 queryModifier: .empty,

@@ -20,10 +20,8 @@ extension BaseVaporRestKitTest {
             versiondGroup.on(
                 .POST,
                 [Galaxy.path, Galaxy.idPath, "belongs", StarTag.path],
-                use: { req -> EventLoopFuture<StarTag.Output> in
-
-                    try ResourceController<StarTag>()
-                        .create(req: req,
+                use: { try ResourceController<StarTag.Output>()
+                        .create(req: $0,
                                 using: StarTag.Input.self)
                 })
 

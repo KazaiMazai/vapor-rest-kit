@@ -10,7 +10,7 @@ import Fluent
 
 extension RelationsController {
     
-    func createRelation<Output, RelatedModel>(
+    func createRelation<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -18,7 +18,7 @@ extension RelationsController {
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -37,7 +37,7 @@ extension RelationsController {
         }
     }
     
-    func createRelation<Output, RelatedModel>(
+    func createRelation<Model, RelatedModel>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -45,7 +45,7 @@ extension RelationsController {
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -65,7 +65,7 @@ extension RelationsController {
         }
     }
     
-    func createRelation<Output, RelatedModel, Through>(
+    func createRelation<Model, RelatedModel, Through>(
         resolver: ModelResolver<RelatedModel>,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -73,7 +73,7 @@ extension RelationsController {
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         
-        Output: ResourceOutputModel,
+
         Model == Output.Model {
         
         req.db.tryTransaction { db in
