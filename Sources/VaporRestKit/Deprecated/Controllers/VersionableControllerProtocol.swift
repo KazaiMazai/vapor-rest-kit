@@ -7,6 +7,7 @@
 
 import Vapor
 
+@available(*, deprecated, message: "Use ResourceController, RelatedResourceController and RelationsController API instead")
 public protocol VersionableController {
     associatedtype ApiVersion
 
