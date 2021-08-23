@@ -82,7 +82,7 @@ extension SiblingsResolver {
     }
 }
 
-struct ModelResolver<Model>
+struct Resolver<Model>
 where
     Model: Fluent.Model,
     Model.IDValue: LosslessStringConvertible {
@@ -91,13 +91,13 @@ where
                _ db: Database) throws -> EventLoopFuture<Model>
 }
 
-extension ModelResolver {
-    static func requireAuth() -> ModelResolver where Model: Authenticatable {
-        ModelResolver(find: Model.requireAuth)
+extension Resolver {
+    static func requireAuth() -> Resolver where Model: Authenticatable {
+        Resolver(find: Model.requireAuth)
     }
 
-    static var byIdKeys: ModelResolver {
-        ModelResolver(find: Model.findByIdKey)
+    static var byIdKeys: Resolver {
+        Resolver(find: Model.findByIdKey)
     }
 }
 
