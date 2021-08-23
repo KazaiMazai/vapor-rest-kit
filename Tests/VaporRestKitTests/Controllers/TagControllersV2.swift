@@ -14,7 +14,7 @@ struct TagControllersV2 {
     struct TagController {
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
             try RelatedResourceController<Tag.Output>().getCursorPage(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Todo.$tags,
@@ -32,7 +32,7 @@ struct TagControllersV2 {
 
         func create(req: Request) throws -> EventLoopFuture<Tag.Output> {
             try RelatedResourceController<Tag.Output>().create(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Tag.CreateInput.self,
                 willAttach: todoOwnerGuardMiddleware,
@@ -41,7 +41,7 @@ struct TagControllersV2 {
 
         func read(req: Request) throws -> EventLoopFuture<Tag.Output> {
             try RelatedResourceController<Tag.Output>().read(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Todo.$tags)
@@ -49,7 +49,7 @@ struct TagControllersV2 {
 
         func update(req: Request) throws -> EventLoopFuture<Tag.Output> {
             try RelatedResourceController<Tag.Output>().update(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Tag.UpdateInput.self,
                 willSave: todoOwnerGuardMiddleware,
@@ -59,7 +59,7 @@ struct TagControllersV2 {
 
         func patch(req: Request) throws -> EventLoopFuture<Tag.Output> {
             try RelatedResourceController<Tag.Output>().patch(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Tag.PatchInput.self,
                 willSave: todoOwnerGuardMiddleware,
@@ -69,7 +69,7 @@ struct TagControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
             try RelatedResourceController<Tag.Output>().getCursorPage(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Todo.$tags,

@@ -26,7 +26,7 @@ extension ParentChildResolver {
         ParentChildResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static func byIdKeys() -> ParentChildResolver {
+    static var byIdKeys: ParentChildResolver {
         ParentChildResolver(find: Model.findByIdKeys)
     }
 }
@@ -49,7 +49,7 @@ extension ChildParentResolver {
         ChildParentResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static func byIdKeys() -> ChildParentResolver {
+    static var byIdKeys: ChildParentResolver {
         ChildParentResolver(find: Model.findByIdKeys)
     }
 }
@@ -77,7 +77,7 @@ extension SiblingsPairResolver {
         SiblingsPairResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static func byIdKeys() -> SiblingsPairResolver  {
+    static var byIdKeys: SiblingsPairResolver {
         SiblingsPairResolver(find: Model.findByIdKeys)
     }
 }
@@ -96,7 +96,7 @@ extension ModelResolver {
         ModelResolver(find: Model.requireAuth)
     }
 
-    static func byIdKeys() -> ModelResolver {
+    static var byIdKeys: ModelResolver {
         ModelResolver(find: Model.findByIdKey)
     }
 }

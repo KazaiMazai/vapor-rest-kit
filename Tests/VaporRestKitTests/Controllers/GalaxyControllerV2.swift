@@ -70,7 +70,7 @@ struct GalaxyControllersV2 {
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().create(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Galaxy.Input.self,
                 relationKeyPath: \Galaxy.$stars)
@@ -78,7 +78,7 @@ struct GalaxyControllersV2 {
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().read(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
@@ -86,7 +86,7 @@ struct GalaxyControllersV2 {
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().update(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Galaxy.Input.self,
                 queryModifier: queryModifier,
@@ -95,7 +95,7 @@ struct GalaxyControllersV2 {
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().delete(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier,
@@ -104,7 +104,7 @@ struct GalaxyControllersV2 {
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().patch(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Galaxy.PatchInput.self,
                 queryModifier: queryModifier,
@@ -113,7 +113,7 @@ struct GalaxyControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.Output>> {
             try RelatedResourceController<Galaxy.Output>().getCursorPage(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars,
@@ -131,7 +131,7 @@ struct GalaxyControllersV2 {
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().create(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Galaxy.Input.self,
                 relationKeyPath: \Galaxy.$stars)
@@ -139,7 +139,7 @@ struct GalaxyControllersV2 {
 
         func read(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().read(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
@@ -147,7 +147,7 @@ struct GalaxyControllersV2 {
 
         func update(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().update(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Galaxy.Input.self,
                 queryModifier: queryModifier,
@@ -156,7 +156,7 @@ struct GalaxyControllersV2 {
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().delete(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: .defaultDeleter,
                 queryModifier: queryModifier,
@@ -165,7 +165,7 @@ struct GalaxyControllersV2 {
 
         func patch(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().patch(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 using: Galaxy.PatchInput.self,
                 queryModifier: queryModifier,
@@ -174,7 +174,7 @@ struct GalaxyControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.ExtendedOutput<Star.Output>>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().getCursorPage(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars,
@@ -185,7 +185,7 @@ struct GalaxyControllersV2 {
     struct GalaxyForStarsRelationNestedController {
         func createRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelationsController<Galaxy.Output>().createRelation(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Galaxy.$stars)
@@ -193,7 +193,7 @@ struct GalaxyControllersV2 {
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelationsController<Galaxy.Output>().deleteRelation(
-                resolver: .byIdKeys(),
+                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Galaxy.$stars)
