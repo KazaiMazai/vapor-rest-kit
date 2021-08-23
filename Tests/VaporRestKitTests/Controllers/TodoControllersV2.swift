@@ -35,7 +35,6 @@ struct TodoControllersV2 {
     struct TodosForTagsController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
             try RelatedResourceController<Todo.Output>().read(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Tag.$relatedTodos)
@@ -43,7 +42,6 @@ struct TodoControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
             try RelatedResourceController<Todo.Output>().getCursorPage(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Tag.$relatedTodos,
@@ -54,7 +52,6 @@ struct TodoControllersV2 {
     struct TodosForTagsRelationController {
         func createRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
             try RelationsController<Todo.Output>().createRelation(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Tag.$relatedTodos)
@@ -62,7 +59,6 @@ struct TodoControllersV2 {
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Todo.Output> {
             try RelationsController<Todo.Output>().deleteRelation(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Tag.$relatedTodos)
@@ -144,7 +140,6 @@ struct TodoControllersV2 {
     struct TodosForUserController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
             try RelatedResourceController<Todo.Output>().read(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \User.$todos)
@@ -152,7 +147,6 @@ struct TodoControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
             try RelatedResourceController<Todo.Output>().getCursorPage(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \User.$todos,
@@ -163,7 +157,6 @@ struct TodoControllersV2 {
     struct AssignedTodosForUserController {
         func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
             try RelatedResourceController<Todo.Output>().read(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \User.$assignedTodos)
@@ -171,7 +164,6 @@ struct TodoControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
             try RelatedResourceController<Todo.Output>().getCursorPage(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \User.$assignedTodos,

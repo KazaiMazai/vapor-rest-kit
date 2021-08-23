@@ -26,7 +26,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
     func getAll<Model, RelatedModel>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<[Output]>
@@ -43,7 +43,7 @@ extension RelatedResourceController {
     }
     
     func getAll<Model, RelatedModel>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<[Output]>
@@ -60,7 +60,7 @@ extension RelatedResourceController {
     }
     
     func getAll<Model, RelatedModel, Through>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<[Output]>

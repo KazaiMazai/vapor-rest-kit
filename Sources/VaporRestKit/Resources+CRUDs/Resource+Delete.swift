@@ -9,9 +9,11 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func delete<Model>(req: Request,
-                        using deleter: DeleteHandler<Model>,
-                        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output> where
+    func delete<Model>(
+        req: Request,
+        using deleter: DeleteHandler<Model>,
+        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
+    where
 
         Output.Model == Model {
 
@@ -30,7 +32,7 @@ extension ResourceController {
 extension RelatedResourceController {
 
     func delete<Model, RelatedModel>(
-        resolver: ChildResolver<Model, RelatedModel>,
+        resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,,
         req: Request,
         using deleter: DeleteHandler<Model>,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -56,7 +58,7 @@ extension RelatedResourceController {
     }
 
     func delete<Model, RelatedModel>(
-        resolver: ParentResolver<Model, RelatedModel>,
+        resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using deleter: DeleteHandler<Model>,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -86,7 +88,7 @@ extension RelatedResourceController {
     }
 
     func delete<Model, RelatedModel, Through>(
-        resolver: SiblingsResolver<Model, RelatedModel, Through>,
+        resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
         using deleter: DeleteHandler<Model>,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,

@@ -31,7 +31,6 @@ struct UserControllersV2 {
     struct UsersForTodoController {
         func read(req: Request) throws -> EventLoopFuture<User.Output> {
             try RelatedResourceController<User.Output>().read(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Todo.$assignees)
@@ -39,7 +38,6 @@ struct UserControllersV2 {
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<User.Output>> {
             try RelatedResourceController<User.Output>().getCursorPage(
-                resolver: .byIdKeys,
                 req: req,
                 queryModifier: .empty,
                 relationKeyPath: \Todo.$assignees,
@@ -57,7 +55,6 @@ struct UserControllersV2 {
 
         func createRelation(req: Request) throws -> EventLoopFuture<User.Output> {
             try RelationsController<User.Output>().createRelation(
-                resolver: .byIdKeys,
                 req: req,
                 willAttach: todoOwnerGuardMiddleware,
                 queryModifier: .empty,
@@ -66,7 +63,6 @@ struct UserControllersV2 {
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<User.Output> {
             try RelationsController<User.Output>().deleteRelation(
-                resolver: .byIdKeys,
                 req: req,
                 willDetach: todoOwnerGuardMiddleware,
                 queryModifier: .empty,

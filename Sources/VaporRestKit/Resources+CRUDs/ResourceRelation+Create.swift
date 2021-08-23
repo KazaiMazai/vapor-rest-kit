@@ -11,7 +11,7 @@ import Fluent
 extension RelationsController {
     
     func createRelation<Model, RelatedModel>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -38,7 +38,7 @@ extension RelationsController {
     }
     
     func createRelation<Model, RelatedModel>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -66,7 +66,7 @@ extension RelationsController {
     }
     
     func createRelation<Model, RelatedModel, Through>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,

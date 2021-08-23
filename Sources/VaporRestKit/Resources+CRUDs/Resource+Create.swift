@@ -10,7 +10,10 @@ import Fluent
 
 
 extension ResourceController {
-    func create<Input, Model>(req: Request, using: Input.Type) throws -> EventLoopFuture<Output> where
+    func create<Input, Model>(
+        req: Request,
+        using: Input.Type) throws -> EventLoopFuture<Output>
+    where
         Input: ResourceUpdateModel,
 
         Output.Model == Model,
@@ -30,7 +33,7 @@ extension ResourceController {
 
 extension RelatedResourceController {
     func create<Input, Model, RelatedModel>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -60,7 +63,7 @@ extension RelatedResourceController {
     }
 
     func create<Input, Model, RelatedModel>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -95,7 +98,7 @@ extension RelatedResourceController {
     }
 
     func create<Input, Model, RelatedModel, Through>(
-        resolver: ModelResolver<RelatedModel>,
+        resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,

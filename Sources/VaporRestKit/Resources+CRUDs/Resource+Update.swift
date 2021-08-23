@@ -22,7 +22,7 @@ extension ResourceController {
 extension RelatedResourceController {
     
     func update<Input, Model, RelatedModel>(
-        resolver: ChildResolver<Model, RelatedModel>,
+        resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -43,7 +43,7 @@ extension RelatedResourceController {
     }
     
     func update<Input, Model, RelatedModel>(
-        resolver: ParentResolver<Model, RelatedModel>,
+        resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -64,7 +64,7 @@ extension RelatedResourceController {
     }
     
     func update<Input, Model, RelatedModel, Through>(
-        resolver: SiblingsResolver<Model, RelatedModel, Through>,
+        resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
