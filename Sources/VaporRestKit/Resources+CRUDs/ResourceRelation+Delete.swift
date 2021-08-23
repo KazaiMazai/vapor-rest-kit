@@ -10,7 +10,7 @@ import Fluent
 
 extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
-        resolver: ParentChildResolver<Model, RelatedModel>,
+        resolver: ChildResolver<Model, RelatedModel>,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -36,7 +36,7 @@ extension RelationsController {
     }
     
     func deleteRelation<Model, RelatedModel>(
-        resolver: ChildParentResolver<Model, RelatedModel>,
+        resolver: ParentResolver<Model, RelatedModel>,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -63,7 +63,7 @@ extension RelationsController {
     }
     
     func deleteRelation<Model, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
+        resolver: SiblingsResolver<Model, RelatedModel, Through>,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,

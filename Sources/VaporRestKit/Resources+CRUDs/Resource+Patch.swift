@@ -26,7 +26,7 @@ extension ResourceController {
 extension RelatedResourceController {
     
     func patch<Input, Model, RelatedModel>(
-        resolver: ParentChildResolver<Model, RelatedModel>,
+        resolver: ChildResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -47,7 +47,7 @@ extension RelatedResourceController {
     }
     
     func patch<Input, Model, RelatedModel>(
-        resolver: ChildParentResolver<Model, RelatedModel>,
+        resolver: ParentResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -68,7 +68,7 @@ extension RelatedResourceController {
     }
     
     func patch<Input, Model, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
+        resolver: SiblingsResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,

@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct ParentChildResolver<Model, RelatedModel>
+struct ChildResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
     RelatedModel: Fluent.Model,
@@ -17,21 +17,21 @@ where
 
     let find: (_ req: Request,
                _ db: Database,
-               _ childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+               _ keyPath: ChildrenKeyPath<RelatedModel, Model>,
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension ParentChildResolver {
-    static func requireAuth() -> ParentChildResolver where RelatedModel: Authenticatable {
-        ParentChildResolver(find: Model.findByIdKeyAndAuthRelated)
+extension ChildResolver {
+    static func requireAuth() -> ChildResolver where RelatedModel: Authenticatable {
+        ChildResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static var byIdKeys: ParentChildResolver {
-        ParentChildResolver(find: Model.findByIdKeys)
+    static var byIdKeys: ChildResolver {
+        ChildResolver(find: Model.findByIdKeys)
     }
 }
 
-struct ChildParentResolver<Model, RelatedModel>
+struct ParentResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
     RelatedModel: Fluent.Model,
@@ -40,22 +40,22 @@ where
 
     let find: (_ req: Request,
                _ db: Database,
-               _ childrenKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+               _ keyPath: ChildrenKeyPath<Model, RelatedModel>,
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension ChildParentResolver {
-    static func requireAuth() -> ChildParentResolver where RelatedModel: Authenticatable {
-        ChildParentResolver(find: Model.findByIdKeyAndAuthRelated)
+extension ParentResolver {
+    static func requireAuth() -> ParentResolver where RelatedModel: Authenticatable {
+        ParentResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static var byIdKeys: ChildParentResolver {
-        ChildParentResolver(find: Model.findByIdKeys)
+    static var byIdKeys: ParentResolver {
+        ParentResolver(find: Model.findByIdKeys)
     }
 }
 
 
-struct SiblingsPairResolver<Model, RelatedModel, Through>
+struct SiblingsResolver<Model, RelatedModel, Through>
 where
     Model: Fluent.Model,
     Through: Fluent.Model,
@@ -65,20 +65,20 @@ where
 
     let find: (_ req: Request,
                _ db: Database,
-               _ siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+               _ keyPath: SiblingKeyPath<RelatedModel, Model, Through>,
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension SiblingsPairResolver {
-    static func requireAuth() -> SiblingsPairResolver
+extension SiblingsResolver {
+    static func requireAuth() -> SiblingsResolver
     where
         RelatedModel: Authenticatable {
 
-        SiblingsPairResolver(find: Model.findByIdKeyAndAuthRelated)
+        SiblingsResolver(find: Model.findByIdKeyAndAuthRelated)
     }
 
-    static var byIdKeys: SiblingsPairResolver {
-        SiblingsPairResolver(find: Model.findByIdKeys)
+    static var byIdKeys: SiblingsResolver {
+        SiblingsResolver(find: Model.findByIdKeys)
     }
 }
 

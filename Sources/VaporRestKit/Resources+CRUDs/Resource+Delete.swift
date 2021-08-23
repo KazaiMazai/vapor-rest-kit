@@ -30,7 +30,7 @@ extension ResourceController {
 extension RelatedResourceController {
 
     func delete<Model, RelatedModel>(
-        resolver: ParentChildResolver<Model, RelatedModel>,
+        resolver: ChildResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -56,7 +56,7 @@ extension RelatedResourceController {
     }
 
     func delete<Model, RelatedModel>(
-        resolver: ChildParentResolver<Model, RelatedModel>,
+        resolver: ParentResolver<Model, RelatedModel>,
         req: Request,
         using deleter: DeleteHandler<Model>,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
@@ -86,7 +86,7 @@ extension RelatedResourceController {
     }
 
     func delete<Model, RelatedModel, Through>(
-        resolver: SiblingsPairResolver<Model, RelatedModel, Through>,
+        resolver: SiblingsResolver<Model, RelatedModel, Through>,
         req: Request,
         using deleter: DeleteHandler<Model>,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
