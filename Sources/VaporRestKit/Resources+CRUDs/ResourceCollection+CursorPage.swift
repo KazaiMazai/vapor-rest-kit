@@ -11,7 +11,7 @@ import Fluent
 extension ResourceController {
     func getCursorPage<Model>(
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
 
@@ -29,7 +29,7 @@ extension RelatedResourceController {
     func getCursorPage<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
@@ -47,7 +47,7 @@ extension RelatedResourceController {
     func getCursorPage<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
@@ -65,7 +65,7 @@ extension RelatedResourceController {
     func getCursorPage<Model, RelatedModel, Through>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where

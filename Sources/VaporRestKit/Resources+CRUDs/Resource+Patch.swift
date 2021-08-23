@@ -12,7 +12,7 @@ extension ResourceController {
     func patch<Input, Model>(
         req: Request,
         using: Input.Type,
-        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
+        queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
 
@@ -30,7 +30,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
@@ -51,7 +51,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
@@ -72,7 +72,7 @@ extension RelatedResourceController {
         req: Request,
         using: Input.Type,
         willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,

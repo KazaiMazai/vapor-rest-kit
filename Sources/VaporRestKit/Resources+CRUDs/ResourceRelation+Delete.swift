@@ -13,7 +13,7 @@ extension RelationsController {
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
@@ -39,7 +39,7 @@ extension RelationsController {
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     
     where
@@ -66,7 +66,7 @@ extension RelationsController {
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
         willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     
     where

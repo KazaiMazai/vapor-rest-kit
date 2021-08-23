@@ -12,7 +12,7 @@ import Fluent
 
 extension ResourceController {
     func getAll<Model>(req: Request,
-                        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<[Output]> where
+                        queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<[Output]> where
 
         Output.Model == Model {
         
@@ -28,7 +28,7 @@ extension RelatedResourceController {
     func getAll<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<[Output]>
     where
 
@@ -45,7 +45,7 @@ extension RelatedResourceController {
     func getAll<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<[Output]>
     where
 
@@ -62,7 +62,7 @@ extension RelatedResourceController {
     func getAll<Model, RelatedModel, Through>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<[Output]>
     where
 

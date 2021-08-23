@@ -9,9 +9,10 @@ import Vapor
 import Fluent
 
 extension ResourceController {
-    func getPage<Model>(req: Request,
-                        queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Page<Output>> where
-
+    func getPage<Model>(
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Page<Output>>
+    where
         Output.Model == Model {
         
         try Model
@@ -26,7 +27,7 @@ extension RelatedResourceController {
     func getPage<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Page<Output>>
     where
 
@@ -43,7 +44,7 @@ extension RelatedResourceController {
     func getPage<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Page<Output>>
     where
 
@@ -60,7 +61,7 @@ extension RelatedResourceController {
     func getPage<Model, RelatedModel, Through>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Page<Output>>
     where
 

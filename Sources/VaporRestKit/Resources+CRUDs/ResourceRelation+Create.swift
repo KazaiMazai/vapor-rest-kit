@@ -14,7 +14,7 @@ extension RelationsController {
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         
@@ -41,7 +41,7 @@ extension RelationsController {
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         
@@ -69,7 +69,7 @@ extension RelationsController {
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
-        queryModifier: QueryModifier<Model>,
+        queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         
