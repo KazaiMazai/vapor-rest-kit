@@ -95,7 +95,7 @@ struct TodoControllersV2 {
             try RelatedResourceController<Todo.Output>().delete(
                 resolver: .requireAuth(),
                 req: req,
-                using: .defaultDeleter,
+                using: .defaultDeleter(),
                 queryModifier: .empty,
                 relationKeyPath: \User.$todos)
         }

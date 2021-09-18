@@ -111,7 +111,7 @@ struct DeleteRelatedResourceController<Model, RelatedModel, Through, Output, Eag
     Through: Fluent.Model {
 
     let relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
-    let deleter: DeleteHandler<Model>
+    let deleter: Deleter<Model>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
 

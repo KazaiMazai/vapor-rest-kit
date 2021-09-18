@@ -112,7 +112,7 @@ struct DeleteAuthChildrenResourceController<Model, RelatedModel, Output, EagerLo
 
 
     var relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
-    let deleter: DeleteHandler<Model>
+    let deleter: Deleter<Model>
     let relationNamePath: String?
     let childrenKeyPath: ChildrenKeyPath<RelatedModel, Model>
 

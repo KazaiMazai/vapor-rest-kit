@@ -129,7 +129,7 @@ public extension RelatedResourceControllerBuilder {
             }
     }
 
-    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
+    func delete(with handler: Deleter<Model> = .defaultDeleter(),
                 middleware: ControllerMiddleware<Model, RelatedModel> = .empty)  -> RelatedResourceControllerBuilder {
 
         switch keyPathType {
@@ -297,7 +297,7 @@ public extension RelatedResourceControllerBuilder where RelatedModel: Authentica
             }
     }
 
-    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
+    func delete(with handler: Deleter<Model> = .defaultDeleter(),
                 middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
                 authenticatable: RelatedModel.Type) -> RelatedResourceControllerBuilder {
 

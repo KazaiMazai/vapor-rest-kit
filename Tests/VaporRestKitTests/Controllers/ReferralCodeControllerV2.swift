@@ -38,7 +38,7 @@ struct ReferralCodeControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<ReferralCode.Output> {
             try ResourceController<ReferralCode.Output>().delete(
                 req: req,
-                using: .defaultDeleter,
+                using: .defaultDeleter(),
                 queryModifier: .empty)
         }
 
@@ -80,7 +80,7 @@ struct ReferralCodeControllersV2 {
             try RelatedResourceController<ReferralCode.Output>().delete(
                 resolver: .requireAuth(),
                 req: req,
-                using: .defaultDeleter,
+                using: .defaultDeleter(),
                 queryModifier: .empty,
                 relationKeyPath: \ReferralCode.$users)
         }

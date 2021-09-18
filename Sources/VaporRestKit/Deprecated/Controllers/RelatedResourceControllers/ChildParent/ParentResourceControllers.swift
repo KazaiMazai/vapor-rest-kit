@@ -106,7 +106,7 @@ struct DeleteParentResourceController<Model, RelatedModel, Output, EagerLoading>
 
 
     let relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
-    let deleter: DeleteHandler<Model>
+    let deleter: Deleter<Model>
     let relationNamePath: String?
     let inversedChildrenKeyPath: ChildrenKeyPath<Model, RelatedModel>
 

@@ -91,7 +91,7 @@ public extension SiblingsResourceControllerBuilder {
                               bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
-    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
+    func delete(with handler: Deleter<Model> = .defaultDeleter(),
                 middleware: ControllerMiddleware<Model, RelatedModel> = .empty) -> SiblingsResourceControllerBuilder {
 
         return adding(DeleteRelatedResourceController<Model,
@@ -188,7 +188,7 @@ public extension SiblingsResourceControllerBuilder where RelatedModel: Authentic
                               bodyStreamingStrategy: bodyStreamingStrategy))
     }
 
-    func delete(with handler: DeleteHandler<Model> = .defaultDeleter,
+    func delete(with handler: Deleter<Model> = .defaultDeleter(),
                 middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
                 authenticatable: RelatedModel.Type) -> SiblingsResourceControllerBuilder {
 

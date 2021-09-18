@@ -11,7 +11,7 @@ import Fluent
 extension ResourceController {
     func delete<Model>(
         req: Request,
-        using deleter: DeleteHandler<Model>,
+        using deleter: Deleter<Model>,
         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
         Output.Model == Model {
@@ -33,7 +33,7 @@ extension RelatedResourceController {
     func delete<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
-        using deleter: DeleteHandler<Model>,
+        using deleter: Deleter<Model>,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
@@ -59,7 +59,7 @@ extension RelatedResourceController {
     func delete<Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
-        using deleter: DeleteHandler<Model>,
+        using deleter: Deleter<Model>,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
@@ -89,7 +89,7 @@ extension RelatedResourceController {
     func delete<Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
-        using deleter: DeleteHandler<Model>,
+        using deleter: Deleter<Model>,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>

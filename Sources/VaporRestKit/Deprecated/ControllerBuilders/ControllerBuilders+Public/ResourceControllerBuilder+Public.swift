@@ -98,7 +98,7 @@ public extension ResourceControllerBuilder {
     }
 
 
-    func delete(with handler: DeleteHandler<Model> = .defaultDeleter) -> ResourceControllerBuilder {
+    func delete(with handler: Deleter<Model> = .defaultDeleter()) -> ResourceControllerBuilder {
 
         return adding(DeleteResourceController<Model,
             Output,

@@ -81,7 +81,7 @@ struct DeleteResourceController<Model, Output, EagerLoading>: DeletableResourceC
 EagerLoading.Model == Model {
 
 
-    let deleter: DeleteHandler<Model>
+    let deleter: Deleter<Model>
 }
 
 //MARK:- CollectionResourceController

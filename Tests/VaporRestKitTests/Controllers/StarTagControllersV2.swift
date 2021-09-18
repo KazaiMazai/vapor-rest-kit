@@ -36,7 +36,7 @@ struct StarTagControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try ResourceController<StarTag.Output>().delete(
                 req: req,
-                using: .defaultDeleter,
+                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -83,7 +83,7 @@ struct StarTagControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelatedResourceController<StarTag.Output>().delete(
                 req: req,
-                using: .defaultDeleter,
+                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
