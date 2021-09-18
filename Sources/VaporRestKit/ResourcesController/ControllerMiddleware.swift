@@ -21,6 +21,7 @@ public struct ControllerMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Mod
                 relatedModel: RelatedModel,
                 req: Request,
                 database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
+
         handler(model, relatedModel, req, database)
     }
 }

@@ -12,19 +12,19 @@ import Fluent
 public struct Deleter<Model: Fluent.Model> {
     public typealias Handler = (Model, Bool, Request, Database) -> EventLoopFuture<Model>
 
-    fileprivate let deleteHandler: Handler
-    fileprivate let useForcedDelete: Bool
+    private let handler: Handler
+    private let useForcedDelete: Bool
 
     public init(useForcedDelete: Bool = false,
                 handler: @escaping Handler = Self.defaultDeleteHandler) {
-        self.deleteHandler = handler
+        self.handler = handler
         self.useForcedDelete = useForcedDelete
     }
 
     public static func defaultDeleteHandler(_ model: Model,
-                                           forceDelete: Bool,
-                                           req: Request,
-                                           db: Database) -> EventLoopFuture<Model> {
+                                            forceDelete: Bool,
+                                            req: Request,
+                                            db: Database) -> EventLoopFuture<Model> {
 
         model.delete(force: forceDelete, on: db).transform(to: model)
     }
@@ -33,7 +33,7 @@ public struct Deleter<Model: Fluent.Model> {
                        req: Request,
                        database: Database) -> EventLoopFuture<Model> {
 
-        deleteHandler(model, useForcedDelete, req, database)
+        handler(model, useForcedDelete, req, database)
     }
 }
 
