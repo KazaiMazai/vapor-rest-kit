@@ -12,8 +12,14 @@ import Fluent
 import FluentSQLiteDriver
 
 
-extension BaseVaporRestKitTest {
-    func routesDeprecatedAPI() throws {
+class BaseVaporRestKitDeprecatedAPITest: BaseVaporRestKitTest {
+    override func routes() throws {
+        try routesWithDeprecatedAPI()
+    }
+}
+
+extension BaseVaporRestKitDeprecatedAPITest {
+    func routesWithDeprecatedAPI() throws {
         ApiVersion.allCases.forEach { version in
             let versiondGroup = app.grouped(version.path)
 

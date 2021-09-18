@@ -43,3 +43,5 @@ class BaseVaporRestKitTest: XCTestCase {
         try Galaxy.seed(on: app.db)
     }
 }
+
+
