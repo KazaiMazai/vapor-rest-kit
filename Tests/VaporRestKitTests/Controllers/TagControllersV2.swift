@@ -22,7 +22,7 @@ struct TagControllersV2 {
     }
 
     struct TagsForTodoController {
-        let todoOwnerGuardMiddleware = RelatedResourceMiddleware<Tag, Todo> { (tag, todo, req, db) in
+        let todoOwnerGuardMiddleware = ControllerMiddleware<Tag, Todo> { (tag, todo, req, db) in
             db.eventLoop
                 .tryFuture { try req.auth.require(User.self) }
                 .guard( { $0.id == todo.user?.id}, else: Abort(.unauthorized))

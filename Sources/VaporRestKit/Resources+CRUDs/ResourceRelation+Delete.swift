@@ -12,12 +12,10 @@ extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
-        
-
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -38,12 +36,10 @@ extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
-    
     where
-
         Model == Output.Model {
         
         req.db.tryTransaction { db in
@@ -65,12 +61,10 @@ extension RelationsController {
     func deleteRelation<Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
-    
     where
-
         Model == Output.Model {
         
         req.db.tryTransaction { db in

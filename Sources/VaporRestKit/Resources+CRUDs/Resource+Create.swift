@@ -15,7 +15,6 @@ extension ResourceController {
         using: Input.Type) throws -> EventLoopFuture<Output>
     where
         Input: ResourceUpdateModel,
-
         Output.Model == Model,
         Input.Model == Output.Model {
 
@@ -36,12 +35,10 @@ extension RelatedResourceController {
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
-
         Input: ResourceUpdateModel,
-
         Model == Output.Model,
         Input.Model == Output.Model {
 
@@ -66,15 +63,12 @@ extension RelatedResourceController {
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
-
         Input: ResourceUpdateModel,
-
         Model == Output.Model,
         Input.Model == Output.Model {
-
 
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
@@ -101,7 +95,7 @@ extension RelatedResourceController {
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
-        willAttach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         Input: ResourceUpdateModel,

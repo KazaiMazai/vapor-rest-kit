@@ -32,7 +32,6 @@ extension RelatedResourceController {
         try resolver
             .find(req, req.db, relationKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req) }
-
     }
 
     func read<Model, RelatedModel>(
@@ -46,7 +45,6 @@ extension RelatedResourceController {
         try resolver
             .find(req, req.db, relationKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req)}
-
     }
 
     func read<Model, RelatedModel, Through>(
@@ -60,7 +58,6 @@ extension RelatedResourceController {
         try resolver
             .find(req, req.db, relationKeyPath, queryModifier)
             .flatMapThrowing { (model, related) in try Output(model, req: req) }
-
     }
 }
 

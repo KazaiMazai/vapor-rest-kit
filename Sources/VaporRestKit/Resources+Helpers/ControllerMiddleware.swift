@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-public struct RelatedResourceMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
+public struct ControllerMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
     public typealias Handler = (Model, RelatedModel, Request, Database) -> EventLoopFuture<(Model, RelatedModel)>
 
     fileprivate let handler: Handler
@@ -17,16 +17,18 @@ public struct RelatedResourceMiddleware<Model: Fluent.Model, RelatedModel: Fluen
         self.handler = handler
     }
 
-    public static var empty: RelatedResourceMiddleware<Model, RelatedModel> {
-        RelatedResourceMiddleware { model, relatedModel, req, _ in
-            req.eventLoop.makeSucceededFuture((model, relatedModel))
-        }
-    }
-
     func handle(_ model: Model,
                 relatedModel: RelatedModel,
                 req: Request,
                 database: Database) -> EventLoopFuture<(Model, RelatedModel)> {
-        return handler(model, relatedModel, req, database)
+        handler(model, relatedModel, req, database)
+    }
+}
+
+public extension ControllerMiddleware {
+    static var empty: ControllerMiddleware<Model, RelatedModel> {
+        ControllerMiddleware { model, relatedModel, req, _ in
+            req.eventLoop.makeSucceededFuture((model, relatedModel))
+        }
     }
 }

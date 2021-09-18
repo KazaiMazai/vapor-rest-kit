@@ -25,7 +25,7 @@ struct CreateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -69,7 +69,7 @@ struct UpdateRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -94,7 +94,7 @@ struct PatchRelatedAuthResourceController<Model, RelatedModel, Through, Output, 
     RelatedModel: Authenticatable,
     Through: Fluent.Model {
 
-    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>
     let bodyStreamingStrategy: HTTPBodyStreamStrategy
@@ -117,7 +117,7 @@ struct DeleteRelatedAuthResourceController<Model, RelatedModel, Through, Output,
     Through: Fluent.Model {
 
 
-    let relatedResourceMiddleware: RelatedResourceMiddleware<Model, RelatedModel>
+    let relatedResourceMiddleware: ControllerMiddleware<Model, RelatedModel>
     let deleter: DeleteHandler<Model>
     let relationNamePath: String?
     let siblingKeyPath: SiblingKeyPath<RelatedModel, Model, Through>

@@ -16,7 +16,7 @@ public extension SiblingsRelationControllerBuilder {
 }
 
 public extension SiblingsRelationControllerBuilder {
-    func create(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty) -> SiblingsRelationControllerBuilder {
+    func create(with middleware: ControllerMiddleware<Model, RelatedModel> = .empty) -> SiblingsRelationControllerBuilder {
         return adding(CreateSiblingRelationController<Model,
             RelatedModel,
             Through,
@@ -26,7 +26,7 @@ public extension SiblingsRelationControllerBuilder {
                           siblingKeyPath: resourceControllerBuilder.relationKeyPath))
     }
 
-    func delete(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty) -> SiblingsRelationControllerBuilder {
+    func delete(with middleware: ControllerMiddleware<Model, RelatedModel> = .empty) -> SiblingsRelationControllerBuilder {
 
         return adding(DeleteSiblingRelationController<Model,
             RelatedModel,
@@ -39,7 +39,7 @@ public extension SiblingsRelationControllerBuilder {
 }
 
 public extension SiblingsRelationControllerBuilder where RelatedModel: Authenticatable {
-    func create(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+    func create(with middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
                 authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
 
         return adding(CreateAuthSiblingRelationController<Model,
@@ -52,7 +52,7 @@ public extension SiblingsRelationControllerBuilder where RelatedModel: Authentic
     }
 
 
-    func delete(with middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty, authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
+    func delete(with middleware: ControllerMiddleware<Model, RelatedModel> = .empty, authenticatable: RelatedModel.Type) -> SiblingsRelationControllerBuilder {
 
         return adding(DeleteAuthSiblingRelationController<Model,
             RelatedModel,

@@ -30,7 +30,6 @@ extension RelatedResourceController {
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Page<Output>>
     where
-
         Model == Output.Model {
         
         try resolver
@@ -47,7 +46,6 @@ extension RelatedResourceController {
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Page<Output>>
     where
-
         Model == Output.Model {
         
         try resolver
@@ -64,7 +62,6 @@ extension RelatedResourceController {
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Page<Output>>
     where
-
         Model == Output.Model {
         
         try resolver

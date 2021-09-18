@@ -14,7 +14,6 @@ extension ResourceController {
         queryModifier: QueryModifier<Model> = .empty,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-
         Output.Model == Model {
         
         try Model
@@ -33,7 +32,6 @@ extension RelatedResourceController {
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-
         Model == Output.Model {
         
         try resolver
@@ -51,7 +49,6 @@ extension RelatedResourceController {
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-
         Model == Output.Model {
         
         try resolver
@@ -69,7 +66,6 @@ extension RelatedResourceController {
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
         config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
-
         Model == Output.Model {
         
         try resolver

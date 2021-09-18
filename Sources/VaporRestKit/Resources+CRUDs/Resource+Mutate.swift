@@ -15,7 +15,6 @@ extension ResourceController {
         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
     where
         Input: ResourceMutationModel,
-
         Output.Model == Model,
         Input.Model == Output.Model {
         
@@ -38,11 +37,10 @@ extension RelatedResourceController {
         resolver: ChildResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
-        
         Input: ResourceMutationModel,
         Model == Output.Model,
         Model == Input.Model {
@@ -68,13 +66,11 @@ extension RelatedResourceController {
         resolver: ParentResolver<Model, RelatedModel>,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
-        
         Input: ResourceMutationModel,
-
         Model == Output.Model,
         Model == Input.Model {
 
@@ -104,13 +100,11 @@ extension RelatedResourceController {
         resolver: SiblingsResolver<Model, RelatedModel, Through>,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
-        
         Input: ResourceMutationModel,
-
         Model == Output.Model,
         Model == Input.Model {
         

@@ -6,12 +6,12 @@
 //
 
 import Vapor
-
-extension RoutesBuilder {
-
-    @discardableResult
-    func with<Controller>(_ controller: Controller,  closure: (RoutesBuilder, Controller) -> Void) -> RoutesBuilder {
-        closure(self, controller)
-        return self
-    }
-}
+//
+//extension RoutesBuilder {
+//
+//    @discardableResult
+//    func with<Controller>(_ controller: Controller,  closure: (RoutesBuilder, Controller) -> Void) -> RoutesBuilder {
+//        closure(self, controller)
+//        return self
+//    }
+//}

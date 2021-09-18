@@ -14,7 +14,6 @@ extension ResourceController {
         using deleter: DeleteHandler<Model>,
         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
-
         Output.Model == Model {
 
         req.db.tryTransaction { db in
@@ -35,7 +34,7 @@ extension RelatedResourceController {
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using deleter: DeleteHandler<Model>,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
@@ -61,7 +60,7 @@ extension RelatedResourceController {
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using deleter: DeleteHandler<Model>,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
@@ -91,7 +90,7 @@ extension RelatedResourceController {
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
         using deleter: DeleteHandler<Model>,
-        willDetach middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where

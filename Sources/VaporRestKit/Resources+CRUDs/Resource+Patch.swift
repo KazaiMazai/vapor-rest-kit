@@ -15,7 +15,6 @@ extension ResourceController {
         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
-
         Output.Model == Model,
         Input.Model == Output.Model {
         
@@ -29,12 +28,11 @@ extension RelatedResourceController {
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
-
         Model == Output.Model,
         Input.Model == Output.Model {
         
@@ -50,12 +48,11 @@ extension RelatedResourceController {
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Input: ResourcePatchModel,
-
         Model == Output.Model,
         Input.Model == Output.Model {
         
@@ -71,7 +68,7 @@ extension RelatedResourceController {
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
         using: Input.Type,
-        willSave middleware: RelatedResourceMiddleware<Model, RelatedModel> = .empty,
+        willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
