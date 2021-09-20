@@ -7,7 +7,12 @@
 ### Siblings
 
 1. Define Inputs, Outputs as usual
-2. Define relation controller providing sibling relation keyPath and some *relationName* or nil, if not needed.
+
+
+
+<details><summary>Deprecated</summary>
+<p>
+3. Define relation controller providing sibling relation keyPath and some *relationName* or nil, if not needed.
 
 ```swift
 let controller = Tag.Output
@@ -29,6 +34,9 @@ let controller = Tag.Output
 let todos = routeBuilder.grouped("todos")
 controller.addMethodsTo(todos, on: "tags")
 ```
+        
+</p>
+</details>
 
 This will add the following methods:
 
@@ -62,6 +70,8 @@ We can create:
 - Tags controller for Tags related to a Todo
 - Todo controller for Todos related to a Tag:
 
+<details><summary>Deprecated</summary>
+<p>
 1. Create controller
 ```swift
 let controller = Todo.Output
@@ -83,6 +93,10 @@ let controller = Todo.Output
 let tags = routeBuilder.grouped("tags")
 controller.addMethodsTo(tags, on: "todos")
 ```
+        
+</p>
+</details>
+     
 Will result in:
 
 | HTTP Method                 | Route               | Result
@@ -96,6 +110,8 @@ Will result in:
 
 ### Parent / Child relations
 
+<details><summary>Deprecated</summary>
+<p>
 1. Create controller with child relation keyPath and optional *relationName*
 
 ```swift
@@ -121,7 +137,9 @@ let users = routeBuilder.grouped("users")
 controller.addMethodsTo(userss, on: "todos")
 
 ```
-
+        
+</p>
+</details>
 
 Will result in:
 
@@ -138,6 +156,9 @@ Will result in:
 ### Child / Parent relations
 Probably more rare case, but still supported. Inversed nested controller for child - parent relation
 
+<details><summary>Deprecated</summary>
+<p>
+        
 1. Create controller with child relation keyPath and optional *relationName*:
 
 ```swift
@@ -155,7 +176,9 @@ let users = routeBuilder.grouped("users")
 controller.addMethodsTo(users, on: "todos")
 
 ```
-
+        
+</p>
+</details>
 
 
 Will result in:
@@ -177,6 +200,9 @@ It works the same way as with other type of relations:
 
 1. Create controller with relation keyPath, optional *relationName* and mention **authenticatable** type:
 
+<details><summary>Deprecated</summary>
+<p>
+        
 ```swift
 let controller = Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
@@ -201,6 +227,9 @@ let users = authRoutesBuilder.grouped("users")
 controller.addMethodsTo(userss, on: "todos")
 
 ```
+        
+</p>
+</details>
 
 Will result in:
 
