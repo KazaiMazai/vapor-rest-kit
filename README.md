@@ -130,9 +130,9 @@ ___________
 
 [Controller Middlewares](Docs/Controller-Middlewares.md)
 
-[Combine Controllers](Docs/Combine-Controllers.md)
+[~~Combine Controllers~~](Docs/Combine-Controllers.md)
 
-[API Versioning](Docs/API-Versioning.md)
+[~~API Versioning~~](Docs/API-Versioning.md)
 
 [Filtering](Docs/Filtering.md)
 
