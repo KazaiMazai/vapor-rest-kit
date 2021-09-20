@@ -52,9 +52,9 @@ struct TodoControllers {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(by: \Tag.$relatedTodos, relationName: nil)
-                .read()
-                .collection(sorting: SortingUnsupported.self,
-                            filtering: FilteringUnsupported.self)
+                .relation
+                .create()
+                .delete()
         }
 
         func setupAPIMethods(on routeBuilder: RoutesBuilder, for endpoint: String, with version: ApiVersion) {
@@ -66,15 +66,12 @@ struct TodoControllers {
     }
 
     struct MyTodosController: VersionableController {
-        let todoOwnerMiddleware = RelatedResourceControllerMiddleware<Todo, User>(handler: { (todo, user, req, db) in
-            db.eventLoop.makeSucceededFuture((todo, user))
-        })
 
         var apiV1: APIMethodsProviding {
             return Todo.Output
                 .controller(eagerLoading: EagerLoadingUnsupported.self)
                 .related(by: \User.$todos, relationName: "owns")
-                .create(using: Todo.Input.self, middleware: todoOwnerMiddleware, authenticatable: User.self)
+                .create(using: Todo.Input.self, authenticatable: User.self)
                 .read(authenticatable: User.self)
                 .update(using: Todo.Input.self, authenticatable: User.self)
                 .patch(using: Todo.PatchInput.self, authenticatable: User.self)

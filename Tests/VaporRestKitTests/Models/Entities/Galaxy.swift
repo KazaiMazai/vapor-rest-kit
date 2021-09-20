@@ -96,6 +96,8 @@ extension Galaxy {
     }
 
     struct PatchInput: ResourcePatchModel {
+        typealias Model = Galaxy
+
         let title: String?
 
         func patch(_ model: Galaxy) -> Galaxy {

@@ -61,6 +61,8 @@ extension ReferralCode {
 
 
     struct Input: ResourceUpdateModel {
+        typealias Model = ReferralCode
+
         let code: String
 
         func update(_ model: ReferralCode) -> ReferralCode {
@@ -74,6 +76,8 @@ extension ReferralCode {
     }
 
     struct PatchInput: ResourcePatchModel {
+        typealias Model = ReferralCode
+
         let code: String?
 
         func patch(_ model: ReferralCode) -> ReferralCode {
