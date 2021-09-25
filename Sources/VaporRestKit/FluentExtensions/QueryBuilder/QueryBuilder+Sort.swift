@@ -11,25 +11,39 @@ import Fluent
 //MARK:- QueryBuilder Extension
 
 public extension QueryBuilder {
+    @available(*, deprecated, message: "Use Sorting<Key> instead")
     func sort<Sorting: SortProvider>(_ sortProvider: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
+        try sort(sortProvider.sorting, for: req)
+    }
 
-        guard sortProvider.supportsDynamicSortKeys else {
-            let defaultSorted = sortProvider.defaultSorting(self)
-            return sortProvider.uniqueKeySorting(defaultSorted)
+    func sort<Key>(_ sorting: Sorting<Key>, for req: Request) throws -> QueryBuilder<Model> where Key.Model == Model {
+        guard sorting.supportsDynamicSortKeys else {
+            let defaultSorted = sorting.defaultSorting(self)
+            return sorting.uniqueKeySorting(defaultSorted)
         }
 
-        let keys = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
+        let sortDescriptors = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
                                 .values
-                                .map { SortDescriptor(fromString: $0, sortKeyType: Sorting.Key.self) }
+                                .map { SortDescriptor(fromString: $0, sortKeyType: Key.self) }
                                 .compactMap { $0 }
 
-        let sortedQueryBuilder = keys.isEmpty ?
-                                sortProvider.defaultSorting(self):
-                                sortProvider.sortFor(builder: self, sortDescriptors: keys)
+        let sortedQueryBuilder = sortDescriptors.isEmpty ?
+                                sorting.defaultSorting(self):
+                                self.sort(with: sortDescriptors)
 
-        return sortProvider.uniqueKeySorting(sortedQueryBuilder)
+        return sorting.uniqueKeySorting(sortedQueryBuilder)
     }
 }
+
+extension QueryBuilder {
+    func sort<Key>(with sortDescriptors: [SortDescriptor<Key>]) -> QueryBuilder<Key.Model> where Key.Model == Model {
+        var queryBuilder = self
+        sortDescriptors.forEach { queryBuilder =  $0.key.sortFor(queryBuilder, direction: $0.direction) }
+
+        return queryBuilder
+    }
+}
+
 
 //MARK:- SortDescriptor
 
