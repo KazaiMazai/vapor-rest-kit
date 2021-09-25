@@ -16,7 +16,6 @@ public struct QueryModifier<Model: Fluent.Model> {
     }
 }
 
-
 public extension QueryModifier {
     static func & (lhs: QueryModifier, rhs: QueryModifier) -> QueryModifier {
         QueryModifier { query, req in
@@ -44,13 +43,21 @@ public extension QueryModifier {
         }
     }
 
+    @available(*, deprecated, message: "use Filtering<Key> instead")
     static func filter<Filtering: FilterProvider>(_ filterProvider: Filtering) -> QueryModifier
         where
         Filtering.Model == Model {
 
+        filter(filterProvider.filtering)
+    }
+
+    static func filter<Key>(_ filtering: Filtering<Key>) -> QueryModifier
+        where
+        Key.Model == Model {
+
         QueryModifier { query, req in
             try query
-                .filter(filterProvider, for: req)
+                .filter(filtering, for: req)
         }
     }
 
