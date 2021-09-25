@@ -11,21 +11,28 @@ import Fluent
 //MARK:- QueryBuilder Extension
 
 public extension QueryBuilder {
+    @available(*, deprecated, message: "use Filtering<Key> instead")
     func filter<Filtering: FilterProvider>(_ filterProvider: Filtering, for req: Request) throws -> QueryBuilder<Model> where Filtering.Model == Model {
 
-        guard filterProvider.supportsDynamicFilterKeys else {
-            return filterProvider.baseFiltering(self)
+        try filter(filterProvider.filtering, for: req)
+    }
+
+    func filter<Key: FilteringKey>(_ filtering: Filtering<Key>, for req: Request) throws -> QueryBuilder<Model> where Key.Model == Model {
+
+        guard filtering.useQueryFilterKeys else {
+            return filtering.base(self)
         }
 
-        let baseFiltered = filterProvider.baseFiltering(self)
+        let baseFiltered = filtering.base(self)
 
-        let filter = try req.query.decode(FilterQueryRequest<FilteringCodingKeys, Filtering.Key>.self)
+        let filter = try req.query.decode(FilterQueryRequest<FilteringCodingKeys, Key>.self)
         guard let filterNode = filter.filterNode else {
-            return filterProvider.defaultFiltering(baseFiltered)
+            return filtering.emptyQueryKeys(baseFiltered)
         }
 
         return filterNode.filterFor(queryBuilder: baseFiltered)
     }
+
 }
 
 //MARK:- FilterQueryRequest
