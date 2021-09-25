@@ -10,15 +10,6 @@ import Fluent
 
 //MARK:- QueryBuilder Extension
 
-extension QueryBuilder {
-    func sort<Key>(with sortDescriptors: [SortDescriptor<Key>]) -> QueryBuilder<Key.Model> where Key.Model == Model {
-        var queryBuilder = self
-        sortDescriptors.forEach { queryBuilder =  $0.key.sortFor(queryBuilder, direction: $0.direction) }
-
-        return queryBuilder
-    }
-}
-
 public extension QueryBuilder {
     @available(*, deprecated, message: "Use Sorting<Key> instead")
     func sort<Sorting: SortProvider>(_ sortProvider: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
@@ -43,6 +34,16 @@ public extension QueryBuilder {
         return sorting.uniqueKeySorting(sortedQueryBuilder)
     }
 }
+
+extension QueryBuilder {
+    func sort<Key>(with sortDescriptors: [SortDescriptor<Key>]) -> QueryBuilder<Key.Model> where Key.Model == Model {
+        var queryBuilder = self
+        sortDescriptors.forEach { queryBuilder =  $0.key.sortFor(queryBuilder, direction: $0.direction) }
+
+        return queryBuilder
+    }
+}
+
 
 //MARK:- SortDescriptor
 

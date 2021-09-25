@@ -26,13 +26,21 @@ public extension QueryModifier {
 }
 
 public extension QueryModifier {
+    @available(*, deprecated, message: "Use Sorting<Key> instead")
     static func sort<Sorting: SortProvider>(_ sortProvider: Sorting) -> QueryModifier
     where
     Sorting.Model == Model {
 
+        sort(sortProvider.sorting)
+    }
+
+    static func sort<Key>(_ sorting: Sorting<Key>) -> QueryModifier
+    where
+    Key.Model == Model {
+
         QueryModifier { query, req in
             try query
-                .sort(sortProvider, for: req)
+                .sort(sorting, for: req)
         }
     }
 
