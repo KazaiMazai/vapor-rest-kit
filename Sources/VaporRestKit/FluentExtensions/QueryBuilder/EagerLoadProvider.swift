@@ -17,6 +17,11 @@ public protocol EagerLoadingKey: RawRepresentable where RawValue == String {
     func eagerLoadFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
 }
 
+public protocol EagerLoadingQueryKey: EagerLoadingKey {
+    static func eagerLoadEmptyQueryFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
+}
+
+
 //MARK:- EagerLoadProvider Protocol
 
 public protocol EagerLoadProvider where Key: EagerLoadingKey, Key.Model == Model {
@@ -38,16 +43,7 @@ public extension EagerLoadProvider {
     }
 }
 
-extension EagerLoadProvider where Key.RawValue == String {
-    func eagerLoadFor(builder: QueryBuilder<Model>,
-                       includeKeys: [Self.Key]) -> QueryBuilder<Model> {
 
-        var queryBuilder = builder
-        includeKeys.forEach { queryBuilder = $0.eagerLoadFor(queryBuilder) }
-
-        return queryBuilder
-    }
-}
 
 //MARK:- StaticEagerLoading Protocol
 

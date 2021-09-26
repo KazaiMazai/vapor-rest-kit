@@ -18,9 +18,16 @@ public protocol FilteringKey: RawRepresentable, Codable where RawValue == String
     static func filterFor(queryBuilder: QueryBuilder<Model>, lhs: Self, method: DatabaseQuery.Filter.Method, rhs: Self)-> QueryBuilder<Model>
 }
 
+//MARK:- FilteringQueryKey Protocol
+
+public protocol FilterQueryKey: FilteringKey {
+
+    static func emptyQueryFilter(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
+}
+
 //MARK:- FilterProvider Protocol
 
-@available(*, deprecated, message: "use Filtering<Key> instead")
+@available(*, deprecated, message: "Use FilterQueryKey instead")
 public protocol FilterProvider where Key: FilteringKey, Key.Model == Model {
     associatedtype Model
     associatedtype Key
@@ -32,14 +39,6 @@ public protocol FilterProvider where Key: FilteringKey, Key.Model == Model {
     func baseFiltering(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
 
     init()
-}
-
-extension FilterProvider {
-    var filtering: Filtering<Key> {
-        Filtering(useQueryFilterKeys: supportsDynamicFilterKeys,
-                  emptyQueryKeys: defaultFiltering,
-                  base: baseFiltering)
-    }
 }
 
 public extension FilterProvider {

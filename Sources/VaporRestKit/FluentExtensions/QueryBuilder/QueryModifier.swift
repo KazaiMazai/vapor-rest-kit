@@ -7,7 +7,7 @@
 
 import Vapor
 import Fluent
- 
+
 public struct QueryModifier<Model: Fluent.Model> {
     let apply: (QueryBuilder<Model>, Request) throws -> QueryBuilder<Model>
 
@@ -25,49 +25,66 @@ public extension QueryModifier {
 }
 
 public extension QueryModifier {
-    @available(*, deprecated, message: "Use Sorting<Key> instead")
+    @available(*, deprecated, message: "Use SortingQueryKey instead")
     static func sort<Sorting: SortProvider>(_ sortProvider: Sorting) -> QueryModifier
     where
-    Sorting.Model == Model {
-
-        sort(sortProvider.sorting)
-    }
-
-    static func sort<Key>(_ sorting: Sorting<Key>) -> QueryModifier
-    where
-    Key.Model == Model {
+        Sorting.Model == Model {
 
         QueryModifier { query, req in
-            try query
-                .sort(sorting, for: req)
+            try query.sort(sortProvider, for: req)
         }
     }
 
-    @available(*, deprecated, message: "use Filtering<Key> instead")
-    static func filter<Filtering: FilterProvider>(_ filterProvider: Filtering) -> QueryModifier
-        where
-        Filtering.Model == Model {
-
-        filter(filterProvider.filtering)
-    }
-
-    static func filter<Key>(_ filtering: Filtering<Key>) -> QueryModifier
-        where
+    static func sort<Key: SortingQueryKey>(using key: Key.Type) -> QueryModifier
+    where
         Key.Model == Model {
 
         QueryModifier { query, req in
-            try query
-                .filter(filtering, for: req)
+            try query.sort(key, for: req)
+        }
+    }
+}
+
+public extension QueryModifier {
+
+    @available(*, deprecated, message: "Use FilterQueryKey instead")
+    static func filter<Filtering: FilterProvider>(_ filterProvider: Filtering) -> QueryModifier
+    where
+        Filtering.Model == Model {
+
+        QueryModifier { query, req in
+            try query.filter(filterProvider, for: req)
         }
     }
 
+    static func filter<Key: FilterQueryKey>(_ keys: Key.Type) -> QueryModifier
+    where
+        Key.Model == Model {
+
+        QueryModifier { query, req in
+            try query.filter(with: keys, for: req)
+        }
+    }
+}
+
+
+public extension QueryModifier {
+
     static func eagerLoading<EagerLoading: EagerLoadProvider>(_ eagerLoadProvider: EagerLoading) -> QueryModifier
-        where
+    where
         EagerLoading.Model == Model {
 
         QueryModifier { query, req in
-            try query
-                .with(eagerLoadProvider, for: req)
+            try query.with(eagerLoadProvider, for: req)
+        }
+    }
+
+    static func eagerLoading<Key: EagerLoadingQueryKey>(_ keys: Key.Type) -> QueryModifier
+    where
+        Key.Model == Model {
+
+        QueryModifier { query, req in
+            try query.with(keys: keys, for: req)
         }
     }
 }
