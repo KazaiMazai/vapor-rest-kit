@@ -17,8 +17,14 @@ public protocol SortingKey: RawRepresentable where RawValue == String {
     func sortFor(_ queryBuilder: QueryBuilder<Model>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model>
 }
 
+public protocol SortingQueryKey: SortingKey {
+    static func emptyQuerySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
+
+    static func uniqueKeySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
+}
+
 //MARK:- SortProvider Protocol
-@available(*, deprecated, message: "Use Sorting<Key> instead")
+@available(*, deprecated, message: "Use SortingQueryKey instead")
 public protocol SortProvider where Key: SortingKey, Key.Model == Model {
     associatedtype Model
     associatedtype Key
@@ -32,14 +38,6 @@ public protocol SortProvider where Key: SortingKey, Key.Model == Model {
     init()
 }
 
-extension SortProvider {
-    var sorting: Sorting<Key> {
-        Sorting(
-            supportsDynamicSortKeys: supportsDynamicSortKeys,
-            defaultSorting: defaultSorting,
-            uniqueKeySorting: uniqueKeySorting)
-    }
-}
 
 public extension SortProvider {
     func uniqueKeySorting(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {

@@ -11,12 +11,8 @@ import Fluent
 //MARK:- QueryBuilder Extension
 
 public extension QueryBuilder {
-    @available(*, deprecated, message: "Use Sorting<Key> instead")
-    func sort<Sorting: SortProvider>(_ sortProvider: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
-        try sort(sortProvider.sorting, for: req)
-    }
-
-    func sort<Key>(_ sorting: Sorting<Key>, for req: Request) throws -> QueryBuilder<Model> where Key.Model == Model {
+    @available(*, deprecated, message: "Use SortingQueryKey instead")
+    func sort<Sorting: SortProvider>(_ sorting: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
         guard sorting.supportsDynamicSortKeys else {
             let defaultSorted = sorting.defaultSorting(self)
             return sorting.uniqueKeySorting(defaultSorted)
@@ -24,7 +20,7 @@ public extension QueryBuilder {
 
         let sortDescriptors = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
                                 .values
-                                .map { SortDescriptor(fromString: $0, sortKeyType: Key.self) }
+                                .map { SortDescriptor(fromString: $0, sortKeyType: Sorting.Key.self) }
                                 .compactMap { $0 }
 
         let sortedQueryBuilder = sortDescriptors.isEmpty ?
@@ -33,6 +29,21 @@ public extension QueryBuilder {
 
         return sorting.uniqueKeySorting(sortedQueryBuilder)
     }
+
+    func sort<Key: SortingQueryKey>(_ keys: Key.Type, for req: Request) throws -> QueryBuilder<Model> where Key.Model == Model {
+        let sortDescriptors = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
+                                .values
+                                .map { SortDescriptor(fromString: $0, sortKeyType: Key.self) }
+                                .compactMap { $0 }
+
+        let sortedQueryBuilder = sortDescriptors.isEmpty ?
+                                Key.emptyQuerySort(queryBuilder: self):
+                                self.sort(with: sortDescriptors)
+
+        return Key.uniqueKeySort(queryBuilder: sortedQueryBuilder)
+    }
+
+
 }
 
 extension QueryBuilder {
