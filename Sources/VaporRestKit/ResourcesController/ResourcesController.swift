@@ -11,14 +11,26 @@ import Fluent
 public struct ResourceController<Output: ResourceOutputModel> where
     Output.Model.IDValue: LosslessStringConvertible,
     Output.Model: Fluent.Model {
+
+    public init() {
+
+    }
 }
 
 public struct RelatedResourceController<Output: ResourceOutputModel> where
     Output.Model.IDValue: LosslessStringConvertible,
     Output.Model: Fluent.Model {
+
+    public init() {
+
+    }
 }
 
 public struct RelationsController<Output: ResourceOutputModel> where
     Output.Model.IDValue: LosslessStringConvertible,
     Output.Model: Fluent.Model {
+
+    public init() {
+
+    }
 }
