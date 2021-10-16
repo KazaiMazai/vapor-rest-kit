@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+public extension ResourceController {
     func delete<Model>(
         req: Request,
         using deleter: Deleter<Model> = .defaultDeleter(),
@@ -28,7 +28,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
 
     func delete<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,

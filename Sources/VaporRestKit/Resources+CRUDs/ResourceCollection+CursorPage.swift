@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+public extension ResourceController {
     func getCursorPage<Model>(
         req: Request,
         queryModifier: QueryModifier<Model> = .empty,
@@ -24,7 +24,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
     func getCursorPage<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,

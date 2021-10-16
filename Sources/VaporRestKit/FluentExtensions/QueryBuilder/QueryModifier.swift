@@ -89,7 +89,7 @@ public extension QueryModifier {
     }
 }
 
-extension QueryModifier {
+public extension QueryModifier {
     static var empty: QueryModifier {
         QueryModifier { query, _ in query  }
     }
