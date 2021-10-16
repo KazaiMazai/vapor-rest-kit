@@ -73,10 +73,10 @@ extension QueryBuilder  {
 
 //MARK:- CursorPage
 
-struct CursorPage<T>: Codable where T: Codable {
-    let items: [T]
+public struct CursorPage<T>: Codable where T: Codable {
+    public let items: [T]
 
-    let metadata: CursorPageMetadata
+    public let metadata: CursorPageMetadata
 
     init(items: [T], metadata: CursorPageMetadata) {
         self.items = items
@@ -95,8 +95,8 @@ extension CursorPage: Content { }
 
 //MARK:- CursorPageMetadata
 
-struct CursorPageMetadata: Codable {
-    let nextCursor: String?
+public struct CursorPageMetadata: Codable {
+    public let nextCursor: String?
 }
 
 //MARK:- CursorRequestType
