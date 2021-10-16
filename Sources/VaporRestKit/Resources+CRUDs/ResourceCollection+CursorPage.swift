@@ -12,7 +12,7 @@ public extension ResourceController {
     func getCursorPage<Model>(
         req: Request,
         queryModifier: QueryModifier<Model> = .empty,
-        config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
+        config: CursorPaginationConfig = .defaultConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Output.Model == Model {
         
@@ -30,7 +30,7 @@ public extension RelatedResourceController {
         req: Request,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>,
-        config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
+        config: CursorPaginationConfig = .defaultConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Model == Output.Model {
         
@@ -47,7 +47,7 @@ public extension RelatedResourceController {
         req: Request,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>,
-        config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
+        config: CursorPaginationConfig = .defaultConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Model == Output.Model {
         
@@ -64,7 +64,7 @@ public extension RelatedResourceController {
         req: Request,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
-        config: CursorPaginationConfig) throws -> EventLoopFuture<CursorPage<Output>>
+        config: CursorPaginationConfig = .defaultConfig) throws -> EventLoopFuture<CursorPage<Output>>
     where
         Model == Output.Model {
         

@@ -109,6 +109,12 @@ enum CursorType {
 //MARK:- CursorPaginationConfig
 
 public struct CursorPaginationConfig {
+
+
+    let limitMax: Int
+    let defaultLimit: Int
+    let coder: PaginationCursorDecoder & PaginationCursorEncoder
+
     static let encoder: JSONEncoder = {
         let jsonEncoder = JSONEncoder()
         jsonEncoder.dateEncodingStrategy = .secondsSince1970
@@ -121,15 +127,27 @@ public struct CursorPaginationConfig {
         return jsonDecoder
     }()
     
-    static let defaultConfig = CursorPaginationConfig(
+    public static let defaultConfig = CursorPaginationConfig(
         limitMax: 25,
         defaultLimit: 10,
         coder: PaginationCursorCoder(encoder: Self.encoder,
                                      decoder: Self.decoder))
 
-    let limitMax: Int
-    let defaultLimit: Int
-    let coder: PaginationCursorDecoder & PaginationCursorEncoder
+    public init(limitMax: Int, defaultLimit: Int) {
+        self.limitMax = limitMax
+        self.defaultLimit = defaultLimit
+        self.coder = PaginationCursorCoder(encoder: Self.encoder,
+                                           decoder: Self.decoder)
+    }
+
+    init(limitMax: Int,
+         defaultLimit: Int,
+         coder: PaginationCursorDecoder & PaginationCursorEncoder) {
+
+        self.limitMax = limitMax
+        self.defaultLimit = defaultLimit
+        self.coder = coder
+    }
 }
 
 //MARK:- CursorPageRequest
