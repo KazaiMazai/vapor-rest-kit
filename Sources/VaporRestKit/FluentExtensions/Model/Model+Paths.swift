@@ -95,8 +95,8 @@ extension Model where IDValue: LosslessStringConvertible {
     static var pluralPath: String { "\(self.idKey)s"}
 
 
-    static var path: PathComponent { PathComponent(stringLiteral: pluralPath) }
-    static var idPath: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
+    public static var path: PathComponent { PathComponent(stringLiteral: pluralPath) }
+    public static var idPath: PathComponent { return PathComponent(stringLiteral: ":\(self.idKey)") }
 }
 
 extension Model where IDValue: LosslessStringConvertible {
