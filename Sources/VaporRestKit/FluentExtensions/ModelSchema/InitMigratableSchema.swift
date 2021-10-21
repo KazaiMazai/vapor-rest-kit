@@ -10,13 +10,15 @@ import Fluent
 
 //MARK:- InitMigratableSchema
 
-public protocol InitMigratableSchema: FieldsProvidingModel {
+public protocol InitMigratableSchema: Model {
     static func prepare(on schemaBuilder: SchemaBuilder) -> EventLoopFuture<Void>
 }
 
 public extension InitMigratableSchema {
-    static func createInitialMigration() -> InitialMigration<Self> {
-        return InitialMigration(with: prepare)
+    static func createInitialMigration() -> Migration {
+        Migrating<Self>.createInitialMigration { db in
+            prepare(on: db.schema(Self.schema))
+        }
     }
 }
 
