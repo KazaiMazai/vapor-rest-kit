@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+public extension ResourceController {
     func read<Model>(req: Request,
                       queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
@@ -20,7 +20,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
     func read<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,

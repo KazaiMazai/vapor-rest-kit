@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension RelationsController {
+public extension RelationsController {
     
     func createRelation<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,

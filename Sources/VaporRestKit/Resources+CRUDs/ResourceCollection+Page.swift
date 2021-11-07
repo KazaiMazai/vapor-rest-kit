@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+public extension ResourceController {
     func getPage<Model>(
         req: Request,
         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Page<Output>>
@@ -23,7 +23,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
     func getPage<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,

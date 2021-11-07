@@ -9,7 +9,7 @@ import Vapor
 import Fluent
 
 
-extension ResourceController {
+public extension ResourceController {
     func create<Input, Model>(
         req: Request,
         using: Input.Type) throws -> EventLoopFuture<Output>
@@ -30,7 +30,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
     func create<Input, Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,

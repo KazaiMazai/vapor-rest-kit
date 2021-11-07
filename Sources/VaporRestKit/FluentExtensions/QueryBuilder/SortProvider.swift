@@ -17,8 +17,14 @@ public protocol SortingKey: RawRepresentable where RawValue == String {
     func sortFor(_ queryBuilder: QueryBuilder<Model>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Model>
 }
 
-//MARK:- SortProvider Protocol
+public protocol SortingQueryKey: SortingKey {
+    static func emptyQuerySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
 
+    static func uniqueKeySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
+}
+
+//MARK:- SortProvider Protocol
+@available(*, deprecated, message: "Use SortingQueryKey instead")
 public protocol SortProvider where Key: SortingKey, Key.Model == Model {
     associatedtype Model
     associatedtype Key
@@ -32,24 +38,16 @@ public protocol SortProvider where Key: SortingKey, Key.Model == Model {
     init()
 }
 
+
 public extension SortProvider {
     func uniqueKeySorting(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
         return queryBuilder.sort(\Model._$id, .ascending)
     }
 }
 
-extension SortProvider {
-    func sortFor(builder: QueryBuilder<Model>,
-                 sortDescriptors: [SortDescriptor<Self.Key>]) -> QueryBuilder<Model> {
-        var queryBuilder = builder
-        sortDescriptors.forEach { queryBuilder =  $0.key.sortFor(queryBuilder, direction: $0.direction) }
-
-        return queryBuilder
-    }
-}
-
 //MARK:- StaticSorting Protocol
 
+@available(*, deprecated, message: "Use Sorting<Key>.with(_ handler: _) instead")
 public protocol StaticSorting: SortProvider { }
 
 public extension StaticSorting {
@@ -58,6 +56,7 @@ public extension StaticSorting {
 
 //MARK: DynamicSorting Protocol
 
+@available(*, deprecated, message: "Use Sorting<Key>.with(keys: _, defaultSorting: _, uniqueKeySorting: _) instead")
 public protocol DynamicSorting: SortProvider { }
 
 public extension DynamicSorting {

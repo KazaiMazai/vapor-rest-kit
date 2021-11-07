@@ -8,17 +8,29 @@
 import Vapor
 import Fluent
 
-struct ResourceController<Output: ResourceOutputModel> where
+public struct ResourceController<Output: ResourceOutputModel> where
     Output.Model.IDValue: LosslessStringConvertible,
     Output.Model: Fluent.Model {
+
+    public init() {
+
+    }
 }
 
-struct RelatedResourceController<Output: ResourceOutputModel> where
+public struct RelatedResourceController<Output: ResourceOutputModel> where
     Output.Model.IDValue: LosslessStringConvertible,
     Output.Model: Fluent.Model {
+
+    public init() {
+
+    }
 }
 
-struct RelationsController<Output: ResourceOutputModel> where
+public struct RelationsController<Output: ResourceOutputModel> where
     Output.Model.IDValue: LosslessStringConvertible,
     Output.Model: Fluent.Model {
+
+    public init() {
+
+    }
 }

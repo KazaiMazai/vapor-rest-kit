@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-struct ChildResolver<Model, RelatedModel>
+public struct ChildResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
     RelatedModel: Fluent.Model,
@@ -21,7 +21,7 @@ where
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension ChildResolver {
+public extension ChildResolver {
     static func requireAuth() -> ChildResolver where RelatedModel: Authenticatable {
         ChildResolver(find: Model.findByIdKeyAndAuthRelated)
     }
@@ -31,7 +31,7 @@ extension ChildResolver {
     }
 }
 
-struct ParentResolver<Model, RelatedModel>
+public struct ParentResolver<Model, RelatedModel>
 where
     Model: Fluent.Model,
     RelatedModel: Fluent.Model,
@@ -44,7 +44,7 @@ where
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension ParentResolver {
+public extension ParentResolver {
     static func requireAuth() -> ParentResolver where RelatedModel: Authenticatable {
         ParentResolver(find: Model.findByIdKeyAndAuthRelated)
     }
@@ -55,7 +55,7 @@ extension ParentResolver {
 }
 
 
-struct SiblingsResolver<Model, RelatedModel, Through>
+public struct SiblingsResolver<Model, RelatedModel, Through>
 where
     Model: Fluent.Model,
     Through: Fluent.Model,
@@ -69,7 +69,7 @@ where
                _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<(Model, RelatedModel)>
 }
 
-extension SiblingsResolver {
+public extension SiblingsResolver {
     static func requireAuth() -> SiblingsResolver where RelatedModel: Authenticatable {
 
         SiblingsResolver(find: Model.findByIdKeyAndAuthRelated)
@@ -80,14 +80,14 @@ extension SiblingsResolver {
     }
 }
 
-struct Resolver<Model> where Model: Fluent.Model,
+public struct Resolver<Model> where Model: Fluent.Model,
                              Model.IDValue: LosslessStringConvertible {
 
     let find: (_ req: Request,
                _ db: Database) throws -> EventLoopFuture<Model>
 }
 
-extension Resolver {
+public extension Resolver {
     static func requireAuth() -> Resolver where Model: Authenticatable {
         Resolver(find: Model.requireAuth)
     }

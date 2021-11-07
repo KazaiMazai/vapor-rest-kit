@@ -9,7 +9,7 @@
 import Vapor
 import Fluent
 
-extension ResourceController {
+public extension ResourceController {
     func update<Input, Model>(
         req: Request,
         using: Input.Type,
@@ -23,7 +23,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
     
     func update<Input, Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,

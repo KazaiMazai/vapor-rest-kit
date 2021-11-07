@@ -10,7 +10,7 @@ import Foundation
 import Vapor
 import Fluent
 
-extension ResourceController {
+public extension ResourceController {
     func getAll<Model>(req: Request,
                         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<[Output]>
     where
@@ -24,7 +24,7 @@ extension ResourceController {
     }
 }
 
-extension RelatedResourceController {
+public extension RelatedResourceController {
     func getAll<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
