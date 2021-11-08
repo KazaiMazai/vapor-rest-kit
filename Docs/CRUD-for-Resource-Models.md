@@ -66,9 +66,7 @@ extension Todo {
 ```swift
 struct TodoController {
     func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
-        try ResourceController<Todo.Output>().create(
-            req: req,
-            using: Todo.Input.self)
+        try ResourceController<Todo.Output>().create(req: req, using: Todo.Input.self)
     }
 
     func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
@@ -88,7 +86,7 @@ struct TodoController {
     }
 
     func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
-        try ResourceController<Todo.Output>().getCursorPage(req: req, config: CursorPaginationConfig.defaultConfig)
+        try ResourceController<Todo.Output>().getCursorPage(req: req)
     }
 }
 
@@ -110,35 +108,6 @@ routeBuilder.group("todos") {
 
 ```
 
- 
-<details><summary>Deprecated</summary>
-<p>
- 
-2. Define which operations will be supported by your resource controller:
-
-```swift
-let controller = Todo.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .create(using: Todo.CreateInput.self)
-                    .read()
-                    .update(using: Todo.UpdateInput.self)
-                    .patch(using: Todo.PatchInput.self)
-                    .delete()
-                    .collection(sorting: DefaultSorting.self,
-                                filtering: DefaultFiltering.self)
-
-``` 
-3. Add controller's methods to Vapor's routes builder:
-
-```swift
-controller.addMethodsTo(routeBuilder, on: "todos")
-
-```
-
-</p>
-</details>
-
-
   
 This will add the following methods to your API endpoint: 
 
@@ -154,30 +123,5 @@ This will add the following methods to your API endpoint:
 
 ### DeleteOutput 
 
-By default delete method will return deleted model instance wrapped into output as response.
-
-
-<details><summary>Deprecated</summary>
-<p>
-    
-If defined this way, controller will return deleted model instance wrapped into output as response:
-
-```swift
-let controller = Todo.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .delete()
-
-```
-
-It's possible to define special empty Output for delete controller, or use default **SuccessOutput**:
-
-```swift
-let controller =  SuccessOutput<Todo>
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .delete()
-
-```
-   
-</p>
-</details>
+By default delete method will return deleted model instance wrapped into output as a response.
 

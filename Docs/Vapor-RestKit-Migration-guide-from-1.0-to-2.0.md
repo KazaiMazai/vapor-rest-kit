@@ -120,7 +120,7 @@ app.group("v1") { base in
 
 struct GalaxyForStarsNestedController {
     var controller: APIMethodsProviding {
-        return Galaxy.Output
+        Galaxy.Output
             .controller(eagerLoading: EagerLoadingUnsupported.self)
             .related(by: \Galaxy.$stars, relationName: "belongs")
             .create(using: Galaxy.Input.self)

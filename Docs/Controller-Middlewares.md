@@ -80,28 +80,6 @@ routesBuilder.group("todos", Todo.idPath, "assignees", "users", User.idPath, "re
 
 4. Profit!
 
-
-<details><summary>Deprecated</summary>
-<p>
-    
-2. Add middleware to controller 
-```swift
-let controller = Todo.Output
-                .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \User.$todos, relationName: nil)
-                .relation
-                .create(with: middleware) 
-
-```
-    
-3. Profit!   
-    
-</p>
-</details>
-
-
-
-
 For middlewares restrictions are the same:
 - **All database requests should be performed with provided database instance**
 - **Database instance parameter should be used for obtaining event loop** 
@@ -138,20 +116,6 @@ struct TodoController {
 
 ```
 
-<details><summary>Deprecated</summary>
-<p>
-    
-2. Provide custom deleter to delete controller builder:
-
-```swift
-let controller = Todo.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .read()
-                    .delete(with: deleter)
-
-```
-</p>
-</details>
 
 Restrictions are usual for RestKit middlewares:
 - **All database requests should be performed with provided database instance**

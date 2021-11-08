@@ -47,44 +47,6 @@ Will result in:
 
 Everything is the same as with RelatedResourceController. 
 
-<details><summary>Deprecated</summary>
-<p>
-  
-The proccess is almost the same as usual:
-
-1. Use **relation** property of contoller builder:
-
-```swift
-let controller = Tag.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .related(with: \Todo.$tags, relationName: "relation_name")
-                    .relation
-                    .create()
-                    .delete()
-
-```
-  
-
-Will result in:
-
-| HTTP Method                 | Route                                              | Result
-| --------------------------- |:---------------------------------------------------| :---------------|
-|POST                         | /todos/:todoId/relation_name/tags/:tagId/relation  | Attach instances with relation
-|DELETE                       | /todos/:todoId/relation_name/tags/:tagId/relation  | Detach instances using relation 
-
-
-Everything is the same as with RelatedResourceController. 
-Relation name parameter is still optional. If nil is provided then the routes will look like:
-
-| HTTP Method                 | Route                                              | Result
-| --------------------------- |:---------------------------------------------------| :---------------|
-|POST                         | /todos/:todoId/tags/:tagId/relation  | Attach instances with relation
-|DELETE                       | /todos/:todoId/tags/:tagId/relation  | Detach instances using relation 
-
-</p>
-</details>
-
-
 
 **It's also possible to use use RelationController with Authenticatable models.**
 

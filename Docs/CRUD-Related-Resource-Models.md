@@ -4,240 +4,235 @@
 
 #### How to create nested CRUD API with related models
 
-### Siblings
 
 1. Define Inputs, Outputs as usual
 
-
-
-<details><summary>Deprecated</summary>
-<p>
-3. Define relation controller providing sibling relation keyPath and some *relationName* or nil, if not needed.
+ 
+2. Define relation controller providing sibling relation keyPath and some *relationName* or nil, if not needed.
 
 ```swift
-let controller = Tag.Output
-        .controller(eagerLoading: EagerLoadingUnsupported.self)
-        .related(with: \Todo.$tags, relationName: "mentioned")
-        .create(using: Tag.CreateInput.self)
-        .read()
-        .update(using: Tag.UpdateInput.self)
-        .patch(using: Tag.PatchInput.self)
-        .collection(sorting: DefaultSorting.self,
-                    filtering: DefaultFiltering.self)
+
+struct StarForGalaxyNestedController {
+    func create(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().create(
+            req: req,
+            using: Star.Input.self,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func read(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().read(
+            req: req,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func update(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().update(
+            req: req,
+            using: Star.Input.self,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().delete(
+            req: req,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().patch(
+            req: req,
+            using: Star.PatchInput.self,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
+        try RelatedResourceController<Star.Output>().getCursorPage(
+            req: req,
+            relationKeyPath: \Galaxy.$stars)
+    }
+}
 
 ```
 
-3. Add related tags controller on top of "todos" route group:
+3. Routes setup:
 
 
 ```swift
-let todos = routeBuilder.grouped("todos")
-controller.addMethodsTo(todos, on: "tags")
-```
+
+app.group("galaxies") {
+   
+    $0.group(Galaxy.idPath, "contains") {
+    
+        $0.group("stars") {
         
-</p>
-</details>
+            let controller = StarForGalaxyNestedController()
 
-This will add the following methods:
-
-
-| HTTP Method                 | Route               | Result
-| --------------------------- |:--------------------| :---------------|
-|POST       | /todos/:todoId/mentioned/tags         | Create new
-|GET        | /todos/:todoId/mentioned/tags/:tagId  | Show existing
-|PUT        | /todos/:todoId/mentioned/tags/:tagId  | Update existing (Replace)
-|PATCH      | /todos/:todoId/mentioned/tags/:tagId  | Patch exsiting (Partial update)
-|DELETE     | /todos/:todoId/mentioned/tags/:tagId  | Delete 
-|GET        | /todos/:todoId/mentioned/tags         | Show list
-
-
-
-In case of nil provided as *relationName*, the following routes will be created:
-
-| HTTP Method                 | Route               | Result
-| --------------------------- |:--------------------| :---------------|
-|POST       | /todos/:todoId/tags         | Create new as related
-|GET        | /todos/:todoId/tags/:tagId  | Show existing
-|PUT        | /todos/:todoId/tags/:tagId  | Update existing (Replace)
-|PATCH      | /todos/:todoId/tags/:tagId  | Patch exsiting (Partial update)
-|DELETE     | /todos/:todoId/tags/:tagId  | Delete 
-|GET        | /todos/:todoId/tags         | Show list of related
-
-### Inversed Siblings
-
-Nested controllers for siblings work in both directions. 
-We can create:
-- Tags controller for Tags related to a Todo
-- Todo controller for Todos related to a Tag:
-
-<details><summary>Deprecated</summary>
-<p>
-1. Create controller
-```swift
-let controller = Todo.Output
-                .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \Tag.$relatedTodos, relationName: "related")
-                .create(using: Todo.Input.self)
-                .read()
-                .update(using: Todo.Input.self)
-                .patch(using: Todo.PatchInput.self)
-                .read()
-                .delete()
-                .collection(sorting: DefaultSorting.self,
-                            filtering: DefaultFiltering.self)
-
-
+            $0.on(.POST, use: controller.create)
+            $0.on(.GET, Star.idPath, use: controller.read)
+            $0.on(.PUT, Star.idPath, use: controller.update)
+            $0.on(.PATCH, Star.idPath, use: controller.patch)
+            $0.on(.DELETE, Star.idPath, use: controller.delete)
+            $0.on(.GET, use: controller.index)
+ 
+        }
+    }
+}
 ```
-2. Add methods to route builder
-```swift
-let tags = routeBuilder.grouped("tags")
-controller.addMethodsTo(tags, on: "todos")
-```
-        
-</p>
-</details>
      
-Will result in:
+
+This will result in the following methods:
+
 
 | HTTP Method                 | Route               | Result
 | --------------------------- |:--------------------| :---------------|
-|POST       | /tags/:tagId/related/todos          | Create new
-|GET        | /tags/:tagId/related/todos/:todoId  | Show existing
-|PUT        | /tags/:tagId/related/todos/:todoId  | Update existing (Replace)
-|PATCH      | /tags/:tagId/related/todos/:todoId  | Patch exsiting (Partial update)
-|DELETE     | /tags/:tagId/related/todos/:todoId  | Delete 
-|GET        | /tags/:tagId/related/todos          | Show list
+|POST       | /galaxies/:GalaxyId/contains/stars         | Create new
+|GET        | /galaxies/:GalaxyId/contains/stars/:starId  | Show existing
+|PUT        | /galaxies/:GalaxyId/contains/stars/:starId  | Update existing (Replace)
+|PATCH      | /galaxies/:GalaxyId/contains/stars/:starId  | Patch exsiting (Partial update)
+|DELETE     | /galaxies/:GalaxyId/contains/stars/:starId  | Delete 
+|GET        | /galaxies/:GalaxyId/contains/stars         | Show list
 
-### Parent / Child relations
+*Under the hood, there is a "resolver guy", who takes models' IDs from the route query path as `Galaxy.idPath` and `Star.idPath` and then looks them up in the database, taking into account specified relations key paths.*
 
-<details><summary>Deprecated</summary>
-<p>
-1. Create controller with child relation keyPath and optional *relationName*
+Actually we can easily do without "contains" part of the path:
 
 ```swift
-let controller = Todo.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .related(with: \User.$todos, relationName: "managed")
-                    .create(using: Todo.Input.self)
-                    .read()
-                    .update(using: Todo.Input.self)
-                    .patch(using: Todo.PatchInput.self)
-                    .read()
-                    .delete()
-                    .collection(sorting: DefaultSorting.self,
-                                filtering: DefaultFiltering.self)
+
+app.group("galaxies") {
+   
+    $0.group(Galaxy.idPath) {
+    
+        $0.group("stars") {
         
+            let controller = StarForGalaxyNestedController()
+
+            $0.on(.POST, use: controller.create)
+            $0.on(.GET, Star.idPath, use: controller.read)
+            $0.on(.PUT, Star.idPath, use: controller.update)
+            $0.on(.PATCH, Star.idPath, use: controller.patch)
+            $0.on(.DELETE, Star.idPath, use: controller.delete)
+            $0.on(.GET, use: controller.index)
+ 
+        }
+    }
+}
 
 ```
 
-2. Add methods to route builder:
-
-```swift
-let users = routeBuilder.grouped("users")
-controller.addMethodsTo(userss, on: "todos")
-
-```
-        
-</p>
-</details>
-
-Will result in:
+And get the following methods: 
 
 | HTTP Method                 | Route               | Result
 | --------------------------- |:--------------------| :---------------|
-|POST       | /users/:userId/managed/todos          | Create new
-|GET        | /users/:userId/managed/todos/:todoId  | Show existing
-|PUT        | /users/:userId/managed/todos/:todoId  | Update existing (Replace)
-|PATCH      | /users/:userId/managed/todos/:todoId  | Patch exsiting (Partial update)
-|DELETE     | /users/:userId/managed/todos/:todoId  | Delete 
-|GET        | /users/:userId/managed/todos          | Show list
+|POST       | /galaxies/:GalaxyId/stars         | Create new
+|GET        | /galaxies/:GalaxyId/stars/:starId  | Show existing
+|PUT        | /galaxies/:GalaxyId/stars/:starId  | Update existing (Replace)
+|PATCH      | /galaxies/:GalaxyId/stars/:starId  | Patch exsiting (Partial update)
+|DELETE     | /galaxies/:GalaxyId/stars/:starId  | Delete 
+|GET        | /galaxies/:GalaxyId/stars         | Show list
 
 
-### Child / Parent relations
-Probably more rare case, but still supported. Inversed nested controller for child - parent relation
-
-<details><summary>Deprecated</summary>
-<p>
-        
-1. Create controller with child relation keyPath and optional *relationName*:
-
-```swift
-let controller = User.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .related(with: \User.$todos, relationName: "author")
-                    .read()
-```
 
 
-2. Add methods to route builder:
+### Supported relations type
 
-```swift
-let users = routeBuilder.grouped("users")
-controller.addMethodsTo(users, on: "todos")
-
-```
-        
-</p>
-</details>
-
-
-Will result in:
-
-| HTTP Method                 | Route               | Result
-| --------------------------- |:--------------------| :---------------|
-|POST       | /todos/:todoId/author/users          | Create new
-|GET        | /todos/:todoId/author/users/:userId  | Show existing
-|PUT        | /todos/:todoId/author/users/:userId  | Update existing (Replace)
-|PATCH      | /todos/:todoId/author/users/:userId  | Patch exsiting (Partial update)
-|DELETE     | /todos/:todoId/author/users/:userId  | Delete
-|GET        | /todos/:todoId/author/users          | Show list
+`RelatedResourceController` supports Child-Parent and Siblings relations in both directions. 
+Meaning that you can setup all kinds of "galaxy for star" or "stars for galaxy" controllers for parent-child relations. Along with "post-for-tags" or "tags-for-post" controllers for siblings relations.
 
 
 ### Related to Authenticatable Model
-If root Model conforms to Vapor's Authenticatable protocol, it's possible to add **/me** nested controllers.
-It works the same way as with other type of relations:
+
+If root Model conforms to Vapor's Authenticatable protocol, there is a way to add related resource controller for it. So that the root model would come from authenticator istead of looked up by ID.
+This a quick way for creating current user's posts or todos or whatever.
+ 
+
+1. Create controller with relation keyPath and pass `.requireAuth()` as resolver parameter:
 
 
-1. Create controller with relation keyPath, optional *relationName* and mention **authenticatable** type:
-
-<details><summary>Deprecated</summary>
-<p>
-        
 ```swift
-let controller = Todo.Output
-                .controller(eagerLoading: EagerLoadingUnsupported.self)
-                .related(with: \User.$todos, relationName: "managed")
-                .read(authenticatable: User.self)
-                .collection(authenticatable: User.self,
-                            sorting: DefaultSorting.self,
-                            filtering: DefaultFiltering.self)
+struct MyTodosController {
+    func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try RelatedResourceController<Todo.Output>().create(
+            resolver: .requireAuth(),
+            req: req,
+            using: Todo.Input.self,
+            relationKeyPath: \User.$todos)
+    }
+
+    func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try RelatedResourceController<Todo.Output>().read(
+            resolver: .requireAuth(),
+            req: req,
+            relationKeyPath: \User.$todos)
+    }
+
+    func update(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try RelatedResourceController<Todo.Output>().update(
+            resolver: .requireAuth(),
+            req: req,
+            using: Todo.Input.self,
+            relationKeyPath: \User.$todos)
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try RelatedResourceController<Todo.Output>().delete(
+            resolver: .requireAuth(),
+            req: req,
+            relationKeyPath: \User.$todos)
+    }
+
+    func patch(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try RelatedResourceController<Todo.Output>().patch(
+            resolver: .requireAuth(),
+            req: req,
+            using: Todo.PatchInput.self,
+            relationKeyPath: \User.$todos)
+    }
+
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
+        try RelatedResourceController<Todo.Output>().getCursorPage(
+            resolver: .requireAuth(),
+            req: req,
+            relationKeyPath: \User.$todos,
+            config: CursorPaginationConfig.defaultConfig)
+    }
+}
         
 
 ```
-2. Make sure that auth and auth guard middlewares are added to the routee
+
+2. Setup route
 
 ```swift
-authRoutesBuilder = routeBuilder.grouped(Authenticator(), User.guardMiddleware())
+
+app.group("users") {
+ 
+    // Make sure that authenticator and auth guard middlewares are added to the route builder
+    
+    let auth = $0.grouped(Authenticator(), User.guardMiddleware())
+    
+    auth.group("me", "todos") {
+    
+        let controller = MyTodosController()
+
+        $0.on(.POST, use: controller.create)
+        $0.on(.GET, Todo.idPath, use: controller.read)
+        $0.on(.PUT, Todo.idPath, use: controller.update)
+        $0.on(.PATCH, Todo.idPath, use: controller.patch)
+        $0.on(.DELETE, Todo.idPath, use: controller.delete)
+        $0.on(.GET, use: controller.index)
+    }
+}
+
 ```
-
-3. Add methods to route builder:
-
-```swift
-let users = authRoutesBuilder.grouped("users")
-controller.addMethodsTo(userss, on: "todos")
-
-```
-        
-</p>
-</details>
-
+   
 Will result in:
 
 | HTTP Method                 | Route               | Result
 | --------------------------- |:--------------------| :---------------|
-|POST       | /users/me/managed/todos          | Create new
-|GET        | /users/me/managed/todos/:todoId  | Show existing
-|PUT        | /users/me/managed/todos/:todoId  | Update existing (Replace)
-|PATCH      | /users/me/managed/todos/:todoId  | Patch exsiting (Partial update)
-|DELETE     | /users/me/managed/todos/:todoId  | Delete 
-|GET        | /users/me/managed/todos          | Show list
+|POST       | /users/me/todos          | Create new
+|GET        | /users/me/todos/:todoId  | Show existing
+|PUT        | /users/me/todos/:todoId  | Update existing (Replace)
+|PATCH      | /users/me/todos/:todoId  | Patch exsiting (Partial update)
+|DELETE     | /users/me/todos/:todoId  | Delete 
+|GET        | /users/me/todos          | Show list
