@@ -8,6 +8,9 @@
 import Vapor
 import Fluent
 
+@available(*, deprecated, renamed: "ControllerMiddleware")
+public typealias RelatedResourceControllerMiddleware = ControllerMiddleware
+
 public struct ControllerMiddleware<Model: Fluent.Model, RelatedModel: Fluent.Model> {
     public typealias Handler = (Model, RelatedModel, Request, Database) -> EventLoopFuture<(Model, RelatedModel)>
 

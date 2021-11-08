@@ -11,7 +11,6 @@ import Fluent
 //MARK:- QueryBuilder Extension
 
 public extension QueryBuilder {
-    @available(*, deprecated, message: "Use FilterQueryKey instead")
     func filter<Filtering: FilterProvider>(_ filtering: Filtering, for req: Request) throws -> QueryBuilder<Model> where Filtering.Model == Model {
 
         guard filtering.supportsDynamicFilterKeys else {

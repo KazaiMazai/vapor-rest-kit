@@ -11,7 +11,6 @@ import Fluent
 //MARK:- QueryBuilder Extension
 
 public extension QueryBuilder {
-    @available(*, deprecated, message: "Use SortingQueryKey instead")
     func sort<Sorting: SortProvider>(_ sorting: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
         guard sorting.supportsDynamicSortKeys else {
             let defaultSorted = sorting.defaultSorting(self)

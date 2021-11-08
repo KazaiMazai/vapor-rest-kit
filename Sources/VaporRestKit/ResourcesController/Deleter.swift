@@ -9,6 +9,9 @@
 import Vapor
 import Fluent
 
+@available(*, deprecated, renamed: "Deleter")
+public typealias DeleteHandler = Deleter
+
 public struct Deleter<Model: Fluent.Model> {
     public typealias Handler = (Model, Bool, Request, Database) -> EventLoopFuture<Model>
 
