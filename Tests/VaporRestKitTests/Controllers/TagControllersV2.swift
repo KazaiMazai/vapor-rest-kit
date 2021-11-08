@@ -15,7 +15,6 @@ struct TagControllersV2 {
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
             try RelatedResourceController<Tag.Output>().getCursorPage(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$tags,
                 config: CursorPaginationConfig.defaultConfig)
         }
@@ -40,7 +39,6 @@ struct TagControllersV2 {
         func read(req: Request) throws -> EventLoopFuture<Tag.Output> {
             try RelatedResourceController<Tag.Output>().read(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$tags)
         }
 
@@ -49,7 +47,6 @@ struct TagControllersV2 {
                 req: req,
                 using: Tag.UpdateInput.self,
                 willSave: todoOwnerGuardMiddleware,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$tags)
         }
 
@@ -58,14 +55,12 @@ struct TagControllersV2 {
                 req: req,
                 using: Tag.PatchInput.self,
                 willSave: todoOwnerGuardMiddleware,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$tags)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Tag.Output>> {
             try RelatedResourceController<Tag.Output>().getCursorPage(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$tags,
                 config: CursorPaginationConfig.defaultConfig)
         }

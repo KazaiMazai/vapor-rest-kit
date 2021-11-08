@@ -23,13 +23,9 @@ extension BaseVaporRestKitDeprecatedAPITest {
         ApiVersion.allCases.forEach { version in
             let versiondGroup = app.grouped(version.path)
 
-            versiondGroup.on(
-                .POST,
-                [Galaxy.path, Galaxy.idPath, "belongs", StarTag.path],
-                use: { try ResourceController<StarTag.Output>()
-                        .create(req: $0,
-                                using: StarTag.Input.self)
-                })
+            app.group(version.path) {
+                StarTagControllers.StarTagController().setupAPIMethods(on: $0, for: "star_tags", with: version)
+            }
 
             StarTagControllers.StarTagController().setupAPIMethods(on: versiondGroup, for: "star_tags", with: version)
 

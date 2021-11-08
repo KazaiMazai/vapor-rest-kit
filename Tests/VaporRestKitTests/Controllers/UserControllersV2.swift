@@ -23,8 +23,7 @@ struct UserControllersV2 {
 
         func read(req: Request) throws -> EventLoopFuture<User.Output> {
             try ResourceController<User.Output>().read(
-                req: req,
-                queryModifier: .empty)
+                req: req)
         }
     }
 
@@ -32,14 +31,12 @@ struct UserControllersV2 {
         func read(req: Request) throws -> EventLoopFuture<User.Output> {
             try RelatedResourceController<User.Output>().read(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$assignees)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<User.Output>> {
             try RelatedResourceController<User.Output>().getCursorPage(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$assignees,
                 config: CursorPaginationConfig.defaultConfig)
         }
@@ -49,23 +46,21 @@ struct UserControllersV2 {
         let todoOwnerGuardMiddleware = ControllerMiddleware<User, Todo>(handler: { (user, todo, req, db) in
             db.eventLoop
                 .tryFuture { try req.auth.require(User.self) }
-                .guard( { $0.id == todo.$user.id}, else: Abort(.unauthorized))
+                .guard({ $0.id == todo.$user.id }, else: Abort(.unauthorized))
                 .transform(to: (user, todo))
         })
 
-        func createRelation(req: Request) throws -> EventLoopFuture<User.Output> {
+        func addAssignee(req: Request) throws -> EventLoopFuture<User.Output> {
             try RelationsController<User.Output>().createRelation(
                 req: req,
                 willAttach: todoOwnerGuardMiddleware,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$assignees)
         }
 
-        func deleteRelation(req: Request) throws -> EventLoopFuture<User.Output> {
+        func removeAssignee(req: Request) throws -> EventLoopFuture<User.Output> {
             try RelationsController<User.Output>().deleteRelation(
                 req: req,
                 willDetach: todoOwnerGuardMiddleware,
-                queryModifier: .empty,
                 relationKeyPath: \Todo.$assignees)
         }
     }

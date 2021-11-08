@@ -44,7 +44,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
             try ResourceController<Star.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -58,8 +57,7 @@ struct StarControllersV2 {
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
             try ResourceController<Star.Output>().getCursorPage(
                 req: req,
-                queryModifier: queryModifier,
-                config: CursorPaginationConfig.defaultConfig)
+                queryModifier: queryModifier)
         }
     }
 
@@ -435,14 +433,12 @@ struct StarControllersV2 {
         func createRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelationsController<Star.Output>().createRelation(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \StarTag.$stars)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelationsController<Star.Output>().deleteRelation(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \StarTag.$stars)
         }
     }
@@ -729,24 +725,15 @@ extension StarControllersV2 {
     }
     
     struct StarForGalaxyRelationNestedController {
-        var queryModifier: QueryModifier<Star> {
-            QueryModifier.using(
-                eagerLoadProvider: EagerLoadingUnsupported(),
-                sortProvider: StarTagControllers.StarsSorting(),
-                filterProvider: StarTagControllers.StarsFiltering())
-        }
-
         func createRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelationsController<Star.Output>().createRelation(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Galaxy.$stars)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelationsController<Star.Output>().deleteRelation(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Galaxy.$stars)
         }
     }
