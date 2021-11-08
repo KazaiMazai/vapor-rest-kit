@@ -41,7 +41,6 @@ struct GalaxyControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try ResourceController<Galaxy.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -134,7 +133,6 @@ struct GalaxyControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }

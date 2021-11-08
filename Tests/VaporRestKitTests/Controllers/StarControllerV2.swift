@@ -91,7 +91,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -140,7 +139,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -189,7 +187,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try ResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -242,7 +239,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \StarTag.$stars)
         }
@@ -297,7 +293,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \StarTag.$stars)
         }
@@ -352,7 +347,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \StarTag.$stars)
         }
@@ -407,7 +401,6 @@ struct StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \StarTag.$stars)
         }
@@ -477,9 +470,7 @@ extension StarControllersV2  {
 
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star.Output>().delete(
-                
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Star.$planets)
         }
@@ -536,7 +527,6 @@ extension StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
@@ -591,7 +581,6 @@ extension StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
@@ -646,7 +635,6 @@ extension StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>> {
             try RelatedResourceController<Star.ExtendedOutput<Galaxy.Output, StarTag.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
@@ -702,7 +690,6 @@ extension StarControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
             try RelatedResourceController<Star.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
