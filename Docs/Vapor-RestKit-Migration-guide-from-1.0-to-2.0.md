@@ -347,8 +347,7 @@ struct GalaxyController {
     func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.Output>> {
         try RelatedResourceController<Galaxy.Output>().getCursorPage(
             req: req,
-            queryModifier: queryModifier,
-            config: CursorPaginationConfig.defaultConfig)
+            queryModifier: queryModifier)
     }
 }
 

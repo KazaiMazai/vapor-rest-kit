@@ -39,7 +39,7 @@ It can be made as complicated as you wish, but with the following restrictions:
 #### How to provide custom middleware for RelatedResourceController or RelationsController
 
 When creating nested controller that works with related resource or relations, it's possible to provide middleware method that will be called 
-right **before** Resource Model and Related Resource models will be attached/detached and saved to database.
+right before Resource Model and Related Resource models will be attached/detached or saved to database.
 
 
 1. Define middleware:
@@ -70,6 +70,7 @@ struct UserController {
 ```
 
 3. Add method to route builder:
+
 ```swift
 routesBuilder.group("todos", Todo.idPath, "assignees", "users", User.idPath, "relation") {
 
@@ -80,7 +81,7 @@ routesBuilder.group("todos", Todo.idPath, "assignees", "users", User.idPath, "re
 
 4. Profit!
 
-For middlewares restrictions are the same:
+For middlewares has some restrictions :
 - **All database requests should be performed with provided database instance**
 - **Database instance parameter should be used for obtaining event loop** 
 
@@ -90,14 +91,14 @@ For middlewares restrictions are the same:
 Custon delete busiess logic can be defined via Fluent on database level: cascade delete, etc.
 Fluent also provides model lifecycle callbacks that can be used for that.
 
-RestKit provides a way to implement delete logic on controller's layer via Deleter
+RestKit provides a way to add some delete logic on controller's layer via Deleter
 
 1. Define delete handler:
 
 ```swift
 
 let deleter = Deleter<Todo>(useForcedDelete: false) { (todo, forceDelete, req, database) -> EventLoopFuture<Todo> in
-    //that's the default implementation:
+    //that's actually the default deleter implementation:
     todo.delete(force: forceDelete, on: database)
  }
  
@@ -117,6 +118,6 @@ struct TodoController {
 ```
 
 
-Restrictions are usual for RestKit middlewares:
+For deleter restrictions are similar to middlewares:
 - **All database requests should be performed with provided database instance**
 - **Database instance parameter should be used for obtaining event loop** 

@@ -1,97 +1,109 @@
 ## Sorting
 
 ### Static Sorting
-#### How to setup default sorting for controller methods
+#### How to setup static sorting for controller methods
 
-1. Define Sorting struct, conforming to StaticSorting protocol:
+
+1. Pass query modifier with necessary sorting to controller's methods:
 
 ```swift
-struct StaticStarsSorting: StaticSorting {
-    typealias Key = EmptySortingKey<Star>
-    typealias Model = Star
 
-    func defaultSorting(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
-        return queryBuilder
+struct StarController {
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
+        try ResourceController<Star.Output>().getCursorPage(
+            req: req,
+            queryModifier: QueryModifier { querybuilder, _ in
+                queryBuilder.sort(\Star.$title, .ascending)
+            })
     }
 }
+
 ```
 
-2. When defining controller, add sorting type as collection controller builder parameter:
+2. Setup route:
+ 
 
-```swift 
+```swift
 
-let controller = Star.Output
-            .controller(eagerLoading: EagerLoadingUnsupported.self)
-            .create(using: Star.Input.self)
-            .read()
-            .update(using: Star.Input.self)
-            .patch(using: Star.PatchInput.self)
-            .delete()
-            .collection(sorting: StarControllers.StaticStarsSorting.self, 
-                        filtering: StarControllers.StarsFiltering.self)
+app.group("stars") {
+    let controller = StarController()
+ 
+    $0.on(.GET, use: controller.index)
+}
+
 ```
 
 ### Dynamic Sorting
+
 #### How to setup dynamic sorting query keys
 
-1. Define Sorting struct, conforming to DynamicSorting protocol:
+1. Define Sorting keys, conforming to SortingQueryKey protocol:
 ```swift 
 
-struct StarsSorting: DynamicSorting {
+enum StarsSortingKeys: String, SortingQueryKey {
     typealias Model = Star
-    typealias Key = Keys
-    
-    func defaultSorting(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
-        return queryBuilder
+
+    case title
+    case subtitle
+
+    func sortFor(_ queryBuilder: QueryBuilder<Star>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Star> {
+        switch self {
+        case .title:
+            return queryBuilder.sort(\Star.$title, direction)
+        case .subtitle:
+            return queryBuilder.sort(\Star.$subtitle, direction)
+        }
     }
     
-    enum Keys: String, SortingKey {
-        typealias Model = Star
+    // (Optional) This guy is used when there is no keys in the request query:
+    
+    static func emptyQuerySort(queryBuilder: QueryBuilder<Star>)-> QueryBuilder<Star> {
+        queryBuilder
+    }
 
-        case title
-        case subtitle
+    // This guy is applied as the last sort to ensure the exact sorting. 
+    // No need to override it unless you are 300% sure what you are doing
 
-        func sortFor(_ queryBuilder: QueryBuilder<Star>, direction: DatabaseQuery.Sort.Direction) -> QueryBuilder<Star> {
-            switch self {
-            case .title:
-                return queryBuilder.sort(\Star.$title, direction)
-            case .subtitle:
-                return queryBuilder.sort(\Star.$subtitle, direction)
-            }
-        }
+    static func uniqueKeySort(queryBuilder: QueryBuilder<Star>)-> QueryBuilder<Star> {
+    
+        // default implementation looks like this:
+        
+        queryBuilder.sort(\Star._$id, .ascending)
     }
 }
 
 ```
 
-2. When defining controller, add sorting type as collection controller builder parameter:
+2. Pass  ```.sort(...)``` query modifier to necessary controller's methods:
 
-```swift 
-
-let controller = Star.Output
-            .controller(eagerLoading: EagerLoadingUnsupported.self)
-            .create(using: Star.Input.self)
-            .read()
-            .update(using: Star.Input.self)
-            .patch(using: Star.PatchInput.self)
-            .delete()
-            .collection(sorting: StarControllers.StarsSorting.self, 
-                        filtering: StarControllers.StarsFiltering.self)
-```
-
-#### Definitions
-This func that defines default sorting, applied to the collection:
 
 ```swift
-func defaultSorting() 
+
+struct StarController {
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
+        try ResourceController<Star.Output>().getCursorPage(
+            req: req,
+            queryModifier: .sort(StarsSortingKeys.self))
+    }
+}
+
 ```
 
-- If sorting enitity conforms to **StaticSorting** default sorting is always applied. 
-- If sorting enitity conforms to **DynamicSorting** default StaticSorting is applied if no sorting keys provided.
+3. Setup route:
+ 
 
-### Important
+```swift
 
-**RestKit always appends sorting by ID with ascending order. This is necessary for valid cursor pagination.**
+app.group("stars") {
+    let controller = StarController()
+ 
+    $0.on(.GET, use: controller.index)
+}
+
+```
+
+
+#### Definitions
 
 #### How to use dynamic sort query
 

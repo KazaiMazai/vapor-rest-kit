@@ -5,6 +5,7 @@
 
 1. Define eager loading struct conforming to *StaticEagerLoading* protocol:
 
+
 ```swift
  struct StarStaticEagerLoading: StaticEagerLoading {
     typealias Key = EmptyEagerLoadKey<Model>

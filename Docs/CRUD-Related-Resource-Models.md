@@ -6,9 +6,8 @@
 
 
 1. Define Inputs, Outputs as usual
-
  
-2. Define relation controller providing sibling relation keyPath and some *relationName* or nil, if not needed.
+2. Define related resource controller providing relation keyPath:
 
 ```swift
 
@@ -95,7 +94,7 @@ This will result in the following methods:
 
 *Under the hood, there is a "resolver guy", who takes models' IDs from the route query path as `Galaxy.idPath` and `Star.idPath` and then looks them up in the database, taking into account specified relations key paths.*
 
-Actually we can easily do without "contains" part of the path:
+Actually we can easily do without relation name part of the path:
 
 ```swift
 
@@ -142,7 +141,7 @@ Meaning that you can setup all kinds of "galaxy for star" or "stars for galaxy" 
 
 ### Related to Authenticatable Model
 
-If root Model conforms to Vapor's Authenticatable protocol, there is a way to add related resource controller for it. So that the root model would come from authenticator istead of looked up by ID.
+If root Model conforms to Vapor's Authenticatable protocol, there is a way to add related resource controller in a way that the root model would be resolved from authenticator istead of looked up by ID.
 This a quick way for creating current user's posts or todos or whatever.
  
 
@@ -193,8 +192,7 @@ struct MyTodosController {
         try RelatedResourceController<Todo.Output>().getCursorPage(
             resolver: .requireAuth(),
             req: req,
-            relationKeyPath: \User.$todos,
-            config: CursorPaginationConfig.defaultConfig)
+            relationKeyPath: \User.$todos)
     }
 }
         

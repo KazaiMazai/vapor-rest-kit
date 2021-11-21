@@ -6,6 +6,7 @@
 1. Create Inputs, Outputs for your model:
 
 ```swift
+
 extension Todo {
     struct Output: ResourceOutputModel {
         let id: Int?
@@ -56,7 +57,6 @@ extension Todo {
             //Validate something
         }
     }
-
 }
 
 ```
