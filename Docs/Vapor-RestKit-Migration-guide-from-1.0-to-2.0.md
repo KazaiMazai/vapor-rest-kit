@@ -312,7 +312,7 @@ app.group("v1") { base in
 ## Sorting, Filtering, Eagerloading Migration Guide
 
 
-Sorting, Filtering, Eagerloading related things may be wrapped into a QueryModifier or updated to a new query keys API: ( SortingQueryKey, FilterQueryKey,  EagerLoadingKey)
+Sorting, Filtering, Eagerloading related things may be wrapped into a QueryModifier without changes or updated to a new query keys API: ( SortingQueryKey, FilterQueryKey,  EagerLoadingKey)
 
 
 ### v1.0:

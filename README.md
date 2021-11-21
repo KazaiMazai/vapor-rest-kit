@@ -8,21 +8,14 @@ This package is intended to speed up backend development using server side swift
 
 
 ## Features
-- Generic-powered Declarative API 
-- CRUD for Resource Models 
-- CRUD for Related Resource Models 
-- Nested routes for Parent-Child, Siblings relations
-- Nested */me* routes for Authenticatable Related Resource
-- API versioning for controllers and Resource Models 
-- Pagination for Resource Collections by Cursor or Page 
-- Filtering 
-- Sorting
-- Eager loading
-- Dynamic query keys for sorting, filtering and eager loading
-- Controller Middlewares for business logic
-- Compound Controllers
-- Fluent Model convenience extensions for models initial migrations
-- Fluent Model convenience extensions for Siblings relations
+- CRUDs with Resource and Nested Resource Controllers
+- Parent-Child, Siblings relations support
+- Nested Resource Controllers for Authenticatable Resource
+- Filter query
+- Sorting query
+- Eager loading query
+- Fluent Model convenience extensions 
+- Cursor Pagination 
 ____________
 
 ## Installation
@@ -73,47 +66,89 @@ protocol ResourceOutputModel: Content {
 
 ```
 
+2. Define ```StarsEagerLoadQueryKeys, StarsSortQueryKeys, StarsFilterQueryKeys``` if needed
 
-2. Define ```TodoEagerLoading, TodoSortKeys, TodoFilterKeys``` if needed
-
-3. Create controller with RestKit Declarative API:
+3. Implement controller with RestKit ResourceControllers API:
 
 ```swift
-let controller = Todo.Output
-                .controller(eagerLoading: TodoEagerLoading.self)
-                .related(with: \Tag.$relatedTodos, relationName: "related")
-                .create(using: Todo.Input.self)
-                .read()
-                .update(using: Todo.Input.self)
-                .patch(using: Todo.PatchInput.self)
-                .read()
-                .delete()
-                .collection(sorting: TodoSortKeys.self,
-                            filtering: TodoFilterKeys.self)
 
+struct StarForGalaxyNestedController {
+     
+    func create(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().create(
+            req: req,
+            using: Star.Input.self,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func read(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().read(
+            req: req,
+            queryModifier: .eagerLoading(StarEagerLoadingKeys.self),
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func update(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().update(
+            req: req,
+            using: Star.Input.self,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().delete(
+            req: req,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
+        try RelatedResourceController<Star.Output>().patch(
+            req: req,
+            using: Star.PatchInput.self,
+            relationKeyPath: \Galaxy.$stars)
+    }
+
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
+        try RelatedResourceController<Star.Output>().getCursorPage(
+            req: req,
+            queryModifier:
+                .eagerLoading(StarEagerLoadingKeys.self) &
+                .sort(using: StarsSortingKeys.self) &
+                .filter(StarsFilterKeys.self),
+            relationKeyPath: \Galaxy.$stars)
+    }
+}
 
 ```
 
-4. Add methods to route builder:
+3. Routes setup:
+
 
 ```swift
-let tags = routeBuilder.grouped("tags")
-controller.addMethodsTo(tags, on: "todos")
-```
 
-5. Get result:
- 
+app.group("galaxies", Galaxy.idPath, "stars") {
+    let controller = StarForGalaxyNestedController()
+
+    $0.on(.POST, use: controller.create)
+    $0.on(.GET, Star.idPath, use: controller.read)
+    $0.on(.PUT, Star.idPath, use: controller.update)
+    $0.on(.PATCH, Star.idPath, use: controller.patch)
+    $0.on(.DELETE, Star.idPath, use: controller.delete)
+    $0.on(.GET, use: controller.index)
+}
+```
+     
+4. Get result
+
 
 | HTTP Method                 | Route               | Result
 | --------------------------- |:--------------------| :---------------|
-|POST       | /tags/:tagId/related/todos          | Create new
-|GET        | /tags/:tagId/related/todos/:todoId  | Show existing
-|PUT        | /tags/:tagId/related/todos/:todoId  | Update existing (Replace)
-|PATCH      | /tags/:tagId/related/todos/:todoId  | Patch exsiting (Partial update)
-|DELETE     | /tags/:tagId/related/todos/:todoId  | Delete 
-|GET        | /tags/:tagId/related/todos          | Show list
-
-
+|POST       | /galaxies/:GalaxyId/stars         | Create new
+|GET        | /galaxies/:GalaxyId/stars/:starId  | Show existing
+|PUT        | /galaxies/:GalaxyId/stars/:starId  | Replace existing 
+|PATCH      | /galaxies/:GalaxyId/stars/:starId  | Patch exsiting
+|DELETE     | /galaxies/:GalaxyId/stars/:starId  | Delete 
+|GET        | /galaxies/:GalaxyId/stars         | Show list with cursor pagination
 ___________
  
 ## Check out the Docs for more details:
@@ -129,16 +164,14 @@ ___________
 [CRUD for Relations](Docs/CRUD-for-Relations.md)
 
 [Controller Middlewares](Docs/Controller-Middlewares.md)
-
-[~~Combine Controllers~~](Docs/Combine-Controllers.md)
-
-[~~API Versioning~~](Docs/API-Versioning.md)
-
+  
 [Filtering](Docs/Filtering.md)
 
 [Sorting](Docs/Sorting.md)
 
 [Eager Loading](Docs/Eager-Loading.md)
+
+[QueryModifier](Docs/QueryModifier.md)
 
 [Pagination](Docs/Pagination.md)
  
