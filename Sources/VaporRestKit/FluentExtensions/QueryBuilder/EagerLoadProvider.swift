@@ -21,6 +21,12 @@ public protocol EagerLoadingQueryKey: EagerLoadingKey {
     static func eagerLoadEmptyQueryFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model>
 }
 
+public extension EagerLoadingQueryKey {
+    static func eagerLoadEmptyQueryFor(_ queryBuilder: QueryBuilder<Model>) -> QueryBuilder<Model> {
+        queryBuilder
+    }
+}
+
 
 //MARK:- EagerLoadProvider Protocol
 
