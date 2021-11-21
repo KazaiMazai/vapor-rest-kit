@@ -6,6 +6,7 @@
 1. Create Inputs, Outputs for your model:
 
 ```swift
+
 extension Todo {
     struct Output: ResourceOutputModel {
         let id: Int?
@@ -56,31 +57,57 @@ extension Todo {
             //Validate something
         }
     }
-
 }
 
 ```
 
-2. Define which operations will be supported by your resource controller:
+2. Implement Controller:
 
 ```swift
-let controller = Todo.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .create(using: Todo.CreateInput.self)
-                    .read()
-                    .update(using: Todo.UpdateInput.self)
-                    .patch(using: Todo.PatchInput.self)
-                    .delete()
-                    .collection(sorting: DefaultSorting.self,
-                                filtering: DefaultFiltering.self)
+struct TodoController {
+    func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().create(req: req, using: Todo.Input.self)
+    }
 
-``` 
+    func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().read(req: req)
+    }
+
+    func update(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().update(req: req, using: Todo.Input.self)
+    }
+
+    func patch(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().patch(req: req, using: Todo.PatchInput.self)
+    }
+
+    func delete(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().delete(req: req)
+    }
+
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
+        try ResourceController<Todo.Output>().getCursorPage(req: req)
+    }
+}
+
+```
 3. Add controller's methods to Vapor's routes builder:
 
 ```swift
-controller.addMethodsTo(routeBuilder, on: "todos")
+
+routeBuilder.group("todos") {
+    let controller = TodoController()
+
+    $0.on(.POST, use: controller.create)
+    $0.on(.GET, Todo.idPath, use: controller.read)
+    $0.on(.PUT, Todo.idPath, use: controller.update)
+    $0.on(.DELETE, Todo.idPath, use: controller.delete)
+    $0.on(.PATCH, Todo.idPath, use: controller.patch)
+    $0.on(.GET, use: controller.index)
+}
 
 ```
+
   
 This will add the following methods to your API endpoint: 
 
@@ -94,23 +121,7 @@ This will add the following methods to your API endpoint:
 |DELETE     | /todos/:todoId            | Delete 
 |GET        | /todos                    | Show list
 
-### DeleteOutput
-#### How to change Delete Output
+### DeleteOutput 
 
-If defined this way, controller will return deleted model instance wrapped into output as response:
+By default delete method will return deleted model instance wrapped into output as a response.
 
-```swift
-let controller = Todo.Output
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .delete()
-
-```
-
-It's possible to define special empty Output for delete controller, or use default **SuccessOutput**:
-
-```swift
-let controller =  SuccessOutput<Todo>
-                    .controller(eagerLoading: EagerLoadingUnsupported.self)
-                    .delete()
-
-```

@@ -41,7 +41,6 @@ struct GalaxyControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try ResourceController<Galaxy.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier)
         }
 
@@ -61,12 +60,6 @@ struct GalaxyControllersV2 {
     }
 
     struct GalaxyForStarsNestedController {
-        var queryModifier: QueryModifier<Galaxy> {
-            QueryModifier.using(
-                eagerLoadProvider: EagerLoadingUnsupported(),
-                sortProvider: SortingUnsupported(),
-                filterProvider: FilteringUnsupported())
-        }
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().create(
@@ -78,7 +71,6 @@ struct GalaxyControllersV2 {
         func read(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().read(
                 req: req,
-                queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
 
@@ -86,15 +78,12 @@ struct GalaxyControllersV2 {
             try RelatedResourceController<Galaxy.Output>().update(
                 req: req,
                 using: Galaxy.Input.self,
-                queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelatedResourceController<Galaxy.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
-                queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
 
@@ -102,26 +91,22 @@ struct GalaxyControllersV2 {
             try RelatedResourceController<Galaxy.Output>().patch(
                 req: req,
                 using: Galaxy.PatchInput.self,
-                queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Galaxy.Output>> {
             try RelatedResourceController<Galaxy.Output>().getCursorPage(
                 req: req,
-                queryModifier: queryModifier,
-                relationKeyPath: \Galaxy.$stars,
-                config: CursorPaginationConfig.defaultConfig)
+                relationKeyPath: \Galaxy.$stars)
         }
     }
 
     struct ExtendableGalaxyForStarsNestedController {
-        var queryModifier: QueryModifier<Galaxy> {
-            QueryModifier.using(
-                eagerLoadProvider: GalaxyControllers.GalaxyEagerLoader(),
-                sortProvider: SortingUnsupported(),
-                filterProvider: FilteringUnsupported())
-        }
+        let queryModifier = QueryModifier.using(
+            eagerLoadProvider: GalaxyControllers.GalaxyEagerLoader(),
+            sortProvider: SortingUnsupported(),
+            filterProvider: FilteringUnsupported())
+
 
         func create(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().create(
@@ -148,7 +133,6 @@ struct GalaxyControllersV2 {
         func delete(req: Request) throws -> EventLoopFuture<Galaxy.ExtendedOutput<Star.Output>> {
             try RelatedResourceController<Galaxy.ExtendedOutput<Star.Output>>().delete(
                 req: req,
-                using: .defaultDeleter(),
                 queryModifier: queryModifier,
                 relationKeyPath: \Galaxy.$stars)
         }
@@ -174,14 +158,12 @@ struct GalaxyControllersV2 {
         func createRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelationsController<Galaxy.Output>().createRelation(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Galaxy.$stars)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<Galaxy.Output> {
             try RelationsController<Galaxy.Output>().deleteRelation(
                 req: req,
-                queryModifier: .empty,
                 relationKeyPath: \Galaxy.$stars)
         }
     }

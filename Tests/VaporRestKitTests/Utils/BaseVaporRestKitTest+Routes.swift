@@ -267,8 +267,8 @@ extension BaseVaporRestKitTest {
                         .group(User.idPath, "relation") {
                             let controller = UserControllersV2.TodoAssigneesRelationController()
 
-                            $0.on(.POST, use: controller.createRelation)
-                            $0.on(.DELETE, use: controller.deleteRelation)
+                            $0.on(.POST, use: controller.addAssignee)
+                            $0.on(.DELETE, use: controller.removeAssignee)
                         }
                 }
 

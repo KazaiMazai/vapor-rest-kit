@@ -1,41 +1,39 @@
 ## Filtering
 
 ### Static Filtering
-#### How to setup default filters for controller methods
 
+#### How to setup static filters for controller methods
 
-1. Define filter struct, conforming to StaticFiltering protocol:
+1. Pass query modifier with necessary filter to controller's methods:
 
 ```swift
-struct StarsFiltering: StaticFiltering {
-    typealias Model = Star
-    typealias Key = EmptyFilteringKey
 
-    func baseFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
-        //no filter will be applied:
-        return queryBuilder
+struct StarController {
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
+        try ResourceController<Star.Output>().getCursorPage(
+            req: req,
+            queryModifier: QueryModifier { querybuilder, _ in
+                queryBuilder.filter(\.$title == value)
+            })
     }
 }
 
 ```
 
-2. When defining controller, add filter type as collection controller builder parameter:
+2. Setup route:
+ 
 
 ```swift
 
-let controller = Star.Output
-        .controller(eagerLoading: EagerLoadingUnsupported.self)
-        .create(using: Star.Input.self)
-        .read()
-        .update(using: Star.Input.self)
-        .patch(using: Star.PatchInput.self)
-        .delete()
-        .collection(sorting: StarControllers.StarsSorting.self, 
-                    filtering: StarControllers.StarsFiltering.self)
+app.group("stars") {
+    let controller = StarController()
+ 
+    $0.on(.GET, use: controller.index)
+}
 
 ```
 
-Such filter will be always applied to the collection request
+Such filter will be always applied to the paginated collection request
 
 ### Dynamic Filtering
 
@@ -48,97 +46,93 @@ Supported filter types:
 
 #### How to setup dynamic filters query
 
-1. Define filter struct, conforming to DynamicFiltering protocol:
+1. Implement Fitler Key enum comforming to FilterQueryKey protocol
 
 ```swift
-struct StarsFiltering: DynamicFiltering {
-    typealias Model = Star
-    typealias Key = Keys
-    
-    func baseFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
-        //no filter will be applied:
-        return queryBuilder
-    }
 
-    func defaultFiltering(_ queryBuilder: QueryBuilder<Star>) -> QueryBuilder<Star> {
-        //no filter
-        return queryBuilder
-    }
+enum StarsFilterKeys: String, FilterQueryKey {
+    case title
+    case subtitle
+    case size
 
-    enum Keys: String, FilteringKey {
-        typealias Model = Star
+    func filterFor(queryBuilder: QueryBuilder<Star>,
+                   method: DatabaseQuery.Filter.Method,
+                   value: String) -> QueryBuilder<Star> {
 
-        case title
-        case subtitle
-        case size
-
-        func filterFor(queryBuilder: QueryBuilder<Star>,
-                       method: DatabaseQuery.Filter.Method,
-                       value: String) -> QueryBuilder<Star> {
-
-            switch self {
-            case .title:
-                return queryBuilder.filter(\.$title, method, value)
-            case .subtitle:
-                return queryBuilder.filter(\.$subtitle, method, value)
-            case .size:
-                guard let intValue = Int(value) else {
-                    return queryBuilder
-                }
-                return queryBuilder.filter(\.$size, method, intValue)
-            }
-        }
-
-        static func filterFor(queryBuilder: QueryBuilder<Star>,
-                              lhs: Keys,
-                              method: DatabaseQuery.Filter.Method,
-                              rhs: Keys) -> QueryBuilder<Star> {
-            switch (lhs, rhs) {
-            case (.title, .subtitle):
-                return queryBuilder.filter(\.$title, method, \.$subtitle)
-            case (.subtitle, .title):
-                return queryBuilder.filter(\.$subtitle, method, \.$title)
-            default:
+        switch self {
+        case .title:
+            return queryBuilder.filter(\.$title, method, value)
+        case .subtitle:
+            return queryBuilder.filter(\.$subtitle, method, value)
+        case .size:
+            guard let intValue = Int(value) else {
                 return queryBuilder
             }
+            return queryBuilder.filter(\.$size, method, intValue)
         }
+    }
+
+    static func filterFor(queryBuilder: QueryBuilder<Star>,
+                          lhs: Self,
+                          method: DatabaseQuery.Filter.Method,
+                          rhs: Self) -> QueryBuilder<Star> {
+        switch (lhs, rhs) {
+        case (.title, .subtitle):
+            return queryBuilder.filter(\.$title, method, \.$subtitle)
+        case (.subtitle, .title):
+            return queryBuilder.filter(\.$subtitle, method, \.$title)
+        default:
+            return queryBuilder
+        }
+    }
+    
+    
+    // (Optional) This guy is used when there is no keys in the request query:
+    
+    static func emptyQueryFilter(queryBuilder: QueryBuilder<Star>)-> QueryBuilder<Star> {
+        // does not filter anything in default implementation
+        
+        queryBuilder
     }
 }
 ```
 
-2. When defining controller, add filter type as collection controller builder parameter:
+2. Pass  ```.filter(...)``` query modifier to necessary controller's methods:
+
 
 ```swift
 
-let controller = Star.Output
-        .controller(eagerLoading: EagerLoadingUnsupported.self)
-        .create(using: Star.Input.self)
-        .read()
-        .update(using: Star.Input.self)
-        .patch(using: Star.PatchInput.self)
-        .delete()
-        .collection(sorting: StarControllers.StarsSorting.self, 
-                    filtering: StarControllers.StarsFiltering.self)
+struct StarController {
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
+        try ResourceController<Star.Output>().getCursorPage(
+            req: req,
+            queryModifier: .filter(StarsFilterKeys.self))
+    }
+}
 
 ```
+
+3. Setup route:
+ 
+
+```swift
+
+app.group("stars") {
+    let controller = StarController()
+ 
+    $0.on(.GET, use: controller.index)
+}
+
+```
+
 #### Definitions
 
 
-
-The following func defines default filtering, applied to the collection.
-```swift
-func defaultFiltering() 
-```
-- No matter If filtering enitity conforms to **StaticFiltering** or **DynamicFiltering** base filtering is always applied. 
-- If filtering enitity conforms to **DynamicFiltering** default filtering is applied only if no filter keys provided by client in request query
-
-
-
-The following Keys enum defines supported dynamic keys 
+FilterQueryKey enum defines all keys that would be supported in queries: 
 
 
 ```swift 
- enum Keys: String, FilteringKey {
+ enum Keys: String, FilterQueryKey {
         typealias Model = Star
 
         case title
@@ -146,24 +140,39 @@ The following Keys enum defines supported dynamic keys
         case size
 }
 ```
+The following func defines how filter query key is applied to the queryBuilder for value fitlers:
  
-The following func provides mapping current of keys to a filtered queryBuilder via
 
 ```swift
 func filterFor(queryBuilder: QueryBuilder<Star>,
                            method: DatabaseQuery.Filter.Method,
-                           value: String) -> QueryBuilder<Star> 
+                           value: String) -> QueryBuilder<Star> {
+   ...
+}
 
 ```
 
-The following func defines supported field filter if needed. 
-It provides mapping of filter keys and method to a filtered queryBuilder:
+The following func defines how filter query key is applied to the queryBuilder for field fitlers:
 
 ```swift
 static func filterFor(queryBuilder: QueryBuilder<Star>,
                                   lhs: Keys,
                                   method: DatabaseQuery.Filter.Method,
-                                  rhs: Keys) -> QueryBuilder<Star> 
+                                  rhs: Keys) -> QueryBuilder<Star> {
+    ...                              
+}
+```
+
+The following func allows to apply default filter in case of empty filter query:
+
+```swift
+
+static func emptyQueryFilter(queryBuilder: QueryBuilder<Star>)-> QueryBuilder<Star> {
+    // does not filter anything in default implementation
+    
+    queryBuilder
+}
+
 ```
 
 #### How to use dynamic filters query
@@ -188,6 +197,7 @@ enum FilterOperations: String, Codable {
 #### How to query Value Filter
 
 RestKit uses JSON format to parse filter query string. Query key is **filter**, value is valid JSON string:
+
 ```JSON
 {"value":  {"value": "X", "method": "eq", "key": "title"}}
 ```

@@ -23,6 +23,16 @@ public protocol SortingQueryKey: SortingKey {
     static func uniqueKeySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
 }
 
+public extension SortingQueryKey {
+    static func emptyQuerySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model> {
+        queryBuilder
+    }
+
+    static func uniqueKeySort(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model> {
+        queryBuilder.sort(\Model._$id, .ascending)
+    }
+}
+
 //MARK:- SortProvider Protocol
 @available(*, deprecated, message: "Use SortingQueryKey instead")
 public protocol SortProvider where Key: SortingKey, Key.Model == Model {

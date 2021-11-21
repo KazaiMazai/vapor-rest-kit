@@ -25,6 +25,12 @@ public protocol FilterQueryKey: FilteringKey {
     static func emptyQueryFilter(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model>
 }
 
+public extension FilterQueryKey {
+    static func emptyQueryFilter(queryBuilder: QueryBuilder<Model>)-> QueryBuilder<Model> {
+        queryBuilder
+    }
+}
+
 //MARK:- FilterProvider Protocol
 
 @available(*, deprecated, message: "Use FilterQueryKey instead")

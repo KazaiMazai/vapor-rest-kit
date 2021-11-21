@@ -222,6 +222,7 @@ extension StarTagControllers {
         }
     }
 
+
     struct StarsFiltering: DynamicFiltering {
         typealias Model = Star
         typealias Key = Keys

@@ -12,8 +12,7 @@ import Fluent
 
 struct StarTagControllersV2 {
     struct StarTagController {
-        let queryModifier: QueryModifier<StarTag> = .empty
-
+        
         func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try ResourceController<StarTag.Output>().create(
                 req: req,
@@ -22,41 +21,34 @@ struct StarTagControllersV2 {
 
         func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try ResourceController<StarTag.Output>().read(
-                req: req,
-                queryModifier: queryModifier)
+                req: req)
         }
 
         func update(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try ResourceController<StarTag.Output>().update(
                 req: req,
-                using: StarTag.Input.self,
-                queryModifier: queryModifier)
+                using: StarTag.Input.self)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try ResourceController<StarTag.Output>().delete(
-                req: req,
-                using: .defaultDeleter(),
-                queryModifier: queryModifier)
+                req: req)
         }
 
         func patch(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try ResourceController<StarTag.Output>().patch(
                 req: req,
-                using: StarTag.PatchInput.self,
-                queryModifier: queryModifier)
+                using: StarTag.PatchInput.self)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
             try ResourceController<StarTag.Output>().getCursorPage(
                 req: req,
-                queryModifier: queryModifier,
                 config: CursorPaginationConfig.defaultConfig)
         }
     }
 
     struct StarTagForStarNestedController {
-        let queryModifier: QueryModifier<StarTag> = .empty
 
         func create(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelatedResourceController<StarTag.Output>().create(
@@ -68,7 +60,6 @@ struct StarTagControllersV2 {
         func read(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelatedResourceController<StarTag.Output>().read(
                 req: req,
-                queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
 
@@ -76,15 +67,12 @@ struct StarTagControllersV2 {
             try RelatedResourceController<StarTag.Output>().update(
                 req: req,
                 using: StarTag.Input.self,
-                queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
 
         func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelatedResourceController<StarTag.Output>().delete(
                 req: req,
-                using: .defaultDeleter(),
-                queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
 
@@ -92,33 +80,27 @@ struct StarTagControllersV2 {
             try RelatedResourceController<StarTag.Output>().patch(
                 req: req,
                 using: StarTag.PatchInput.self,
-                queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
 
         func index(req: Request) throws -> EventLoopFuture<CursorPage<StarTag.Output>> {
             try RelatedResourceController<StarTag.Output>().getCursorPage(
                 req: req,
-                queryModifier: queryModifier,
-                relationKeyPath: \Star.$starTags,
-                config: CursorPaginationConfig.defaultConfig)
+                relationKeyPath: \Star.$starTags)
         }
     }
 
     struct StarTagForStarRelationNestedController {
-        let queryModifier: QueryModifier<StarTag> = .empty
 
         func createRelation(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelationsController<StarTag.Output>().createRelation(
                 req: req,
-                queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
 
         func deleteRelation(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelationsController<StarTag.Output>().deleteRelation(
                 req: req,
-                queryModifier: queryModifier,
                 relationKeyPath: \Star.$starTags)
         }
 
