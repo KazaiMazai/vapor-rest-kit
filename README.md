@@ -9,7 +9,7 @@ This package is intended to speed up backend development using server side swift
 
 ## Features
 - CRUDs with Resource and Nested Resource Controllers
-- Parent-Child, Siblings relations support
+- Parent-Child and Siblings relations for Nested Resource Controllers
 - Nested Resource Controllers for Authenticatable Resource
 - Filter query
 - Sorting query
@@ -46,6 +46,7 @@ ____________
 1. Define Input, Output structs for your Model, conforming to ```ResourceUpdateModel, ResourcePatchModel, ResourceOutputModel``` protocols:
 
 ```swift
+
 protocol ResourceUpdateModel: Content, Validatable {
     associatedtype Model: Fields
 
@@ -136,6 +137,7 @@ app.group("galaxies", Galaxy.idPath, "stars") {
     $0.on(.DELETE, Star.idPath, use: controller.delete)
     $0.on(.GET, use: controller.index)
 }
+
 ```
      
 4. Get result
@@ -174,6 +176,11 @@ ___________
 [QueryModifier](Docs/QueryModifier.md)
 
 [Pagination](Docs/Pagination.md)
+
+
+## VaporRestKit Migration Guides
+
+[Migration from v1.x to v2.0](Docs/Vapor-RestKit-Migration-guide-from-v1.0-to-v2.0.md)
  
 # Licensing
 
