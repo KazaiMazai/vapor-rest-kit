@@ -72,7 +72,7 @@ struct StarTagControllersV2 {
 
         func delete(req: Request) throws -> EventLoopFuture<StarTag.Output> {
             try RelatedResourceController<StarTag.Output>().delete(
-                req: req,,
+                req: req,
                 relationKeyPath: \Star.$starTags)
         }
 
