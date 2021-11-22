@@ -158,7 +158,7 @@ ___________
 [Pagination](Docs/Pagination.md)
 
 
-## VaporRestKit Migration Guides
+## Migration Guides
 
 [Migration from v1.x to v2.0](Docs/Vapor-RestKit-Migration-guide-from-v1.0-to-v2.0.md)
  
