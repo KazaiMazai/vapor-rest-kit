@@ -67,90 +67,70 @@ protocol ResourceOutputModel: Content {
 
 ```
 
-2. Define ```StarsEagerLoadQueryKeys, StarsSortQueryKeys, StarsFilterQueryKeys``` if needed
+2. Define `EagerLoadQueryKeys`, `SortQueryKeys`, `FilterQueryKeys`  if needed
 
-3. Implement controller with RestKit ResourceControllers API:
+3. Implement controller with the help of RestKit ResourceController:
 
 ```swift
 
-struct StarForGalaxyNestedController {
-     
-    func create(req: Request) throws -> EventLoopFuture<Star.Output> {
-        try RelatedResourceController<Star.Output>().create(
-            req: req,
-            using: Star.Input.self,
-            relationKeyPath: \Galaxy.$stars)
+struct TodoController {
+    func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().create(req: req, using: Todo.Input.self)
     }
 
-    func read(req: Request) throws -> EventLoopFuture<Star.Output> {
-        try RelatedResourceController<Star.Output>().read(
-            req: req,
-            queryModifier: .eagerLoading(StarEagerLoadingKeys.self),
-            relationKeyPath: \Galaxy.$stars)
+    func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().read(req: req)
     }
 
-    func update(req: Request) throws -> EventLoopFuture<Star.Output> {
-        try RelatedResourceController<Star.Output>().update(
-            req: req,
-            using: Star.Input.self,
-            relationKeyPath: \Galaxy.$stars)
+    func update(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().update(req: req, using: Todo.Input.self)
     }
 
-    func delete(req: Request) throws -> EventLoopFuture<Star.Output> {
-        try RelatedResourceController<Star.Output>().delete(
-            req: req,
-            relationKeyPath: \Galaxy.$stars)
+    func patch(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().patch(req: req, using: Todo.PatchInput.self)
     }
 
-    func patch(req: Request) throws -> EventLoopFuture<Star.Output> {
-        try RelatedResourceController<Star.Output>().patch(
-            req: req,
-            using: Star.PatchInput.self,
-            relationKeyPath: \Galaxy.$stars)
+    func delete(req: Request) throws -> EventLoopFuture<Todo.Output> {
+        try ResourceController<Todo.Output>().delete(req: req)
     }
 
-    func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
-        try RelatedResourceController<Star.Output>().getCursorPage(
-            req: req,
-            queryModifier:
-                .eagerLoading(StarEagerLoadingKeys.self) &
-                .sort(using: StarsSortingKeys.self) &
-                .filter(StarsFilterKeys.self),
-            relationKeyPath: \Galaxy.$stars)
+    func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
+        try ResourceController<Todo.Output>().getCursorPage(req: req)
     }
 }
 
 ```
 
-3. Routes setup:
-
+4. Setup routes:
 
 ```swift
 
-app.group("galaxies", Galaxy.idPath, "stars") {
-    let controller = StarForGalaxyNestedController()
+app.group("todos") {
+    let controller = TodoController()
 
     $0.on(.POST, use: controller.create)
-    $0.on(.GET, Star.idPath, use: controller.read)
-    $0.on(.PUT, Star.idPath, use: controller.update)
-    $0.on(.PATCH, Star.idPath, use: controller.patch)
-    $0.on(.DELETE, Star.idPath, use: controller.delete)
+    $0.on(.GET, Todo.idPath, use: controller.read)
+    $0.on(.PUT, Todo.idPath, use: controller.update)
+    $0.on(.DELETE, Todo.idPath, use: controller.delete)
+    $0.on(.PATCH, Todo.idPath, use: controller.patch)
     $0.on(.GET, use: controller.index)
 }
 
 ```
-     
-4. Get result
+
+  
+This will add the following methods to your API endpoint: 
 
 
-| HTTP Method                 | Route               | Result
-| --------------------------- |:--------------------| :---------------|
-|POST       | /galaxies/:GalaxyId/stars         | Create new
-|GET        | /galaxies/:GalaxyId/stars/:starId  | Show existing
-|PUT        | /galaxies/:GalaxyId/stars/:starId  | Replace existing 
-|PATCH      | /galaxies/:GalaxyId/stars/:starId  | Patch exsiting
-|DELETE     | /galaxies/:GalaxyId/stars/:starId  | Delete 
-|GET        | /galaxies/:GalaxyId/stars         | Show list with cursor pagination
+| HTTP Method                 | Route            | Result
+| --------------------------- |:-----------------| :---------------|
+|POST       | /todos                    | Create new
+|GET        | /todos/:todoId            | Show existing
+|PUT        | /todos/:todoId            | Update existing (Replace)
+|PATCH      | /todos/:todoId            | Patch exsiting (Partial update)
+|DELETE     | /todos/:todoId            | Delete 
+|GET        | /todos                    | Show paginated list
+
 ___________
  
 ## Check out the Docs for more details:
@@ -178,7 +158,7 @@ ___________
 [Pagination](Docs/Pagination.md)
 
 
-## VaporRestKit Migration Guides
+## Migration Guides
 
 [Migration from v1.x to v2.0](Docs/Vapor-RestKit-Migration-guide-from-v1.0-to-v2.0.md)
  

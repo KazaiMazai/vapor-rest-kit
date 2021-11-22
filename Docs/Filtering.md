@@ -113,9 +113,9 @@ struct StarController {
 ```
 
 3. Setup route:
- 
 
 ```swift
+ 
 
 app.group("stars") {
     let controller = StarController()
