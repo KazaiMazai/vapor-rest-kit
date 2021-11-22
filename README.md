@@ -151,7 +151,7 @@ ___________
 
 [Sorting](Docs/Sorting.md)
 
-[Eager Loading](Docs/Eager-Loading.md)
+[Eager Loading](Docs/EaagerLoading.md)
 
 [QueryModifier](Docs/QueryModifier.md)
 
