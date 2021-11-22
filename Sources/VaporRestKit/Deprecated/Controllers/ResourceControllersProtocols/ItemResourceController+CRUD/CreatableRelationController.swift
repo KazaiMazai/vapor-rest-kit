@@ -1,0 +1,70 @@
+//
+//  
+//  
+//
+//  Created by Sergey Kazakov on 04.05.2020.
+//
+
+import Vapor
+import Fluent
+
+protocol CreatableRelationController: ItemResourceControllerProtocol {
+    associatedtype RelatedModel: Fluent.Model
+
+    func create(_ req: Request) throws -> EventLoopFuture<Output>
+}
+
+extension CreatableRelationController where Self: ChildrenResourceRelationProvider {
+    func create(_ req: Request) throws -> EventLoopFuture<Output> {
+        return req.db.tryTransaction { db in
+
+            try self.findRelated(req, database: db)
+                .and(self.find(req, database: db))
+                .flatMap { self.relatedResourceMiddleware.handle($0.1,
+                                                                        relatedModel: $0.0,
+                                                                        req: req,
+                                                                        database: db) }
+                .flatMapThrowing { (resource, related) in
+                    try resource.attached(to: related, with: self.childrenKeyPath) }
+                .flatMap { $0.save(on: db).transform(to: $0) }
+                .flatMapThrowing { try Output($0, req: req) }
+        }
+    }
+}
+
+extension CreatableRelationController where Self: ParentResourceRelationProvider {
+    func create(_ req: Request) throws -> EventLoopFuture<Output> {
+        return req.db.tryTransaction { db in
+
+            try self.findRelated(req, database: db)
+                .and(self.find(req, database: db))
+                .flatMap { self.relatedResourceMiddleware.handle($0.1,
+                                                                        relatedModel: $0.0,
+                                                                        req: req,
+                                                                        database: db) }
+                .flatMapThrowing { (resource, related) in
+                    try resource.attached(to: related, with: self.inversedChildrenKeyPath)
+                    return related.save(on: db).transform(to: resource) }
+                .flatMap { $0 }
+                .flatMapThrowing { try Output($0, req: req) }
+        }
+    }
+}
+
+extension CreatableRelationController where Self: SiblingsResourceRelationProvider {
+    func create(_ req: Request) throws -> EventLoopFuture<Output> {
+        return req.db.tryTransaction { db in
+
+            try self.findRelated(req, database: db)
+                .and(self.find(req, database: db))
+                .flatMap { self.relatedResourceMiddleware.handle($0.1,
+                                                                        relatedModel: $0.0,
+                                                                        req: req,
+                                                                        database: db) }
+                .flatMap { (resource, related) in
+                    resource.attached(to: related, with: self.siblingKeyPath, on: db) }
+                .flatMapThrowing { try Output($0, req: req)}
+        }
+    }
+}
+

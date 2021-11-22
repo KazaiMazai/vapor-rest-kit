@@ -13,7 +13,7 @@ import Fluent
 struct TagControllers {
     struct TagController: VersionableController {
 
-        let todoOwnerGuardMiddleware = RelatedResourceControllerMiddleware<User, Todo>(handler: { (user, todo, req, db) in
+        let todoOwnerGuardMiddleware = ControllerMiddleware<User, Todo>(handler: { (user, todo, req, db) in
             db.eventLoop
                 .tryFuture { try req.auth.require(User.self) }
                 .guard( { $0.id == todo.user?.id}, else: Abort(.unauthorized))
@@ -39,7 +39,7 @@ struct TagControllers {
 
     struct TagsForTodoController: VersionableController {
         var apiV1: APIMethodsProviding {
-            let todoOwnerGuardMiddleware = RelatedResourceControllerMiddleware<Tag, Todo> { (tag, todo, req, db) in
+            let todoOwnerGuardMiddleware = ControllerMiddleware<Tag, Todo> { (tag, todo, req, db) in
                 db.eventLoop
                     .tryFuture { try req.auth.require(User.self) }
                     .guard( { $0.id == todo.user?.id}, else: Abort(.unauthorized))

@@ -10,6 +10,16 @@ import Fluent
 
 //MARK:- QueryBuilder Extension
 
+extension QueryBuilder {
+    func eagerLoadFor<Key: EagerLoadingKey>(keys: [Key]) -> QueryBuilder<Model> where Key.Model == Model {
+
+        var queryBuilder = self
+        keys.forEach { queryBuilder = $0.eagerLoadFor(queryBuilder) }
+
+        return queryBuilder
+    }
+}
+
 public extension QueryBuilder {
     func with<EagerLoading: EagerLoadProvider>(_ eagerLoadProvider: EagerLoading, for req: Request) throws -> QueryBuilder<Model> where EagerLoading.Model == Model {
 
@@ -28,7 +38,22 @@ public extension QueryBuilder {
             return eagerLoadProvider.defaultEagerLoading(baseEagerLoaded)
         }
 
-        return eagerLoadProvider.eagerLoadFor(builder: baseEagerLoaded, includeKeys: keys)
+        return baseEagerLoaded.eagerLoadFor(keys: keys)
+    }
+
+    func with<Key: EagerLoadingQueryKey>(keys: Key.Type, for req: Request) throws -> QueryBuilder<Model>
+    where Key.Model == Model {
+
+        let keys = try req.query.decode(ArrayQueryRequest<EagerLoadCodingKeys>.self)
+                                  .values
+                                  .map { Key(rawValue: $0) }
+                                  .compactMap { $0 }
+
+        guard !keys.isEmpty else {
+            return Key.eagerLoadEmptyQueryFor(self)
+        }
+
+        return self.eagerLoadFor(keys: keys)
     }
 }
 

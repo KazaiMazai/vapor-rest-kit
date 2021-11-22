@@ -10,8 +10,6 @@ import XCTVapor
 import Vapor
 import Fluent
 
-
-
 struct StarTagControllers {
     struct StarTagController: VersionableController {
         var apiV1: APIMethodsProviding {
@@ -72,5 +70,6 @@ struct StarTagControllers {
             }
         }
     }
-
 }
+
+

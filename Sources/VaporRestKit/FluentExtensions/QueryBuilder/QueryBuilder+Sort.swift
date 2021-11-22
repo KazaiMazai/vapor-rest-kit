@@ -11,25 +11,49 @@ import Fluent
 //MARK:- QueryBuilder Extension
 
 public extension QueryBuilder {
-    func sort<Sorting: SortProvider>(_ sortProvider: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
-
-        guard sortProvider.supportsDynamicSortKeys else {
-            let defaultSorted = sortProvider.defaultSorting(self)
-            return sortProvider.uniqueKeySorting(defaultSorted)
+    func sort<Sorting: SortProvider>(_ sorting: Sorting, for req: Request) throws -> QueryBuilder<Model> where Sorting.Model == Model {
+        guard sorting.supportsDynamicSortKeys else {
+            let defaultSorted = sorting.defaultSorting(self)
+            return sorting.uniqueKeySorting(defaultSorted)
         }
 
-        let keys = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
+        let sortDescriptors = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
                                 .values
                                 .map { SortDescriptor(fromString: $0, sortKeyType: Sorting.Key.self) }
                                 .compactMap { $0 }
 
-        let sortedQueryBuilder = keys.isEmpty ?
-                                sortProvider.defaultSorting(self):
-                                sortProvider.sortFor(builder: self, sortDescriptors: keys)
+        let sortedQueryBuilder = sortDescriptors.isEmpty ?
+                                sorting.defaultSorting(self):
+                                self.sort(with: sortDescriptors)
 
-        return sortProvider.uniqueKeySorting(sortedQueryBuilder)
+        return sorting.uniqueKeySorting(sortedQueryBuilder)
+    }
+
+    func sort<Key: SortingQueryKey>(_ keys: Key.Type, for req: Request) throws -> QueryBuilder<Model> where Key.Model == Model {
+        let sortDescriptors = try req.query.decode(ArrayQueryRequest<SortingCodingKeys>.self)
+                                .values
+                                .map { SortDescriptor(fromString: $0, sortKeyType: Key.self) }
+                                .compactMap { $0 }
+
+        let sortedQueryBuilder = sortDescriptors.isEmpty ?
+                                Key.emptyQuerySort(queryBuilder: self):
+                                self.sort(with: sortDescriptors)
+
+        return Key.uniqueKeySort(queryBuilder: sortedQueryBuilder)
+    }
+
+
+}
+
+extension QueryBuilder {
+    func sort<Key>(with sortDescriptors: [SortDescriptor<Key>]) -> QueryBuilder<Key.Model> where Key.Model == Model {
+        var queryBuilder = self
+        sortDescriptors.forEach { queryBuilder =  $0.key.sortFor(queryBuilder, direction: $0.direction) }
+
+        return queryBuilder
     }
 }
+
 
 //MARK:- SortDescriptor
 

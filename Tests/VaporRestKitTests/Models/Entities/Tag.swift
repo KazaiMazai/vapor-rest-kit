@@ -60,6 +60,8 @@ extension Tag {
     }
 
     struct CreateInput: ResourceUpdateModel {
+        typealias Model = Tag
+
         let title: String
 
         func update(_ model: Tag) -> Tag {
@@ -73,6 +75,8 @@ extension Tag {
     }
 
     struct UpdateInput: ResourceUpdateModel {
+        typealias Model = Tag
+        
         let title: String
 
         func update(_ model: Tag) -> Tag {
@@ -86,6 +90,8 @@ extension Tag {
     }
 
     struct PatchInput: ResourcePatchModel {
+        typealias Model = Tag
+
         let title: String?
 
         func patch(_ model: Tag) -> Tag {
