@@ -135,32 +135,22 @@ ___________
  
 ## Check out the Docs for more details:
 
-[Basics](Docs/Basics.md)
-
-[Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
-
-[CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
-
-[CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
-
-[CRUD for Relations](Docs/CRUD-for-Relations.md)
-
-[Controller Middlewares](Docs/Controller-Middlewares.md)
-  
-[Filtering](Docs/Filtering.md)
-
-[Sorting](Docs/Sorting.md)
-
-[Eager Loading](Docs/EaagerLoading.md)
-
-[QueryModifier](Docs/QueryModifier.md)
-
-[Pagination](Docs/Pagination.md)
+- [Basics](Docs/Basics.md)
+- [Fluent Model Extensions](Docs/Fluent-Model-Convenience-Extensions.md)
+- [CRUD for Resource Models](Docs/CRUD-for-Resource-Models.md)
+- [CRUD for Related Resource Models](Docs/CRUD-Related-Resource-Models.md)
+- [CRUD for Relations](Docs/CRUD-for-Relations.md)
+- [Controller Middlewares](Docs/Controller-Middlewares.md)
+- [Filtering](Docs/Filtering.md)
+- [Sorting](Docs/Sorting.md)
+- [Eager Loading](Docs/EaagerLoading.md)
+- [QueryModifier](Docs/QueryModifier.md)
+- [Pagination](Docs/Pagination.md)
 
 
 ## Migration Guides
 
-[Migration from v1.x to v2.0](Docs/Vapor-RestKit-Migration-guide-from-v1.0-to-v2.0.md)
+- [Migration from v1.x to v2.0](Docs/Vapor-RestKit-Migration-guide-from-v1.0-to-v2.0.md)
  
 # Licensing
 
