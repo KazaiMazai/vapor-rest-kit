@@ -70,11 +70,11 @@ extension Fluent.Model {
         }.forEach { propsDict[$0.path] = $0 }
 
         return try fields.map {
-            let key = try $0.codingKey()
-            let fieldKeys = try  $0.getFieldKeys().fieldKeys
+            let codingKey = try $0.codingKey()
+            let fieldKeys = try  $0.getFieldKeys()
             let anyValue = propsDict[fieldKeys]?.unwrappedAnyValue
 
-            return CursorValue(fieldKey: key, value: AnyCodable(anyValue)) }
+            return CursorValue(fieldKey: codingKey, value: AnyCodable(anyValue)) }
     }
 }
 
@@ -85,15 +85,20 @@ extension DatabaseQuery.Field {
         switch self {
         case .path(let keys, let schema):
             return "\(schema)_\(keys)"
-        case .custom(_):
+        case .extendedPath(let keys, schema: let schema, space: let space):
+            let spaceKey = space.map { "\($0)."} ?? ""
+            return "\(spaceKey)\(schema)_\(keys)"
+        case .custom:
             throw Abort(.unprocessableEntity, reason: "Custom Field is not compatible with cursor pagination")
         }
     }
 
-    fileprivate func getFieldKeys() throws -> (fieldKeys: [FieldKey], schema: String) {
+    fileprivate func getFieldKeys() throws -> [FieldKey] {
         switch self {
-        case .path(let keys, let schema):
-            return  (fieldKeys: keys, schema: schema)
+        case .path(let keys, _):
+            return keys
+        case .extendedPath(let keys, _, _):
+            return keys
         case .custom(_):
             throw Abort(.unprocessableEntity, reason: "Custom Field is not compatible with cursor pagination")
         }
@@ -110,7 +115,7 @@ extension AnyProperty {
 
     fileprivate var unwrappedAnyValue: Any? {
         if case Optional<Any>.some(let unwrapped) = self.anyValue {
-            if case Optional<Any>.some(let unwrapped2) =  unwrapped {
+            if case Optional<Any>.some(let unwrapped2) = unwrapped {
                 return unwrapped2
             } else {
                 return nil
