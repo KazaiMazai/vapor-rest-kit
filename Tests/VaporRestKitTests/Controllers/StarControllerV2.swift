@@ -56,7 +56,11 @@ struct StarControllersV2 {
         func index(req: Request) throws -> EventLoopFuture<CursorPage<Star.Output>> {
             try ResourceController<Star.Output>().getCursorPage(
                 req: req,
-                queryModifier: queryModifier)
+                queryModifier: queryModifier,
+                config: CursorPaginationConfig(
+                    allowBackwardPagination: true
+                )
+            )
         }
     }
 

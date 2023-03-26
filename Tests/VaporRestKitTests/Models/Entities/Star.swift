@@ -77,14 +77,20 @@ extension Star: InitMigratableSchema {
 }
 
 extension Star {
-    struct Output: ResourceOutputModel {
+    struct Output: ResourceOutputModel, Equatable {
         let id: Int?
         let title: String
         let subtitle: String?
         let size: Int
 
-
         init(_ model: Star, req: Request) {
+            id = model.id
+            title = model.title
+            subtitle = model.subtitle
+            size = model.size
+        }
+
+        init(_ model: Star) {
             id = model.id
             title = model.title
             subtitle = model.subtitle
