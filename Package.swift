@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
     name: "vapor-rest-kit",
     platforms: [
-          .macOS(.v10_15),
-       ],
+        .macOS(.v10_15),
+    ],
     products: [
         .library(name: "VaporRestKit", targets: ["VaporRestKit"]),
     ],
@@ -22,13 +22,13 @@ let package = Package(
             dependencies: [
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "Fluent", package: "fluent")
-        ]),
+            ]),
         .testTarget(
             name: "VaporRestKitTests",
             dependencies: [
                 .target(name: "VaporRestKit"),
                 .product(name: "XCTVapor", package: "vapor"),
                 .product(name: "FluentSQLiteDriver", package: "fluent-sqlite-driver")
-        ]),
+            ]),
     ]
 )
