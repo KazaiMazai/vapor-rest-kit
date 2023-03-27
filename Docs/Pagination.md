@@ -72,6 +72,46 @@ struct StarsController {
 }
 
 ```
+#### How to configure bi-directional cursor pagination
+
+Bi-directional pagination is disabled by default. It can be turned on in pagination config:
+
+```swift
+//defalut parameters are limitMax: 25, defaultLimit: 10
+
+let cursorPaginationConfig = CursorPaginationConfig(limitMax: 25, defaultLimit: 10, allowBackwardPagination: true)
+```
+
+When enabled, cursor page API response metadata would contain both next and previous cursors.
+
+```json
+{
+   "items": [
+      //your data collection here
+   ],
+   
+   "metadata": {
+     "next_cursor": "W3siZmllbGRLZXkiOiJhc3NldHNfW3RpY2tlcl0iLCJ2",
+     "prev_cursor": "dW3siZmllbGRLZXkiOiJhc3NldHNf2312RpY2tlcl0i3"
+      
+   }
+}
+```
+They can be used with `after` and `before`query parameters to request next and previous portions of collection.
+
+Next portion:
+
+```
+https://api.yourservice.com/v1/stars?limit=10&after=W3siZmllbGRLZXkiOiJhc3NldHNfW3RpY2tlcl0iLCJ2YWx1Z...
+
+```
+
+Previous portion:
+
+```
+https://api.yourservice.com/v1/stars?limit=10&before=W3siZmllbGRLZXkiOiJhc3NldHNfW3RpY2tlcl0iLCJ2YWx1Z...
+
+```
 
 ### By page
 
