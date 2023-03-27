@@ -9,7 +9,7 @@ import Fluent
 import Vapor
 
 protocol PaginationCursorEncoder {
-    func encode<Model: Fluent.Model>(_ model: Model, filterDescriptors: [FilterDescriptor]) throws -> String
+    func encode<Model: Fluent.Model>(_ model: Model, filterDescriptor: CursorFilterDescriptor) throws -> String
 }
 
 protocol PaginationCursorDecoder {
@@ -22,7 +22,8 @@ struct PaginationCursorCoder: PaginationCursorEncoder & PaginationCursorDecoder 
     let encoder: JSONEncoder
     let decoder: JSONDecoder
 
-    func encode<Model: Fluent.Model>(_ model: Model, filterDescriptors: [FilterDescriptor]) throws -> String {
+    func encode<Model: Fluent.Model>(_ model: Model, filterDescriptor: CursorFilterDescriptor) throws -> String {
+        let filterDescriptors = filterDescriptor.filterDescriptors
         guard !filterDescriptors.isEmpty else {
             throw Abort(.badRequest, reason: "Cursor filters should be specified")
         }
@@ -35,7 +36,7 @@ struct PaginationCursorCoder: PaginationCursorEncoder & PaginationCursorDecoder 
         return cursorString
     }
 
-    func decode(cursor: String) throws ->  [CursorValue] {
+    func decode(cursor: String) throws -> [CursorValue] {
         guard let data = Data(base64Encoded: cursor) else {
             throw Abort(.badRequest, reason: "Cursor is malformed")
         }

@@ -36,23 +36,26 @@ extension QueryBuilder {
 
 //MARK:- QueryBuilder private extensions
 
-
 extension QueryBuilder  {
 
     fileprivate func initialPage(_ limit: Int,
                                  inlcudePrevCursor: Bool,
                                  encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
-        let cursorFilter = try CursorFilter(sorts: query.sorts)
-        let filterDescriptors = cursorFilter.filterDescriptors
-        let items = self.copy().limit(limit).all()
 
-        return items.flatMapThrowing { models in
-            let next = try models.last.map { try encoder.encode($0, filterDescriptors: filterDescriptors) }
-            let prev = try models.first.map { try encoder.encode($0, filterDescriptors: filterDescriptors) }
-            let metadata = CursorPageMetadata(nextCursor: next,
-                                              prevCursor: inlcudePrevCursor ? prev: nil)
-            return CursorPage(items: models,
-                              metadata: metadata)
+        let querybuilder = copy()
+        let filterDescriptor = try querybuilder.getCursorFilterDescriptor()
+
+        return querybuilder
+            .limit(limit)
+            .all()
+            .flatMapThrowing { models in
+
+                let next = try models.last.map { try encoder.encode($0, filterDescriptor: filterDescriptor) }
+                let prev = try models.first.map { try encoder.encode($0, filterDescriptor: filterDescriptor) }
+                let metadata = CursorPageMetadata(nextCursor: next,
+                                                  prevCursor: inlcudePrevCursor ? prev: nil)
+                return CursorPage(items: models,
+                                  metadata: metadata)
         }
     }
 
@@ -60,18 +63,19 @@ extension QueryBuilder  {
                                      limit: Int,
                                      inlcudePrevCursor: Bool,
                                      coder: PaginationCursorDecoder & PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+
         let cursorValues = try coder.decode(cursor: cursor)
         let querybuilder = copy()
-        let cursorFilter = try CursorFilter(sorts: querybuilder.query.sorts)
-        let filterDescriptors = cursorFilter.filterDescriptors
+        let filterDescriptor = try querybuilder.getCursorFilterDescriptor()
+
         return try querybuilder
-            .filter(cursorFilter, with: cursorValues)
+            .filter(with: cursorValues)
             .limit(limit)
             .all()
             .flatMapThrowing { models in
 
-                let next = try models.last.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
-                let prev = try models.first.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
+                let next = try models.last.map { try coder.encode($0, filterDescriptor: filterDescriptor) }
+                let prev = try models.first.map { try coder.encode($0, filterDescriptor: filterDescriptor) }
                 let metadata = CursorPageMetadata(nextCursor: next,
                                                   prevCursor: inlcudePrevCursor ? prev: nil)
                 return CursorPage(items: models,
@@ -83,21 +87,22 @@ extension QueryBuilder  {
                                       limit: Int,
                                       inlcudePrevCursor: Bool,
                                       coder: PaginationCursorDecoder & PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+
         let cursorValues = try coder.decode(cursor: cursor)
         let querybuilder = copy()
-        querybuilder.query.sorts = query.sorts.map { sort in sort.reversed() }
-        let cursorFilter = try CursorFilter(sorts: querybuilder.query.sorts)
-        let filterDescriptors = cursorFilter.filterDescriptors
+        querybuilder.reverseSorts()
+
+        let filterDescriptor = try querybuilder.getCursorFilterDescriptor()
 
         return try querybuilder
-            .filter(cursorFilter, with: cursorValues)
+            .filter(with: cursorValues)
             .limit(limit)
             .all()
             .flatMapThrowing { reveresedModels in
 
                 let models = Array(reveresedModels.reversed())
-                let next = try models.last.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
-                let prev = try models.first.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
+                let next = try models.last.map { try coder.encode($0, filterDescriptor: filterDescriptor) }
+                let prev = try models.first.map { try coder.encode($0, filterDescriptor: filterDescriptor) }
                 let metadata = CursorPageMetadata(nextCursor: next,
                                                   prevCursor: inlcudePrevCursor ? prev: nil)
                 return CursorPage(items: models,
