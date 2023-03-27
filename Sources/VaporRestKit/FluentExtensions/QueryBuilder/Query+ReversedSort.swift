@@ -8,7 +8,7 @@
 import Fluent
 
 extension DatabaseQuery.Sort.Direction {
-    func flipped() -> DatabaseQuery.Sort.Direction {
+    func reversed() -> DatabaseQuery.Sort.Direction {
         switch self {
         case .ascending:
             return .descending
@@ -21,10 +21,10 @@ extension DatabaseQuery.Sort.Direction {
 }
 
 extension DatabaseQuery.Sort {
-    func flipped() -> DatabaseQuery.Sort {
+    func reversed() -> DatabaseQuery.Sort {
         switch self {
         case .sort(let field, let direction):
-            return .sort(field, direction.flipped())
+            return .sort(field, direction.reversed())
         case .custom:
             return self
         }

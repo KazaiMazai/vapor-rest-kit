@@ -14,7 +14,7 @@ import FluentSQLiteDriver
 class BaseVaporRestKitTest: XCTestCase {
     var app: Application!
 
-    override func setUp() {
+    override func setUpWithError() throws {
         app = Application(.testing)
 
         // Setup database
@@ -31,7 +31,7 @@ class BaseVaporRestKitTest: XCTestCase {
         app.migrations.add(Tag.createInitialMigration())
         app.migrations.add(Todo.Relations.MarkedTags.Through.createInitialMigration())
         app.migrations.add(Todo.Relations.Assignees.Through.createInitialMigration())
-        try! app.autoMigrate().wait()
+        try app.autoMigrate().wait()
     }
 
     override func tearDown() {

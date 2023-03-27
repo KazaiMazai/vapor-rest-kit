@@ -16,9 +16,18 @@ extension QueryBuilder {
 
         do {
             let page = try request.query.decode(CursorPageRequest.self)
-            return try self.pageWithCursor(page.cursorType(with: config),
-                                           decoder: config.coder,
-                                           encoder: config.coder)
+            let coder = config.coder
+            let cursorType = page.cursorType(with: config)
+            let includePrevCursor = config.allowBackwardPagination
+
+            switch cursorType {
+            case .initial(limit: let limit):
+                return try initialPage(limit, inlcudePrevCursor: includePrevCursor, encoder: coder)
+            case .after(cursor: let cursor, limit: let limit):
+                return try pageAfterCursor(cursor, limit: limit, inlcudePrevCursor: includePrevCursor, coder: coder)
+            case .before(cursor: let cursor, limit: let limit):
+                return try pageBeforeCursor(cursor, limit: limit, inlcudePrevCursor: includePrevCursor, coder: coder)
+            }
         } catch {
             return request.eventLoop.makeFailedFuture(error)
         }
@@ -27,28 +36,19 @@ extension QueryBuilder {
 
 //MARK:- QueryBuilder private extensions
 
+
 extension QueryBuilder  {
-    fileprivate func pageWithCursor(_ cursorType: CursorType,
-                                    decoder: PaginationCursorDecoder,
-                                    encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
-        switch cursorType {
-        case .initial(limit: let limit, let includePrevCursor):
-            return try initialPage(limit, inlcudePrevCursor: includePrevCursor, encoder: encoder)
-        case .after(cursor: let cursor, limit: let limit, let includePrevCursor):
-            return try pageAfterCursor(cursor, limit: limit, inlcudePrevCursor: includePrevCursor, decoder: decoder, encoder: encoder)
-        case .before(cursor: let cursor, limit: let limit, let includePrevCursor):
-            return try pageBeforeCursor(cursor, limit: limit, inlcudePrevCursor: includePrevCursor, decoder: decoder, encoder: encoder)
-        }
-    }
 
-    fileprivate func initialPage(_ limit: Int, inlcudePrevCursor: Bool, encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
-        let cursorFilterBuilder = try CursorFilterBuilder(sorts: query.sorts)
-
+    fileprivate func initialPage(_ limit: Int,
+                                 inlcudePrevCursor: Bool,
+                                 encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+        let cursorFilter = try CursorFilter(sorts: query.sorts)
+        let filterDescriptors = cursorFilter.filterDescriptors
         let items = self.copy().limit(limit).all()
 
         return items.flatMapThrowing { models in
-            let next = try models.last.map { try encoder.encode($0, cursorFilters: cursorFilterBuilder.filterDescriptors) }
-            let prev = try models.first.map { try encoder.encode($0, cursorFilters: cursorFilterBuilder.filterDescriptors) }
+            let next = try models.last.map { try encoder.encode($0, filterDescriptors: filterDescriptors) }
+            let prev = try models.first.map { try encoder.encode($0, filterDescriptors: filterDescriptors) }
             let metadata = CursorPageMetadata(nextCursor: next,
                                               prevCursor: inlcudePrevCursor ? prev: nil)
             return CursorPage(items: models,
@@ -59,46 +59,50 @@ extension QueryBuilder  {
     fileprivate func pageAfterCursor(_ cursor: String,
                                      limit: Int,
                                      inlcudePrevCursor: Bool,
-                                     decoder: PaginationCursorDecoder,
-                                     encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
-        let requestCursorValues = try decoder.decode(cursor: cursor)
-        let cursorFilterBuilder = try CursorFilterBuilder(sorts: query.sorts)
-        let queryBulder = try cursorFilterBuilder.filter(copy(), with: requestCursorValues)
+                                     coder: PaginationCursorDecoder & PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+        let cursorValues = try coder.decode(cursor: cursor)
+        let querybuilder = copy()
+        let cursorFilter = try CursorFilter(sorts: querybuilder.query.sorts)
+        let filterDescriptors = cursorFilter.filterDescriptors
+        return try querybuilder
+            .filter(cursorFilter, with: cursorValues)
+            .limit(limit)
+            .all()
+            .flatMapThrowing { models in
 
-        let items = queryBulder.limit(limit).all()
-
-        return items.flatMapThrowing { models in
-            let next = try models.last.map { try encoder.encode($0, cursorFilters: cursorFilterBuilder.filterDescriptors) }
-            let prev = try models.first.map { try encoder.encode($0, cursorFilters: cursorFilterBuilder.filterDescriptors) }
-            let metadata = CursorPageMetadata(nextCursor: next,
-                                              prevCursor: inlcudePrevCursor ? prev: nil)
-            return CursorPage(items: models,
-                              metadata: metadata)
-        }
+                let next = try models.last.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
+                let prev = try models.first.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
+                let metadata = CursorPageMetadata(nextCursor: next,
+                                                  prevCursor: inlcudePrevCursor ? prev: nil)
+                return CursorPage(items: models,
+                                  metadata: metadata)
+            }
     }
 
     fileprivate func pageBeforeCursor(_ cursor: String,
                                       limit: Int,
                                       inlcudePrevCursor: Bool,
-                                      decoder: PaginationCursorDecoder,
-                                      encoder: PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
-        let requestCursorValues = try decoder.decode(cursor: cursor)
-        let flippedSortQuerybuilder = copy()
-        flippedSortQuerybuilder.query.sorts = query.sorts.map { sort in sort.flipped() }
-        let cursorFilterBuilder = try CursorFilterBuilder(sorts: flippedSortQuerybuilder.query.sorts)
-        let queryBulder = try cursorFilterBuilder.filter(flippedSortQuerybuilder, with: requestCursorValues)
+                                      coder: PaginationCursorDecoder & PaginationCursorEncoder) throws -> EventLoopFuture<CursorPage<Model>> {
+        let cursorValues = try coder.decode(cursor: cursor)
+        let querybuilder = copy()
+        querybuilder.query.sorts = query.sorts.map { sort in sort.reversed() }
+        let cursorFilter = try CursorFilter(sorts: querybuilder.query.sorts)
+        let filterDescriptors = cursorFilter.filterDescriptors
 
-        let items = queryBulder.limit(limit).all()
+        return try querybuilder
+            .filter(cursorFilter, with: cursorValues)
+            .limit(limit)
+            .all()
+            .flatMapThrowing { reveresedModels in
 
-        return items.flatMapThrowing { models in
-            let reveresedModels = Array(models.reversed())
-            let next = try reveresedModels.last.map { try encoder.encode($0, cursorFilters: cursorFilterBuilder.filterDescriptors) }
-            let prev = try reveresedModels.first.map { try encoder.encode($0, cursorFilters: cursorFilterBuilder.filterDescriptors) }
-            let metadata = CursorPageMetadata(nextCursor: next,
-                                              prevCursor: inlcudePrevCursor ? prev: nil)
-            return CursorPage(items: reveresedModels,
-                              metadata: metadata)
-        }
+                let models = Array(reveresedModels.reversed())
+                let next = try models.last.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
+                let prev = try models.first.map { try coder.encode($0, filterDescriptors: filterDescriptors) }
+                let metadata = CursorPageMetadata(nextCursor: next,
+                                                  prevCursor: inlcudePrevCursor ? prev: nil)
+                return CursorPage(items: models,
+                                  metadata: metadata)
+            }
     }
 }
 
@@ -135,9 +139,9 @@ public struct CursorPageMetadata: Codable {
 //MARK:- CursorRequestType
 
 enum CursorType {
-    case initial(limit: Int, includePrevCursor: Bool)
-    case after(cursor: String, limit: Int, includePrevCursor: Bool)
-    case before(cursor: String, limit: Int, includePrevCursor: Bool)
+    case initial(limit: Int)
+    case after(cursor: String, limit: Int)
+    case before(cursor: String, limit: Int)
 }
 
 //MARK:- CursorPaginationConfig
@@ -201,22 +205,21 @@ struct CursorPageRequest: Codable {
         let checkedLimit = min(rawLimit, config.limitMax)
 
         if let cursor = cursor {
-            return .after(cursor: cursor, limit: checkedLimit, includePrevCursor: config.allowBackwardPagination)
-        }
-
-        guard config.allowBackwardPagination else {
-            return .initial(limit: checkedLimit, includePrevCursor: config.allowBackwardPagination)
+            return .after(cursor: cursor, limit: checkedLimit)
         }
 
         if let cursor = after {
-            return .after(cursor: cursor, limit: checkedLimit, includePrevCursor: config.allowBackwardPagination)
+            return .after(cursor: cursor, limit: checkedLimit)
+        }
+
+        guard config.allowBackwardPagination else {
+            return .initial(limit: checkedLimit)
         }
 
         if let cursor = before {
-            return .before(cursor: cursor, limit: checkedLimit, includePrevCursor: config.allowBackwardPagination)
+            return .before(cursor: cursor, limit: checkedLimit)
         }
 
-        return .initial(limit: checkedLimit, includePrevCursor: config.allowBackwardPagination)
+        return .initial(limit: checkedLimit)
     }
-
 }

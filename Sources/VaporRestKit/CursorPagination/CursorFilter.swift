@@ -10,7 +10,13 @@ import Fluent
 
 //MARK:- CursorFilterBuilder
 
-struct CursorFilterBuilder {
+extension QueryBuilder  {
+    func filter(_ cursorFilter: CursorFilter, with values: [CursorValue]) throws -> QueryBuilder<Model> {
+        try cursorFilter.applyFilterTo(self, with: values)
+    }
+}
+
+struct CursorFilter {
     let filterDescriptors: [FilterDescriptor]
 
     init(filterDescriptors: [FilterDescriptor]) {
@@ -21,7 +27,7 @@ struct CursorFilterBuilder {
         self.filterDescriptors = try sorts.map { try FilterDescriptor(sort: $0) }
     }
 
-    func filter<Model>(_ queryBuilder: QueryBuilder<Model>, with values: [CursorValue]) throws -> QueryBuilder<Model> {
+    func applyFilterTo<Model>(_ queryBuilder: QueryBuilder<Model>, with values: [CursorValue]) throws -> QueryBuilder<Model> {
         let valueFilters = try prepareValueFilters(cursorValues: values, filterDescriptors: filterDescriptors)
         return applyCursorValueFilters(to: queryBuilder, valueFilters: valueFilters)
     }
@@ -37,7 +43,7 @@ fileprivate struct CursorValueFilter {
 
 //MARK:- CursorFilterBuilder Extension
 
-extension CursorFilterBuilder {
+extension CursorFilter {
     fileprivate func prepareValueFilters(cursorValues: [CursorValue],
                                          filterDescriptors: [FilterDescriptor]) throws -> [CursorValueFilter] {
 
