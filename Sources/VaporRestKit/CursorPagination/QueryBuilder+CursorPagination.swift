@@ -12,7 +12,7 @@ import Fluent
 
 extension QueryBuilder {
     func paginateWithCursor(for request: Request,
-                            config: CursorPaginationConfig = .defaultConfig) -> EventLoopFuture<CursorPage<Model>> {
+                            config: CursorPaginationConfig) -> EventLoopFuture<CursorPage<Model>> {
 
         do {
             let page = try request.query.decode(CursorPageRequest.self)
