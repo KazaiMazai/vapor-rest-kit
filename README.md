@@ -5,6 +5,12 @@
 
 This package is intended to speed up backend development using server side swift framework [Vapor](https://github.com/vapor/vapor)
 
+<p align="left">
+    <a href="https://github.com/KazaiMazai/vapor-rest-kit/actions">
+        <img src="https://github.com/KazaiMazai/vapor-rest-kit/workflows/Tests/badge.svg" alt="Continuous Integration">
+    </a>
+</p>
+
 
 
 ## Features
