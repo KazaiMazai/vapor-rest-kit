@@ -8,7 +8,6 @@
 import Vapor
 import Fluent
 
-
 public extension ResourceController {
     func create<Input, Model>(
         req: Request,
@@ -17,10 +16,10 @@ public extension ResourceController {
         Input: ResourceUpdateModel,
         Output.Model == Model,
         Input.Model == Output.Model {
-
+        
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
-
+        
         return req.db.tryTransaction { db in
             inputModel
                 .update(Output.Model(), req: req, database: db)
