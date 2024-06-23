@@ -22,20 +22,6 @@ public extension ResourceController {
             .paginateWithCursor(for: req, config: config)
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
-    
-    func getCursorPage<Model>(
-        req: Request,
-        queryModifier: QueryModifier<Model> = .empty,
-        config: CursorPaginationConfig = .defaultConfig) async throws -> CursorPage<Output>
-    where
-        Output.Model == Model {
-            
-            try await getCursorPage(
-                req: req,
-                queryModifier: queryModifier,
-                config: config
-            ).get()
-        }
 }
 
 public extension RelatedResourceController {
@@ -89,6 +75,24 @@ public extension RelatedResourceController {
             .flatMap { query in query.paginateWithCursor(for: req, config: config) }
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
+}
+
+//MARK: - Concurrency
+
+public extension ResourceController {
+    func getCursorPage<Model>(
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        config: CursorPaginationConfig = .defaultConfig) async throws -> CursorPage<Output>
+    where
+        Output.Model == Model {
+            
+            try await getCursorPage(
+                req: req,
+                queryModifier: queryModifier,
+                config: config
+            ).get()
+        }
 }
 
 public extension RelatedResourceController {

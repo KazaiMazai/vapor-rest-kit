@@ -85,6 +85,8 @@ public extension RelatedResourceController {
     }
 }
 
+//MARK: - Concurrency
+
 public extension RelatedResourceController {
     func getAll<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,

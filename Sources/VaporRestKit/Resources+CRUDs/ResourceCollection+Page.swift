@@ -21,15 +21,6 @@ public extension ResourceController {
             .paginate(for: req)
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
-    
-    func getPage<Model>(
-        req: Request,
-        queryModifier: QueryModifier<Model> = .empty) async throws -> Page<Output>
-    where
-        Output.Model == Model {
-        
-        try await getPage(req: req, queryModifier: queryModifier).get()
-    }
 }
 
 public extension RelatedResourceController {
@@ -79,6 +70,19 @@ public extension RelatedResourceController {
             .flatMapThrowing { query in try query.with(queryModifier, for: req) }
             .flatMap { $0.paginate(for: req) }
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
+    }
+}
+
+//MARK: - Concurrency
+
+public extension ResourceController {
+    func getPage<Model>(
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty) async throws -> Page<Output>
+    where
+        Output.Model == Model {
+        
+        try await getPage(req: req, queryModifier: queryModifier).get()
     }
 }
 
