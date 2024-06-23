@@ -17,7 +17,7 @@ extension Galaxy: FieldsProvidingModel {
     }
 }
 
-final class Galaxy: Model, Content {
+final class Galaxy: Model, Content, @unchecked Sendable {
     static var schema = "galaxies"
 
     init() { }

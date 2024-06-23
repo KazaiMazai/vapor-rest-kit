@@ -76,3 +76,77 @@ public extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
 }
+
+//MARK: - Concurrency
+
+public extension ResourceController {
+    func getCursorPage<Model>(
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        config: CursorPaginationConfig = .defaultConfig) async throws -> CursorPage<Output>
+    where
+        Output.Model == Model {
+            
+            try await getCursorPage(
+                req: req,
+                queryModifier: queryModifier,
+                config: config
+            ).get()
+        }
+}
+
+public extension RelatedResourceController {
+    func getCursorPage<Model, RelatedModel>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>,
+        config: CursorPaginationConfig = .defaultConfig) async throws -> CursorPage<Output>
+    where
+        Model == Output.Model {
+        
+        try await getCursorPage(
+            resolver: resolver,
+            req: req,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath,
+            config: config
+        ).get()
+    }
+    
+    func getCursorPage<Model, RelatedModel>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>,
+        config: CursorPaginationConfig = .defaultConfig) async throws -> CursorPage<Output>
+    where
+        Model == Output.Model {
+        
+        try await getCursorPage(
+            resolver: resolver,
+            req: req,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath,
+            config: config
+        ).get()
+    }
+    
+    func getCursorPage<Model, RelatedModel, Through>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>,
+        config: CursorPaginationConfig = .defaultConfig) async throws -> CursorPage<Output>
+    where
+        Model == Output.Model {
+        
+        try await getCursorPage(
+            resolver: resolver,
+            req: req,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath,
+            config: config
+        ).get()
+    }
+}

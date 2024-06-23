@@ -27,7 +27,7 @@ public extension SiblingRepresentable {
 
 //MARK:- SiblingModel
 
-public final class SiblingModel<From, To, Name>: Model, Content
+public final class SiblingModel<From, To, Name>: Model, Content, @unchecked Sendable
     where
     From: Fluent.Model,
     To: Fluent.Model,

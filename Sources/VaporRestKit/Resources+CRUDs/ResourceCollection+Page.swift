@@ -72,3 +72,66 @@ public extension RelatedResourceController {
             .flatMapThrowing { collection in try collection.map { try Output($0, req: req) } }
     }
 }
+
+//MARK: - Concurrency
+
+public extension ResourceController {
+    func getPage<Model>(
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty) async throws -> Page<Output>
+    where
+        Output.Model == Model {
+        
+        try await getPage(req: req, queryModifier: queryModifier).get()
+    }
+}
+
+public extension RelatedResourceController {
+    func getPage<Model, RelatedModel>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) async throws -> Page<Output>
+    where
+        Model == Output.Model {
+        
+        try await getPage(
+            resolver: resolver,
+            req: req,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+    
+    func getPage<Model, RelatedModel>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) async throws -> Page<Output>
+    where
+        Model == Output.Model {
+        
+        try await getPage(
+            resolver: resolver,
+            req: req,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+    
+    func getPage<Model, RelatedModel, Through>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) async throws -> Page<Output>
+    where
+        Model == Output.Model {
+        
+        try await getPage(
+            resolver: resolver,
+            req: req,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+}

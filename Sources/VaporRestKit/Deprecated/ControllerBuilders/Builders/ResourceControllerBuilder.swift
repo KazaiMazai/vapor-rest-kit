@@ -16,16 +16,16 @@ public final class ResourceControllerBuilder<Model, Output, EagerLoading>: APIMe
     EagerLoading: EagerLoadProvider,
     EagerLoading.Model == Model {
 
-    internal init<Model, Output, EagerLoading>(modelType: Model.Type = Model.self,
-                                               outputType: Output.Type = Output.self,
-                                               eagerLoading: EagerLoading.Type = EagerLoading.self) {
-
+        internal init(modelType: Model.Type = Model.self,
+                      outputType: Output.Type = Output.self,
+                      eagerLoading: EagerLoading.Type = EagerLoading.self) {
+            
+        }
+        
+        internal var controllers: [APIMethodsProviding] = []
+        
+        internal func adding(_ controller: APIMethodsProviding) -> ResourceControllerBuilder  {
+            controllers.append(controller)
+            return self
+        }
     }
-
-    internal var controllers: [APIMethodsProviding] = []
-
-    internal func adding(_ controller: APIMethodsProviding) -> ResourceControllerBuilder  {
-        controllers.append(controller)
-        return self
-    }
-}

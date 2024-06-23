@@ -85,3 +85,63 @@ public extension RelationsController {
         }
     }
 }
+
+//MARK: - Concurrency
+
+public extension RelationsController {
+    
+    func createRelation<Model, RelatedModel>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) async throws -> Output
+    where
+        Model == Output.Model {
+        
+        try await createRelation(
+            resolver: resolver,
+            req: req,
+            willAttach: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+    
+    func createRelation<Model, RelatedModel>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) async throws -> Output
+    where
+        Model == Output.Model {
+        
+        try await createRelation(
+            resolver: resolver,
+            req: req,
+            willAttach: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+    
+    func createRelation<Model, RelatedModel, Through>(
+        resolver: Resolver<RelatedModel> = .byIdKeys,
+        req: Request,
+        willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) async throws -> Output
+    where
+        Model == Output.Model {
+        
+        try await createRelation(
+            resolver: resolver,
+            req: req,
+            willAttach: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+}
+

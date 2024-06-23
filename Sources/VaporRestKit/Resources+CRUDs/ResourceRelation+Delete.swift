@@ -82,3 +82,60 @@ public extension RelationsController {
     }
 }
 
+//MARK: - Concurrency
+
+public extension RelationsController {
+    func deleteRelation<Model, RelatedModel>(
+        resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
+        req: Request,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) async throws -> Output
+    where
+        Model == Output.Model {
+        
+        try await deleteRelation(
+            resolver: resolver,
+            req: req,
+            willDetach: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+    
+    func deleteRelation<Model, RelatedModel>(
+        resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
+        req: Request,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) async throws -> Output
+    where
+        Model == Output.Model {
+        
+        try await deleteRelation(
+            resolver: resolver,
+            req: req,
+            willDetach: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+    
+    func deleteRelation<Model, RelatedModel, Through>(
+        resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
+        req: Request,
+        willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
+        queryModifier: QueryModifier<Model> = .empty,
+        relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) async throws -> Output
+    where
+        Model == Output.Model {
+        
+        try await deleteRelation(
+            resolver: resolver,
+            req: req,
+            willDetach: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        ).get()
+    }
+}

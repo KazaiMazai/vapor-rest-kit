@@ -11,7 +11,7 @@ import Fluent
 //MARK:- InitialMigration
 
 public struct Migrating<T: Model> {
-    public typealias MigratingClosure = (Database) -> EventLoopFuture<Void>
+    public typealias MigratingClosure = @Sendable (Database) -> EventLoopFuture<Void>
 
     public let name: String
     private let prepareClosure: MigratingClosure
