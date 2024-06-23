@@ -16,7 +16,11 @@ public extension ResourceController {
     where
         Output.Model == Model {
 
-         try await delete(req: req, using: deleter, queryModifier: queryModifier)
+        try await delete(
+            req: req,
+            using: deleter,
+            queryModifier: queryModifier
+        ).get()
     }
 }
 
