@@ -4,18 +4,24 @@
 #### How to add custom business logic to Resource Controller
 
 
-#### Override ResourceUpdateModel method
+#### Override ResourceUpdateModel methods
 
-Default implementation of that method is:
+It can be as simple as:
 
 ```swift
 func update(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
-    return database.eventLoop.tryFuture { try update(model) }
+    database.eventLoop.tryFuture { try update(model) }
 }
+```
+or its swift-concurrency compatible version:
 
+```swift
+func update(_ model: Model, req: Request, database: Database) async throws -> Model {
+    try await database.eventLoop.tryFuture { try update(model) }.get()
+}
 ```
 
-It can be made complex, but with the following restrictions: 
+It can be made more complex, but with the following restrictions: 
 - **All database requests should be performed with provided database instance parameter**
 - **Database instance parameter should be used for obtaining event loop**
  
@@ -26,9 +32,17 @@ Default implementation of that method is:
 
 ```swift
 func patch(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
-    return database.eventLoop.tryFuture { try patch(model) }
+    database.eventLoop.tryFuture { try patch(model) }
 }
 
+```
+
+or its swift-concurrency compatible version:
+
+```swift
+func patch(_ model: Model, req: Request, database: Database) async throws -> Model {
+    try await database.eventLoop.tryFuture { try patch(model) }.get()
+}
 ```
 
 It can be made as complicated as you wish, but with the following restrictions: 
