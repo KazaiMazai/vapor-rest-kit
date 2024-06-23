@@ -78,9 +78,10 @@ extension Model {
                                with childrenKeyPath: SiblingKeyPath<Self, To, Through>,
                                on database: Database,
                                method: SiblingsProperty<Self, To, Through>.AttachMethod = .ifNotExists,
-                               edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
+                               edit: @Sendable @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
 
-        return self[keyPath: childrenKeyPath].attach(child, method: method, on: database, edit)
+        self[keyPath: childrenKeyPath]
+            .attach(child, method: method, on: database, edit)
             .transform(to: self)
 
     }
@@ -88,7 +89,8 @@ extension Model {
     @discardableResult
     func detached<To, Through>(from child: To,
                                with childrenKeyPath: SiblingKeyPath<Self, To, Through>, on database: Database) -> EventLoopFuture<Self> {
-        return self[keyPath: childrenKeyPath].detach(child, on: database)
+        self[keyPath: childrenKeyPath]
+            .detach(child, on: database)
             .transform(to: self)
     }
 
@@ -97,9 +99,10 @@ extension Model {
                                  with siblingKeyPath: SiblingKeyPath<From, Self, Through>,
                                  on database: Database,
                                  method: SiblingsProperty<From, Self, Through>.AttachMethod = .ifNotExists,
-                                 edit: @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
+                                 edit: @Sendable @escaping (Through) -> () = { _ in }) -> EventLoopFuture<Self> {
 
-        return parent[keyPath: siblingKeyPath].attach(self, method: method, on: database, edit)
+        parent[keyPath: siblingKeyPath]
+            .attach(self, method: method, on: database, edit)
             .transform(to: self)
     }
     @discardableResult
@@ -107,14 +110,15 @@ extension Model {
                                  with siblingKeyPath: SiblingKeyPath<From, Self, Through>,
                                  on database: Database) -> EventLoopFuture<Self> {
 
-        return parent[keyPath: siblingKeyPath].detach(self, on: database)
+        parent[keyPath: siblingKeyPath]
+            .detach(self, on: database)
             .transform(to: self)
     }
 
     @discardableResult
     func getParentKey<From>(with childrenKeyPath: ChildrenKeyPath<From, Self>) -> ChildrenProperty<From, Self>.Key {
 
-        return From()[keyPath: childrenKeyPath].parentKey
+        From()[keyPath: childrenKeyPath].parentKey
     }
 
     func queryRelated<From>(keyPath childrenKeyPath: ChildrenKeyPath<From, Self>,
@@ -136,11 +140,11 @@ extension Model {
 
     func queryRelated<To>(keyPath childrenKeyPath: ChildrenKeyPath<Self, To>,
                           on database: Database) -> QueryBuilder<To> {
-        return self[keyPath: childrenKeyPath].query(on: database)
+        self[keyPath: childrenKeyPath].query(on: database)
     }
 
     func queryRelated<To, Through>(keyPath siblingKeyPath: SiblingKeyPath<Self, To, Through>,
                                    on database: Database) -> QueryBuilder<To> {
-        return self[keyPath: siblingKeyPath].query(on: database)
+        self[keyPath: siblingKeyPath].query(on: database)
     }
 }
