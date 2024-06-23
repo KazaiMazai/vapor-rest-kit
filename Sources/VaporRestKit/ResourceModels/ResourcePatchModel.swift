@@ -18,11 +18,11 @@ public protocol ResourcePatchModel: ResourceMutationModel {
 
 public extension ResourcePatchModel {
     func patch(_ model: Model, req: Request, database: Database) async throws -> Model {
-        try await req.eventLoop.tryFuture { try patch(model) }.get()
+        try await database.eventLoop.tryFuture { try patch(model) }.get()
     }
     
     func patch(_ model: Model, req: Request, database: Database) -> EventLoopFuture<Model> {
-        req.eventLoop.withTask {
+        database.eventLoop.withTask {
             try await patch(model, req: req, database: database)
         }
     }
