@@ -80,27 +80,27 @@ protocol ResourceOutputModel: Content {
 ```swift
 
 struct TodoController {
-    func create(req: Request) throws -> EventLoopFuture<Todo.Output> {
+    func create(req: Request) async throws -> Todo.Output {
         try ResourceController<Todo.Output>().create(req: req, using: Todo.Input.self)
     }
 
-    func read(req: Request) throws -> EventLoopFuture<Todo.Output> {
+    func read(req: Request) async throws -> Todo.Output {
         try ResourceController<Todo.Output>().read(req: req)
     }
 
-    func update(req: Request) throws -> EventLoopFuture<Todo.Output> {
+    func update(req: Request) async throws -> Todo.Output {
         try ResourceController<Todo.Output>().update(req: req, using: Todo.Input.self)
     }
 
-    func patch(req: Request) throws -> EventLoopFuture<Todo.Output> {
+    func patch(req: Request) async throws -> Todo.Output {
         try ResourceController<Todo.Output>().patch(req: req, using: Todo.PatchInput.self)
     }
 
-    func delete(req: Request) throws -> EventLoopFuture<Todo.Output> {
+    func delete(req: Request) async throws -> Todo.Output {
         try ResourceController<Todo.Output>().delete(req: req)
     }
 
-    func index(req: Request) throws -> EventLoopFuture<CursorPage<Todo.Output>> {
+    func index(req: Request) async throws -> CursorPage<Todo.Output> {
         try ResourceController<Todo.Output>().getCursorPage(req: req)
     }
 }
