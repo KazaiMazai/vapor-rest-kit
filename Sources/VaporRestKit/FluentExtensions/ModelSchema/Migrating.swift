@@ -38,12 +38,14 @@ extension Migrating: Migration {
 
 public extension Migrating {
     static func createInitialMigration(
+        _ name: String = "InitialMigration for \(T.schema)",
         with prepare: @escaping MigratingClosure,
         revert: @escaping MigratingClosure = { db in db.schema(T.schema).delete() }) -> Migrating {
 
         Migrating(
-            name: "InitialMigration for \(T.schema)",
+            name: name,
             with: prepare,
-            revertClosure: revert)
+            revertClosure: revert
+        )
     }
 }
