@@ -48,4 +48,16 @@ public extension Migrating {
             revertClosure: revert
         )
     }
+    
+    static func createTable(
+        _ migrationName: String = "create_\(T.schema)_table",
+        with prepare: @escaping MigratingClosure,
+        revert: @escaping MigratingClosure = { db in db.schema(T.schema).delete() }) -> Migrating {
+
+        Migrating(
+            name: migrationName,
+            with: prepare,
+            revertClosure: revert
+        )
+    }
 }

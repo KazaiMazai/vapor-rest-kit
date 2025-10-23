@@ -15,8 +15,14 @@ public protocol InitMigratableSchema: Model {
 }
 
 public extension InitMigratableSchema {
-    static func createInitialMigration(_ name: String = "InitialMigration for \(Self.schema)",) -> Migration {
+    static func createInitialMigration(_ name: String = "InitialMigration for \(Self.schema)") -> Migration {
         Migrating<Self>.createInitialMigration(name) { db in
+            prepare(on: db.schema(Self.schema))
+        }
+    }
+    
+    static func createTable(_ migrationName: String = "create_\(Self.schema)_table") -> Migration {
+        Migrating<Self>.createTable(migrationName) { db in
             prepare(on: db.schema(Self.schema))
         }
     }
