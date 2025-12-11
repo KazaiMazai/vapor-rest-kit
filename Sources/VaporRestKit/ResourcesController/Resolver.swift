@@ -232,5 +232,44 @@ public extension Resolver {
     static var byIdKeys: Resolver {
         Resolver(find: Model.findByIdKey)
     }
+    
+    static func requireAuth(
+        didResolve middleware: ControllerMiddleware<Model, Model>
+    ) -> Resolver where Model: Authenticatable {
+        
+        Resolver { req, db in
+            try Model.requireAuth(
+                req,
+                database: db
+            )
+            .flatMap { model in
+                middleware.handle(
+                    model,
+                    req: req,
+                    database: db
+                )
+            }
+        }
+    }
+
+    static func byIdKeys(
+        didResolve middleware: ControllerMiddleware<Model, Model>
+    ) -> Resolver {
+        
+        Resolver { req, db in
+            try Model.findByIdKey(
+                req,
+                database: db
+            )
+            .flatMap { model in
+                middleware.handle(
+                    model,
+                    req: req,
+                    database: db
+                )
+            }
+        }
+    }
+    
 }
 
