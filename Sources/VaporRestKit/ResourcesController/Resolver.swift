@@ -43,7 +43,7 @@ public extension ChildResolver {
                 childrenKeyPath: keyPath,
                 queryModifier: queryModifier
             )
-            .map { model, relatedModel in
+            .flatMap { model, relatedModel in
                 middleware.handle(
                     model,
                     relatedModel: relatedModel,
@@ -51,7 +51,6 @@ public extension ChildResolver {
                     database: db
                 )
             }
-            .flatMap { $0 }
         }
     }
 
@@ -65,7 +64,7 @@ public extension ChildResolver {
                 childrenKeyPath: keyPath,
                 queryModifier: queryModifier
             )
-            .map { model, relatedModel in
+            .flatMap { model, relatedModel in
                 middleware.handle(
                     model,
                     relatedModel: relatedModel,
@@ -73,7 +72,6 @@ public extension ChildResolver {
                     database: db
                 )
             }
-            .flatMap { $0 }
         }
     }
 }
@@ -113,7 +111,7 @@ public extension ParentResolver {
                 childrenKeyPath: keyPath,
                 queryModifier: queryModifier
             )
-            .map { model, relatedModel in
+            .flatMap { model, relatedModel in
                 middleware.handle(
                     model,
                     relatedModel: relatedModel,
@@ -121,7 +119,6 @@ public extension ParentResolver {
                     database: db
                 )
             }
-            .flatMap { $0 }
         }
     }
 
@@ -136,7 +133,7 @@ public extension ParentResolver {
                 childrenKeyPath: keyPath,
                 queryModifier: queryModifier
             )
-            .map { model, relatedModel in
+            .flatMap { model, relatedModel in
                 middleware.handle(
                     model,
                     relatedModel: relatedModel,
@@ -144,7 +141,6 @@ public extension ParentResolver {
                     database: db
                 )
             }
-            .flatMap { $0 }
         }
     }
 }
@@ -187,7 +183,7 @@ public extension SiblingsResolver {
                 siblingKeyPath: keyPath,
                 queryModifier: queryModifier
             )
-            .map { model, relatedModel in
+            .flatMap { model, relatedModel in
                 middleware.handle(
                     model,
                     relatedModel: relatedModel,
@@ -195,7 +191,6 @@ public extension SiblingsResolver {
                     database: db
                 )
             }
-            .flatMap { $0 }
         }
     }
 
@@ -210,7 +205,7 @@ public extension SiblingsResolver {
                 siblingKeyPath: keyPath,
                 queryModifier: queryModifier
             )
-            .map { model, relatedModel in
+            .flatMap { model, relatedModel in
                 middleware.handle(
                     model,
                     relatedModel: relatedModel,
@@ -218,7 +213,6 @@ public extension SiblingsResolver {
                     database: db
                 )
             }
-            .flatMap { $0 }
         }
     }
 }
