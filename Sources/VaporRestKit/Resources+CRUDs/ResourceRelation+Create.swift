@@ -13,13 +13,14 @@ public extension RelationsController {
     func createRelation<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Model == Output.Model {
         
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db)
@@ -38,13 +39,14 @@ public extension RelationsController {
     func createRelation<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Model == Output.Model {
         
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db)
@@ -64,13 +66,14 @@ public extension RelationsController {
     func createRelation<Model, RelatedModel, Through>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         Model == Output.Model {
         
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db)
@@ -93,6 +96,7 @@ public extension RelationsController {
     func createRelation<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) async throws -> Output
@@ -102,6 +106,7 @@ public extension RelationsController {
         try await createRelation(
             resolver: resolver,
             req: req,
+            db: db,
             willAttach: middleware,
             queryModifier: queryModifier,
             relationKeyPath: relationKeyPath
@@ -111,6 +116,7 @@ public extension RelationsController {
     func createRelation<Model, RelatedModel>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) async throws -> Output
@@ -120,6 +126,7 @@ public extension RelationsController {
         try await createRelation(
             resolver: resolver,
             req: req,
+            db: db,
             willAttach: middleware,
             queryModifier: queryModifier,
             relationKeyPath: relationKeyPath
@@ -129,6 +136,7 @@ public extension RelationsController {
     func createRelation<Model, RelatedModel, Through>(
         resolver: Resolver<RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willAttach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) async throws -> Output
@@ -138,6 +146,7 @@ public extension RelationsController {
         try await createRelation(
             resolver: resolver,
             req: req,
+            db: db,
             willAttach: middleware,
             queryModifier: queryModifier,
             relationKeyPath: relationKeyPath
