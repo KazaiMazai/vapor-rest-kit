@@ -10,7 +10,7 @@ import Fluent
 
 public extension ResourceController {
     func read<Model>(req: Request,
-                      queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
+                     queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
         Output.Model == Model {
 
