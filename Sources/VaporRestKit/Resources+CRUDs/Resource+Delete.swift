@@ -11,12 +11,13 @@ import Fluent
 public extension ResourceController {
     func delete<Model>(
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
         Output.Model == Model {
 
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             try Model
                 .findByIdKey(req, database: db, queryModifier: queryModifier)
                 .flatMap { model in
@@ -33,6 +34,7 @@ public extension RelatedResourceController {
     func delete<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -40,14 +42,14 @@ public extension RelatedResourceController {
     where
         Model == Output.Model {
 
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
 
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
                 .flatMap { (model, related) in middleware.handle(model,
-                                                                        relatedModel: related,
-                                                                        req: req,
-                                                                        database: db) }
+                                                                 relatedModel: related,
+                                                                 req: req,
+                                                                 database: db) }
                 .flatMap { (model, related) in
                     deleter
                         .performDelete(model, req: req, database: db)
@@ -59,6 +61,7 @@ public extension RelatedResourceController {
     func delete<Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -66,7 +69,7 @@ public extension RelatedResourceController {
     where
         Model == Output.Model {
 
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
 
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -89,6 +92,7 @@ public extension RelatedResourceController {
     func delete<Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -97,7 +101,7 @@ public extension RelatedResourceController {
 
         Model == Output.Model {
 
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
 
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -120,6 +124,7 @@ public extension RelatedResourceController {
 public extension ResourceController {
     func delete<Model>(
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         queryModifier: QueryModifier<Model> = .empty) async throws -> Output
     where
@@ -127,6 +132,7 @@ public extension ResourceController {
 
         try await delete(
             req: req,
+            db: db,
             using: deleter,
             queryModifier: queryModifier
         ).get()
@@ -138,6 +144,7 @@ public extension RelatedResourceController {
     func delete<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -148,6 +155,7 @@ public extension RelatedResourceController {
             try await delete(
                 resolver: resolver,
                 req: req,
+                db: db,
                 using: deleter,
                 willDetach: middleware,
                 queryModifier: queryModifier,
@@ -158,6 +166,7 @@ public extension RelatedResourceController {
     func delete<Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -168,6 +177,7 @@ public extension RelatedResourceController {
             try await delete(
                 resolver: resolver,
                 req: req,
+                db: db,
                 using: deleter,
                 willDetach: middleware,
                 queryModifier: queryModifier,
@@ -178,6 +188,7 @@ public extension RelatedResourceController {
     func delete<Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -189,6 +200,7 @@ public extension RelatedResourceController {
             try await delete(
                 resolver: resolver,
                 req: req,
+                db: db,
                 using: deleter,
                 willDetach: middleware,
                 queryModifier: queryModifier,

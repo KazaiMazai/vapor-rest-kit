@@ -12,6 +12,7 @@ import Fluent
 public extension ResourceController {
     func update<Input, Model>(
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
@@ -19,7 +20,12 @@ public extension ResourceController {
         Output.Model == Model,
         Input.Model == Output.Model {
         
-        try mutate(req: req, using: using, queryModifier: queryModifier)
+        try mutate(
+            req: req,
+            db: db,
+            using: using,
+            queryModifier: queryModifier
+        )
     }
 }
 
@@ -28,6 +34,7 @@ public extension RelatedResourceController {
     func update<Input, Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -37,17 +44,21 @@ public extension RelatedResourceController {
         Model == Output.Model,
         Input.Model == Output.Model  {
         
-        try mutate(resolver: resolver,
-                   req: req,
-                   using: using,
-                   willSave: middleware,
-                   queryModifier: queryModifier,
-                   relationKeyPath: relationKeyPath)
+        try mutate(
+            resolver: resolver,
+            req: req,
+            db: db,
+            using: using,
+            willSave: middleware,
+            queryModifier: queryModifier,
+            relationKeyPath: relationKeyPath
+        )
     }
     
     func update<Input, Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -57,17 +68,21 @@ public extension RelatedResourceController {
         Model == Output.Model,
         Input.Model == Output.Model {
         
-        try mutate(resolver: resolver,
-                   req: req,
-                   using: using,
-                   willSave: middleware,
-                   queryModifier: queryModifier,
-                   relationKeyPath: relationKeyPath)
+            try mutate(
+                resolver: resolver,
+                req: req,
+                db: db,
+                using: using,
+                willSave: middleware,
+                queryModifier: queryModifier,
+                relationKeyPath: relationKeyPath
+            )
     }
     
     func update<Input, Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -77,12 +92,15 @@ public extension RelatedResourceController {
         Model == Output.Model,
         Input.Model == Output.Model {
         
-        try mutate(resolver: resolver,
-                   req: req,
-                   using: using,
-                   willSave: middleware,
-                   queryModifier: queryModifier,
-                   relationKeyPath: relationKeyPath)
+            try mutate(
+                resolver: resolver,
+                req: req,
+                db: db,
+                using: using,
+                willSave: middleware,
+                queryModifier: queryModifier,
+                relationKeyPath: relationKeyPath
+            )
     }
 }
 
@@ -91,6 +109,7 @@ public extension RelatedResourceController {
 public extension ResourceController {
     func update<Input, Model>(
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         queryModifier: QueryModifier<Model> = .empty) async throws -> Output
     where
@@ -98,7 +117,12 @@ public extension ResourceController {
         Output.Model == Model,
         Input.Model == Output.Model {
         
-            try await update(req: req, using: using, queryModifier: queryModifier).get()
+            try await update(
+                req: req,
+                db: db,
+                using: using,
+                queryModifier: queryModifier
+            ).get()
     }
 }
 
@@ -107,6 +131,7 @@ public extension RelatedResourceController {
     func update<Input, Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -119,6 +144,7 @@ public extension RelatedResourceController {
         try await update(
             resolver: resolver,
             req: req,
+            db: db,
             using: using,
             willSave: middleware,
             queryModifier: queryModifier,
@@ -129,6 +155,7 @@ public extension RelatedResourceController {
     func update<Input, Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+         db: (any Database)? = nil,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -141,6 +168,7 @@ public extension RelatedResourceController {
             try await update(
                 resolver: resolver,
                 req: req,
+                db: db,
                 using: using,
                 willSave: middleware,
                 queryModifier: queryModifier,
@@ -151,6 +179,7 @@ public extension RelatedResourceController {
     func update<Input, Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
@@ -163,6 +192,7 @@ public extension RelatedResourceController {
         try await update(
             resolver: resolver,
             req: req,
+            db: db,
             using: using,
             willSave: middleware,
             queryModifier: queryModifier,

@@ -12,13 +12,14 @@ public extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) throws -> EventLoopFuture<Output>
     where
         Model == Output.Model {
         
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -36,13 +37,14 @@ public extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) throws -> EventLoopFuture<Output>
     where
         Model == Output.Model {
         
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -61,13 +63,14 @@ public extension RelationsController {
     func deleteRelation<Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) throws -> EventLoopFuture<Output>
     where
         Model == Output.Model {
         
-        req.db.tryTransaction { db in
+        (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -88,6 +91,7 @@ public extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<RelatedModel, Model>) async throws -> Output
@@ -97,6 +101,7 @@ public extension RelationsController {
         try await deleteRelation(
             resolver: resolver,
             req: req,
+            db: db,
             willDetach: middleware,
             queryModifier: queryModifier,
             relationKeyPath: relationKeyPath
@@ -106,6 +111,7 @@ public extension RelationsController {
     func deleteRelation<Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: ChildrenKeyPath<Model, RelatedModel>) async throws -> Output
@@ -115,6 +121,7 @@ public extension RelationsController {
         try await deleteRelation(
             resolver: resolver,
             req: req,
+            db: db,
             willDetach: middleware,
             queryModifier: queryModifier,
             relationKeyPath: relationKeyPath
@@ -124,6 +131,7 @@ public extension RelationsController {
     func deleteRelation<Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through> = .byIdKeys,
         req: Request,
+        db: (any Database)? = nil,
         willDetach middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model> = .empty,
         relationKeyPath: SiblingKeyPath<RelatedModel, Model, Through>) async throws -> Output
@@ -133,6 +141,7 @@ public extension RelationsController {
         try await deleteRelation(
             resolver: resolver,
             req: req,
+            db: db,
             willDetach: middleware,
             queryModifier: queryModifier,
             relationKeyPath: relationKeyPath

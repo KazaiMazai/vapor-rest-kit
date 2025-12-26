@@ -11,6 +11,7 @@ import Fluent
 extension ResourceController {
     func mutate<Input, Model>(
         req: Request,
+        db: (any Database)?,
         using: Input.Type,
         queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Output>
     where
@@ -21,7 +22,7 @@ extension ResourceController {
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         
-        return req.db.tryTransaction { db in
+        return (db ?? req.db).tryTransaction { db in
             try Model
                 .findByIdKey(req, database: db, queryModifier: queryModifier)
                 .flatMap { inputModel.mutate($0, req: req, database: db) }
@@ -36,6 +37,7 @@ extension RelatedResourceController {
     func mutate<Input, Model, RelatedModel>(
         resolver: ChildResolver<Model, RelatedModel>,
         req: Request,
+        db: (any Database)?,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -47,7 +49,7 @@ extension RelatedResourceController {
         
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
-        return req.db.tryTransaction { db in
+        return (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -65,6 +67,7 @@ extension RelatedResourceController {
     func mutate<Input, Model, RelatedModel>(
         resolver: ParentResolver<Model, RelatedModel>,
         req: Request,
+        db: (any Database)?,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -77,7 +80,7 @@ extension RelatedResourceController {
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
         let keyPath = relationKeyPath
-        return req.db.tryTransaction { db in
+        return (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
@@ -99,6 +102,7 @@ extension RelatedResourceController {
     func mutate<Input, Model, RelatedModel, Through>(
         resolver: SiblingsResolver<Model, RelatedModel, Through>,
         req: Request,
+        db: (any Database)?,
         using: Input.Type,
         willSave middleware: ControllerMiddleware<Model, RelatedModel> = .empty,
         queryModifier: QueryModifier<Model>,
@@ -110,7 +114,7 @@ extension RelatedResourceController {
         
         try Input.validate(content: req)
         let inputModel = try req.content.decode(Input.self)
-        return req.db.tryTransaction { db in
+        return (db ?? req.db).tryTransaction { db in
             
             try resolver
                 .find(req, db, relationKeyPath, queryModifier)
