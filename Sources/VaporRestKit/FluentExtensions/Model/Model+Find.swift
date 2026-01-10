@@ -10,14 +10,6 @@ import Fluent
 
 extension Model where IDValue: LosslessStringConvertible {
     static func findByIdKey(_ req: Request,
-                            database: Database) throws -> EventLoopFuture<Self> {
-        try findByIdKey(
-            req,
-            database: database,
-            queryModifier: .empty)
-    }
-
-    static func findByIdKey(_ req: Request,
                             database: Database,
                             queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<Self> {
         try Self.query(on: database)
@@ -27,11 +19,15 @@ extension Model where IDValue: LosslessStringConvertible {
 }
 
 extension Model where Self: Authenticatable {
+ 
     static func requireAuth(_ req: Request,
-                            database: Database) throws -> EventLoopFuture<Self>  {
+                            database: Database,
+                            queryModifier: QueryModifier<Self>) throws -> EventLoopFuture<Self>  {
 
         let related = try req.auth.require(Self.self)
-        return req.eventLoop.makeSucceededFuture(related)
+        return try Self.query(on: database)
+            .with(queryModifier, for: req)
+            .find(by: try related.requireID())
     }
 }
 
