@@ -10,13 +10,14 @@ import Fluent
 
 public extension ResourceController {
     func read<Model>(req: Request,
+                     resolver: Resolver<Model> = .byIdKeys,
                      queryModifier: QueryModifier<Model> = .empty) throws -> EventLoopFuture<Output>
     where
         Output.Model == Model {
-
-        try Model
-            .findByIdKey(req, database: req.db, queryModifier: queryModifier)
-            .flatMapThrowing { model in try Output(model, req: req) }
+            
+            try resolver
+                .find(req, req.db, queryModifier)
+                .flatMapThrowing { model in try Output(model, req: req) }
     }
 }
 
