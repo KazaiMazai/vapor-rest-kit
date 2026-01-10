@@ -221,7 +221,14 @@ public struct Resolver<Model> where Model: Fluent.Model,
                              Model.IDValue: LosslessStringConvertible {
 
     let find: (_ req: Request,
-               _ db: Database) throws -> EventLoopFuture<Model>
+               _ db: Database,
+               _ queryModifier: QueryModifier<Model>) throws -> EventLoopFuture<Model>
+    
+    
+    func find(_ req: Request,
+              _ db: Database) throws -> EventLoopFuture<Model> {
+        try find(req, db, .empty)
+    }
 }
 
 public extension Resolver {
@@ -237,10 +244,11 @@ public extension Resolver {
         didResolve middleware: ControllerMiddleware<Model, Model>
     ) -> Resolver where Model: Authenticatable {
         
-        Resolver { req, db in
+        Resolver { req, db, queryModifier in
             try Model.requireAuth(
                 req,
-                database: db
+                database: db,
+                queryModifier: queryModifier
             )
             .flatMap { model in
                 middleware.handle(
@@ -256,10 +264,11 @@ public extension Resolver {
         didResolve middleware: ControllerMiddleware<Model, Model>
     ) -> Resolver {
         
-        Resolver { req, db in
+        Resolver { req, db, queryModifier in
             try Model.findByIdKey(
                 req,
-                database: db
+                database: db,
+                queryModifier: queryModifier
             )
             .flatMap { model in
                 middleware.handle(
