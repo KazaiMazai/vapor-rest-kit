@@ -25,7 +25,7 @@ extension ResourceController {
         
         return (db ?? req.db).tryTransaction { db in
             try resolver
-                .find(req, req.db, queryModifier)
+                .find(req, db, queryModifier)
                 .flatMap { inputModel.mutate($0, req: req, database: db) }
                 .flatMap { model in return model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }

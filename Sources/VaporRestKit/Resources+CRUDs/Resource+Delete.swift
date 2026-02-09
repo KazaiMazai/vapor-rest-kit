@@ -20,7 +20,7 @@ public extension ResourceController {
 
         (db ?? req.db).tryTransaction { db in
             try resolver
-                .find(req, req.db, queryModifier)
+                .find(req, db, queryModifier)
                 .flatMap { model in
                     deleter
                         .performDelete(model, req: req, database: db)
