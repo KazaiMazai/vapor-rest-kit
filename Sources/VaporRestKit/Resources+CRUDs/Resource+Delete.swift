@@ -10,6 +10,7 @@ import Fluent
 
 public extension ResourceController {
     func delete<Model>(
+        resolver: Resolver<Model> = .byIdKeys,
         req: Request,
         db: (any Database)? = nil,
         using deleter: Deleter<Model> = .defaultDeleter(),
@@ -18,8 +19,8 @@ public extension ResourceController {
         Output.Model == Model {
 
         (db ?? req.db).tryTransaction { db in
-            try Model
-                .findByIdKey(req, database: db, queryModifier: queryModifier)
+            try resolver
+                .find(req, req.db, queryModifier)
                 .flatMap { model in
                     deleter
                         .performDelete(model, req: req, database: db)

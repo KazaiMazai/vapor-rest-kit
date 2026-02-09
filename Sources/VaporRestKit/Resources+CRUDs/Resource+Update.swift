@@ -11,6 +11,7 @@ import Fluent
 
 public extension ResourceController {
     func update<Input, Model>(
+        resolver: Resolver<Model> = .byIdKeys,
         req: Request,
          db: (any Database)? = nil,
         using: Input.Type,
@@ -21,6 +22,7 @@ public extension ResourceController {
         Input.Model == Output.Model {
         
         try mutate(
+            resolver: resolver,
             req: req,
             db: db,
             using: using,

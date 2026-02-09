@@ -10,6 +10,7 @@ import Fluent
 
 extension ResourceController {
     func mutate<Input, Model>(
+        resolver: Resolver<Model> = .byIdKeys,
         req: Request,
         db: (any Database)?,
         using: Input.Type,
@@ -23,8 +24,8 @@ extension ResourceController {
         let inputModel = try req.content.decode(Input.self)
         
         return (db ?? req.db).tryTransaction { db in
-            try Model
-                .findByIdKey(req, database: db, queryModifier: queryModifier)
+            try resolver
+                .find(req, req.db, queryModifier)
                 .flatMap { inputModel.mutate($0, req: req, database: db) }
                 .flatMap { model in return model.save(on: db).transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req) }

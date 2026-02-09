@@ -88,7 +88,7 @@ public extension RelatedResourceController {
                 .flatMapThrowing { (model, related) in (try model.attached(to: related, with: keyPath), related) }
                 .flatMap { (model, related) in [related.save(on: db), model.save(on: db)]
                         .flatten(on: db.context.eventLoop)
-                    .transform(to: model) }
+                        .transform(to: model) }
                 .flatMapThrowing { try Output($0, req: req)}
         }
     }
