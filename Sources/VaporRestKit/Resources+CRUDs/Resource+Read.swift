@@ -75,13 +75,11 @@ public extension RelatedResourceController {
 //MARK: - Concurrency
 
 public extension ResourceController {
-    @available(*, deprecated, renamed: "read(resolver:req:queryModifier:)", message: "Order of arguments was changed")
     func read<Model>(resolver: Resolver<Model> = .byIdKeys,
                      req: Request,
                      queryModifier: QueryModifier<Model> = .empty) async throws -> Output
     where
     Output.Model == Model {
-        
         try await read(
             resolver: resolver,
             req: req,
