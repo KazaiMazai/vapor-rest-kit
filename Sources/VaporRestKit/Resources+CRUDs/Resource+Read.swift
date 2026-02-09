@@ -89,7 +89,7 @@ public extension ResourceController {
     
     @available(*, deprecated, renamed: "read(resolver:req:queryModifier:)", message: "Order of arguments was changed")
     func read<Model>(req: Request,
-                     resolver: Resolver<Model> = .byIdKeys,
+                     resolver: Resolver<Model>,
                      queryModifier: QueryModifier<Model> = .empty) async throws -> Output
     where
     Output.Model == Model {
